@@ -8,6 +8,7 @@ records status + latency to a CSV, and a static dashboard (`index.html`, served 
 GitHub Pages) reads that data straight out of the repo. No server, no database, no cost
 beyond GitHub's free tier for public repos.
 
+<!--
 ## Setup (5 minutes)
 
 1. **Copy these files into your repo**, keeping the folder structure exactly as-is —
@@ -27,6 +28,8 @@ beyond GitHub's free tier for public repos.
 
 5. Data accumulates every 15 minutes from there. The live status grid is useful
    immediately; the peak-hour heatmap becomes meaningful after a few days of data.
+
+-->
 
 ## Customizing
 
