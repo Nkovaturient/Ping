@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Pulse</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  :root{
+    --paper:#F5F0E4;
+    --paper-raised:#FFFFFF;
+    --ink:#1E2530;
+    --ink-soft:#565F6E;
+    --indigo:#2D3A5C;
+    --indigo-dark:#202A45;
+    --saffron:#DB9A34;
+    --saffron-soft:#F3DDB2;
+    --ok:#3D8361;
+    --ok-bg:#E4F1E9;
+    --warn:#C1443C;
+    --warn-bg:#FBE7E5;
+    --amber:#B8860B;
+    --amber-bg:#FDF6E3;
+    --unknown:#A9ADB8;
+    --unknown-bg:#EEF0F3;
+    --line:rgba(30,37,48,.1);
+    --radius:22px;
+    --radius-sm:14px;
+    --shadow:0 4px 24px rgba(32,42,69,.06), 0 1px 3px rgba(32,42,69,.04);
+    --shadow-hover:0 8px 32px rgba(32,42,69,.1), 0 2px 6px rgba(32,42,69,.06);
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:linear-gradient(165deg, #FDF8EE 0%, #F5F0E4 45%, #EDE8DC 100%);
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    line-height:1.5;
+    padding:28px 18px 60px;
+    min-height:100vh;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+  }
+  .wrap{ max-width:1120px; margin:0 auto; }
+
+  header.top{
+    padding-bottom:20px;
+    margin-bottom:20px;
+  }
+  .brand h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:28px;
+    font-weight:700;
+    margin:0 0 6px;
+    color:var(--indigo-dark);
+    letter-spacing:-.02em;
+  }
+  .brand p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:15px;
+    max-width:52ch;
+  }
+
+  .bento-card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+
+  .kpi-strip{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:12px;
+    margin-bottom:20px;
+  }
+  @media (max-width:640px){
+    .kpi-strip{ grid-template-columns:repeat(2, 1fr); }
+  }
+  .kpi-card{
+    padding:16px 18px;
+    transition:box-shadow .2s ease, transform .2s ease;
+  }
+  .kpi-card:hover{ box-shadow:var(--shadow-hover); transform:translateY(-1px); }
+  .kpi-label{
+    font-size:12px;
+    font-weight:500;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    margin-bottom:4px;
+  }
+  .kpi-value{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:26px;
+    font-weight:700;
+    color:var(--indigo-dark);
+    line-height:1.1;
+  }
+  .kpi-value.ok{ color:var(--ok); }
+  .kpi-value.warn{ color:var(--warn); }
+  .kpi-value.mono{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:20px;
+  }
+
+  .banner{
+    padding:14px 18px;
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:20px;
+    border-left:3px solid var(--saffron-soft);
+  }
+  .banner b{ color:var(--ink); }
+
+  .snapix-hero{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+    padding:22px 24px;
+    margin-bottom:28px;
+    background:linear-gradient(135deg, #FFFFFF 0%, #FBF7EF 50%, #F5EDE0 100%);
+    border:1px solid rgba(219,154,52,.25);
+    border-left:4px solid var(--saffron);
+    position:relative;
+    overflow:hidden;
+  }
+  .snapix-hero::after{
+    content:'';
+    position:absolute;
+    top:-40%;
+    right:-5%;
+    width:180px;
+    height:180px;
+    background:radial-gradient(circle, rgba(219,154,52,.12) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .snapix-content{ flex:1; min-width:240px; position:relative; z-index:1; }
+  .snapix-badge{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--indigo);
+    background:rgba(45,58,92,.08);
+    padding:4px 10px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+  .snapix-hero h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:18px;
+    font-weight:700;
+    color:var(--indigo-dark);
+    margin:0 0 6px;
+    line-height:1.3;
+  }
+  .snapix-hero p{
+    margin:0;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    max-width:48ch;
+  }
+  .snapix-icons{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+  }
+  .snapix-icon{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    background:rgba(255,255,255,.7);
+    padding:4px 10px;
+    border-radius:999px;
+    border:1px solid var(--line);
+  }
+  .snapix-icon svg{ flex-shrink:0; }
+  .snapix-cta{
+    position:relative;
+    z-index:1;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:#fff;
+    background:linear-gradient(135deg, var(--indigo) 0%, var(--indigo-dark) 100%);
+    padding:12px 22px;
+    border-radius:999px;
+    text-decoration:none;
+    box-shadow:0 4px 14px rgba(32,42,69,.25);
+    transition:transform .2s ease, box-shadow .2s ease;
+    white-space:nowrap;
+  }
+  .snapix-cta:hover{
+    transform:translateY(-1px);
+    box-shadow:0 6px 20px rgba(32,42,69,.3);
+    color:#fff;
+  }
+  .snapix-cta svg{ transition:transform .2s ease; }
+  .snapix-cta:hover svg{ transform:translate(2px, -2px); }
+  @media (max-width:640px){
+    .snapix-cta{ width:100%; justify-content:center; }
+  }
+
+  section{ margin-bottom:34px; }
+  h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:18px;
+    color:var(--indigo-dark);
+    margin:0 0 4px;
+  }
+  .section-sub{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin:0 0 16px;
+  }
+
+  .cat-block{
+    margin-bottom:20px;
+  }
+  .cat-block:last-child{ margin-bottom:0; }
+  .cat-label{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--saffron);
+    font-weight:600;
+    background:var(--saffron-soft);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:12px;
+  }
+  .grid-cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+    gap:12px;
+  }
+  .pcard{
+    padding:16px;
+    text-decoration:none;
+    color:inherit;
+    display:block;
+    transition:box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+  }
+  .pcard:hover{
+    box-shadow:var(--shadow-hover);
+    transform:translateY(-2px);
+    border-color:rgba(45,58,92,.15);
+  }
+  .pcard-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:12px;
+  }
+  .pcard .name{
+    font-weight:600;
+    font-size:14px;
+    color:var(--indigo-dark);
+    line-height:1.3;
+  }
+  .status-pill{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:.04em;
+    padding:3px 8px;
+    border-radius:999px;
+    flex-shrink:0;
+  }
+  .status-pill.up{ background:var(--ok-bg); color:var(--ok); }
+  .status-pill.down{
+    background:var(--warn-bg);
+    color:var(--warn);
+    animation:pulse-down 2s ease-in-out infinite;
+  }
+  .status-pill.unknown{ background:var(--unknown-bg); color:var(--unknown); }
+  @keyframes pulse-down{
+    0%, 100%{ opacity:1; }
+    50%{ opacity:.7; }
+  }
+  .pcard-latency{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:22px;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1;
+    margin-bottom:4px;
+  }
+  .pcard-latency.slow{ color:var(--amber); }
+  .pcard-latency.critical{ color:var(--warn); }
+  .pcard-latency-label{
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  .pcard-footer{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    padding-top:10px;
+    border-top:1px solid var(--line);
+  }
+
+  .heatmap-shell{
+    padding:18px;
+    overflow-x:auto;
+  }
+  table.heatmap{
+    border-collapse:collapse;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+  }
+  table.heatmap th, table.heatmap td{ padding:0; text-align:center; }
+  table.heatmap th.portal-name{
+    text-align:right;
+    padding-right:12px;
+    font-size:12px;
+    color:var(--ink);
+    white-space:nowrap;
+    font-family:'IBM Plex Sans',sans-serif;
+    font-weight:600;
+  }
+  table.heatmap th.hour-label{
+    font-weight:500;
+    color:var(--ink-soft);
+    padding-bottom:6px;
+  }
+  .cell{
+    width:22px;
+    height:20px;
+    border-radius:4px;
+    margin:1.5px;
+    display:inline-block;
+  }
+  .heat-legend{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px;
+    margin-top:16px;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+  }
+  .legend-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    background:rgba(30,37,48,.04);
+    padding:4px 10px;
+    border-radius:999px;
+  }
+  .legend-swatch{
+    width:12px;
+    height:12px;
+    border-radius:3px;
+    display:inline-block;
+    flex-shrink:0;
+  }
+
+  .empty-state{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    padding:28px 22px;
+    text-align:center;
+    border:1px dashed rgba(30,37,48,.15);
+    border-radius:var(--radius-sm);
+    background:rgba(255,255,255,.5);
+  }
+
+  footer{
+    margin-top:30px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+  a{ color:var(--indigo); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <h1>Ping</h1>
+      <p>Live status and historical peak-hour patterns for India's exam &amp; recruitment portals.</p>
+    </div>
+  </header>
+
+  <div class="kpi-strip" id="kpiStrip">
+    <div class="bento-card kpi-card"><div class="kpi-label">Up</div><div class="kpi-value ok" id="kpiUp">—</div></div>
+    <div class="bento-card kpi-card"><div class="kpi-label">Down</div><div class="kpi-value warn" id="kpiDown">—</div></div>
+    <div class="bento-card kpi-card"><div class="kpi-label">Avg latency</div><div class="kpi-value mono" id="kpiLatency">—</div></div>
+    <div class="bento-card kpi-card"><div class="kpi-label">Last check</div><div class="kpi-value mono" id="kpiLastCheck" style="font-size:16px;">Loading…</div></div>
+  </div>
+
+  <div class="banner bento-card">
+    <b>Independent, unofficial project.</b> Not affiliated with UPSC, SSC, NTA, IBPS, Railways, or any government body. Checks run every ~15 minutes against each portal's public homepage only — read‑only, no login, no form data touched.
+  </div>
+
+  <div class="snapix-hero bento-card" id="snapixHero">
+    <div class="snapix-content">
+      <span class="snapix-badge">Recommended for applicants</span>
+      <h3>Resize photo, signature &amp; PDF to exam portal specs — in seconds.</h3>
+      <p>Meet KB limits, pixel dimensions, and aspect ratios for SSC, UPSC, IBPS, and state PSC uploads without last-minute rejections.</p>
+      <div class="snapix-icons">
+        <span class="snapix-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Photo
+        </span>
+        <span class="snapix-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Signature
+        </span>
+        <span class="snapix-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          PDF
+        </span>
+      </div>
+    </div>
+    <a class="snapix-cta" href="https://snapix.surge.sh" target="_blank" rel="noopener noreferrer">
+      Try Snapix free
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+
+  <section id="liveSection">
+    <h2>Live status</h2>
+    <p class="section-sub">Most recent check per portal. Updates every ~15 minutes.</p>
+    <div id="liveContainer"><div class="empty-state">Loading latest status…</div></div>
+  </section>
+
+  <section id="heatSection">
+    <h2>Peak‑hour heatmap (IST)</h2>
+    <p class="section-sub">Average latency &amp; downtime by hour of day, based on this and last month's checks. Darker red = slower or down more often at that hour.</p>
+    <div id="heatContainer"><div class="empty-state">Building heatmap from historical data…</div></div>
+  </section>
+
+  <footer>
+    ©2026 Nk | Fill your exam forms with confidence. No more last-minute chaos.
+  </footer>
+</div>
+
+<script>
+const CATEGORY_LABELS = { central: "Central", banking: "Banking", state: "State PSC" };
+
+function timeAgo(isoString){
+  if(!isoString) return "never";
+  const diffMs = Date.now() - new Date(isoString).getTime();
+  const mins = Math.round(diffMs/60000);
+  if(mins < 1) return "just now";
+  if(mins < 60) return mins + "m ago";
+  const hrs = Math.round(mins/60);
+  if(hrs < 24) return hrs + "h ago";
+  return Math.round(hrs/24) + "d ago";
+}
+
+function toISTHour(utcIsoString){
+  const d = new Date(utcIsoString.endsWith("Z") ? utcIsoString : utcIsoString + "Z");
+  const utcMinutes = d.getUTCHours()*60 + d.getUTCMinutes();
+  const istMinutes = (utcMinutes + 330) % 1440;
+  return Math.floor(istMinutes/60);
+}
+
+async function loadJSON(path){
+  try{
+    const res = await fetch(path, {cache:"no-store"});
+    if(!res.ok) return null;
+    return await res.json();
+  } catch(e){ return null; }
+}
+
+function parseCSV(text){
+  const lines = text.trim().split(/\r\n|\n/);
+  if(lines.length < 2) return [];
+  const header = lines[0].split(",").map(h=>h.trim());
+  return lines.slice(1).map(line=>{
+    const cols = line.split(",").map(c=>c.trim());
+    const row = {};
+    header.forEach((h,i)=> row[h] = cols[i]);
+    return row;
+  });
+}
+
+async function loadMonthCSV(yyyymm){
+  try{
+    const res = await fetch(`data/uptime-${yyyymm}.csv`, {cache:"no-store"});
+    if(!res.ok) return [];
+    return parseCSV(await res.text());
+  } catch(e){ return []; }
+}
+
+function monthKey(date){
+  return date.getUTCFullYear() + "-" + String(date.getUTCMonth()+1).padStart(2,"0");
+}
+
+function heatColor(score){
+  score = Math.max(0, Math.min(1, score));
+  const stops = [
+    {p:0.0, c:[228,241,233]},
+    {p:0.5, c:[243,221,178]},
+    {p:1.0, c:[193,68,60]}
+  ];
+  let a=stops[0], b=stops[1];
+  if(score > 0.5){ a=stops[1]; b=stops[2]; }
+  const t = a.p===b.p ? 0 : (score-a.p)/(b.p-a.p);
+  const c = a.c.map((v,i)=> Math.round(v + (b.c[i]-v)*t));
+  return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+
+function computeSummary(portals, latest){
+  let upCount = 0, downCount = 0, latencySum = 0, latencyCount = 0;
+  let mostRecent = null;
+  portals.forEach(p=>{
+    const rec = latest[p.id];
+    if(!rec) return;
+    if(rec.up) upCount++; else downCount++;
+    if(typeof rec.latency_ms === "number"){
+      latencySum += rec.latency_ms;
+      latencyCount++;
+    }
+    if(rec.timestamp_utc && (!mostRecent || rec.timestamp_utc > mostRecent)){
+      mostRecent = rec.timestamp_utc;
+    }
+  });
+  return {
+    upCount,
+    downCount,
+    avgLatency: latencyCount > 0 ? Math.round(latencySum / latencyCount) : null,
+    mostRecent
+  };
+}
+
+function renderKPIs(summary){
+  document.getElementById("kpiUp").textContent = summary.mostRecent ? summary.upCount : "0";
+  document.getElementById("kpiDown").textContent = summary.mostRecent ? summary.downCount : "0";
+  document.getElementById("kpiLatency").textContent = summary.avgLatency != null
+    ? summary.avgLatency + " ms"
+    : "—";
+  document.getElementById("kpiLastCheck").textContent = summary.mostRecent
+    ? timeAgo(summary.mostRecent)
+    : "No data yet";
+}
+
+function statusPill(rec){
+  if(!rec) return { cls: "unknown", label: "UNKNOWN" };
+  if(rec.up) return { cls: "up", label: "UP" };
+  return { cls: "down", label: "DOWN" };
+}
+
+function latencyClass(rec){
+  if(!rec || !rec.up) return "";
+  if(rec.latency_ms > 5000) return "critical";
+  if(rec.latency_ms > 3000) return "slow";
+  return "";
+}
+
+function renderLiveGrid(portals, latest){
+  const liveContainer = document.getElementById("liveContainer");
+  if(portals.length === 0){
+    liveContainer.innerHTML = '<div class="empty-state bento-card">config/portals.json not found or empty.</div>';
+    return;
+  }
+  const byCategory = {};
+  portals.forEach(p => { (byCategory[p.category] ||= []).push(p); });
+  let html = "";
+  Object.keys(byCategory).forEach(cat=>{
+    html += `<div class="cat-block"><span class="cat-label">${CATEGORY_LABELS[cat] || cat}</span><div class="grid-cards">`;
+    byCategory[cat].forEach(p=>{
+      const rec = latest[p.id];
+      const pill = statusPill(rec);
+      const latCls = latencyClass(rec);
+      const latencyTxt = rec ? rec.latency_ms + " ms" : "—";
+      const lastTxt = rec ? timeAgo(rec.timestamp_utc) : "no data yet";
+      const title = rec && !rec.up ? `HTTP ${rec.status_code}` : "";
+      html += `
+        <a class="pcard bento-card" href="${p.url}" target="_blank" rel="noopener noreferrer" title="Open ${p.name}">
+          <div class="pcard-top">
+            <div class="name">${p.name}</div>
+            <span class="status-pill ${pill.cls}" title="${title}">${pill.label}</span>
+          </div>
+          <div class="pcard-latency ${latCls}">${latencyTxt}</div>
+          <div class="pcard-latency-label">response time</div>
+          <div class="pcard-footer">checked ${lastTxt}</div>
+        </a>`;
+    });
+    html += `</div></div>`;
+  });
+  liveContainer.innerHTML = html;
+}
+
+function renderHeatmap(portals, allRows){
+  const heatContainer = document.getElementById("heatContainer");
+  if(allRows.length === 0 || portals.length === 0){
+    heatContainer.innerHTML = '<div class="empty-state bento-card">Not enough historical data yet — the heatmap fills in over the first few days as the scheduled check runs.</div>';
+    return;
+  }
+  const agg = {};
+  allRows.forEach(row=>{
+    if(!row.timestamp_utc || !row.portal_id) return;
+    const hour = toISTHour(row.timestamp_utc);
+    agg[row.portal_id] ||= Array.from({length:24}, ()=>({count:0, downCount:0, latencySum:0}));
+    const bucket = agg[row.portal_id][hour];
+    bucket.count += 1;
+    const up = row.up === "1" || row.up === "True" || row.up === "true";
+    if(!up) bucket.downCount += 1;
+    bucket.latencySum += parseFloat(row.latency_ms) || 0;
+  });
+
+  const hours = Array.from({length:24}, (_,h)=>h);
+  let html = '<div class="heatmap-shell bento-card"><table class="heatmap"><tr><th></th>';
+  hours.forEach(h=> html += `<th class="hour-label">${h}</th>`);
+  html += '</tr>';
+
+  portals.forEach(p=>{
+    html += `<tr><th class="portal-name">${p.name}</th>`;
+    const rowAgg = agg[p.id];
+    hours.forEach(h=>{
+      const b = rowAgg ? rowAgg[h] : null;
+      if(!b || b.count === 0){
+        html += `<td><span class="cell" style="background:var(--line); opacity:.35;" title="${p.name} · ${h}:00 IST — no data"></span></td>`;
+      } else {
+        const downRate = b.downCount / b.count;
+        const avgLatency = b.latencySum / b.count;
+        const score = Math.min(1, downRate*1.0 + Math.min(avgLatency/8000, 1)*0.6);
+        const color = heatColor(score);
+        const title = `${p.name} · ${h}:00 IST — avg ${Math.round(avgLatency)}ms, ${Math.round(downRate*100)}% down (n=${b.count})`;
+        html += `<td><span class="cell" style="background:${color};" title="${title}"></span></td>`;
+      }
+    });
+    html += `</tr>`;
+  });
+  html += `</table>
+    <div class="heat-legend">
+      <span class="legend-pill"><span class="legend-swatch" style="background:${heatColor(0)}"></span>fast &amp; up</span>
+      <span class="legend-pill"><span class="legend-swatch" style="background:${heatColor(0.5)}"></span>slower</span>
+      <span class="legend-pill"><span class="legend-swatch" style="background:${heatColor(1)}"></span>slow / down</span>
+      <span class="legend-pill"><span class="legend-swatch" style="background:var(--line); opacity:.35;"></span>no data</span>
+    </div></div>`;
+  heatContainer.innerHTML = html;
+}
+
+async function main(){
+  const portals = await loadJSON("config/portals.json") || [];
+  const latest = await loadJSON("data/latest.json") || {};
+
+  const summary = computeSummary(portals, latest);
+  renderKPIs(summary);
+  renderLiveGrid(portals, latest);
+
+  const now = new Date();
+  const prev = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth()-1, 1));
+  const [curRows, prevRows] = await Promise.all([loadMonthCSV(monthKey(now)), loadMonthCSV(monthKey(prev))]);
+  renderHeatmap(portals, prevRows.concat(curRows));
+}
+
+main();
+</script>
+</body>
+</html>
