@@ -9,26 +9,34 @@
 
   :root{
     --paper:#F5F0E4;
-    --paper-raised:#FFFFFF;
+    --paper-raised:rgba(255,255,255,0.55);
     --ink:#1E2530;
     --ink-soft:#565F6E;
     --indigo:#2D3A5C;
     --indigo-dark:#202A45;
     --saffron:#DB9A34;
     --saffron-soft:#F3DDB2;
-    --ok:#3D8361;
-    --ok-bg:#E4F1E9;
-    --warn:#C1443C;
-    --warn-bg:#FBE7E5;
-    --amber:#B8860B;
-    --amber-bg:#FDF6E3;
-    --unknown:#A9ADB8;
-    --unknown-bg:#EEF0F3;
+    --ok:#15803D;
+    --ok-vivid:#22B07A;
+    --ok-bg:rgba(34,180,110,.14);
+    --warn:#B91C1C;
+    --warn-vivid:#DC2626;
+    --warn-bg:rgba(220,38,38,.12);
+    --amber:#B45309;
+    --amber-vivid:#F59E0B;
+    --amber-bg:rgba(245,158,11,.16);
+    --heat-cool:#22B07A;
+    --heat-okay:#F59E0B;
+    --heat-rush:#DC2626;
+    --heat-nodata:#94A3B8;
+    --unknown:#64748B;
+    --unknown-bg:#E2E8F0;
     --line:rgba(30,37,48,.1);
     --radius:22px;
     --radius-sm:14px;
     --shadow:0 4px 24px rgba(32,42,69,.06), 0 1px 3px rgba(32,42,69,.04);
     --shadow-hover:0 8px 32px rgba(32,42,69,.1), 0 2px 6px rgba(32,42,69,.06);
+    --glass-blur:blur(14px);
   }
   *{ box-sizing:border-box; }
   body{
@@ -40,13 +48,75 @@
     line-height:1.5;
     padding:28px 18px 60px;
     min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+  }
+  body::before, body::after{
+    content:'';
+    position:fixed;
+    border-radius:50%;
+    pointer-events:none;
+    z-index:0;
+    filter:blur(60px);
+    opacity:.08;
+  }
+  body::before{
+    width:420px; height:420px;
+    background:radial-gradient(circle, var(--saffron) 0%, transparent 70%);
+    top:-80px; right:-60px;
+    animation:drift 22s ease-in-out infinite alternate;
+  }
+  body::after{
+    width:360px; height:360px;
+    background:radial-gradient(circle, var(--indigo) 0%, transparent 70%);
+    bottom:10%; left:-80px;
+    animation:drift 26s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes drift{
+    0%{ transform:translate(0,0) scale(1); }
+    100%{ transform:translate(30px,20px) scale(1.08); }
+  }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  @keyframes shimmer{
+    0%{ background-position:200% 0; }
+    100%{ background-position:-200% 0; }
+  }
+  @keyframes pulse-ring{
+    0%,100%{ box-shadow:0 0 0 0 rgba(245,158,11,.55); }
+    50%{ box-shadow:0 0 0 5px rgba(245,158,11,.12); }
+  }
+  @keyframes pulse-up-glow{
+    0%,100%{
+      box-shadow:var(--shadow), 0 0 0 0 rgba(34,180,110,.2), inset 0 1px 0 rgba(255,255,255,.8);
+      border-color:rgba(34,180,110,.3);
+    }
+    50%{
+      box-shadow:0 6px 28px rgba(34,180,110,.18), 0 0 24px rgba(34,180,110,.12), inset 0 1px 0 rgba(255,255,255,.9);
+      border-color:rgba(34,180,110,.55);
+    }
+  }
+  @keyframes pulse-dot-up{
+    0%,100%{ box-shadow:0 0 0 0 rgba(34,180,110,.55); transform:scale(1); }
+    50%{ box-shadow:0 0 0 7px rgba(34,180,110,0); transform:scale(1.12); }
+  }
+  @keyframes up-shimmer{
+    0%{ transform:translateX(-100%) rotate(25deg); opacity:0; }
+    40%{ opacity:.35; }
+    100%{ transform:translateX(200%) rotate(25deg); opacity:0; }
   }
   @media (prefers-reduced-motion: reduce){
     *, *::before, *::after{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
   }
-  .wrap{ max-width:1120px; margin:0 auto; }
+  .wrap{ max-width:1120px; margin:0 auto; position:relative; z-index:1; }
 
   header.top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
     padding-bottom:20px;
     margin-bottom:20px;
   }
@@ -64,10 +134,40 @@
     font-size:15px;
     max-width:52ch;
   }
+  .lang-toggle{
+    display:flex;
+    background:rgba(255,255,255,.45);
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+    border:1px solid rgba(255,255,255,.65);
+    border-radius:999px;
+    padding:3px;
+    flex-shrink:0;
+    box-shadow:var(--shadow);
+  }
+  .lang-toggle button{
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:12px;
+    font-weight:600;
+    padding:6px 12px;
+    border:none;
+    border-radius:999px;
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:background .2s, color .2s;
+  }
+  .lang-toggle button.active{
+    background:var(--indigo-dark);
+    color:#fff;
+  }
+  .lang-toggle button:hover:not(.active){ color:var(--indigo-dark); }
 
   .bento-card{
     background:var(--paper-raised);
-    border:1px solid var(--line);
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+    border:1px solid rgba(255,255,255,.6);
     border-radius:var(--radius);
     box-shadow:var(--shadow);
   }
@@ -76,7 +176,7 @@
     display:grid;
     grid-template-columns:repeat(4, 1fr);
     gap:12px;
-    margin-bottom:20px;
+    margin-bottom:14px;
   }
   @media (max-width:640px){
     .kpi-strip{ grid-template-columns:repeat(2, 1fr); }
@@ -108,6 +208,59 @@
     font-size:20px;
   }
 
+  .pulse-banner{
+    padding:18px 20px;
+    margin-bottom:20px;
+  }
+  .pulse-verdict{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:17px;
+    font-weight:600;
+    color:var(--indigo-dark);
+    margin:0 0 10px;
+  }
+  .pulse-meta{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .context-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    font-weight:600;
+    padding:5px 12px;
+    border-radius:999px;
+    background:rgba(45,58,92,.08);
+    color:var(--indigo);
+  }
+  .context-chip.good{ background:var(--ok-bg); color:var(--ok); border:1px solid rgba(34,180,110,.35); }
+  .context-chip.warn{ background:var(--warn-bg); color:var(--warn); border:1px solid rgba(220,38,38,.35); }
+  .context-chip.neutral{ background:var(--amber-bg); color:var(--amber); border:1px solid rgba(245,158,11,.4); }
+  .health-bar{
+    display:flex;
+    height:10px;
+    border-radius:999px;
+    overflow:hidden;
+    background:rgba(30,37,48,.06);
+    position:relative;
+  }
+  .health-bar::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+    background-size:200% 100%;
+    animation:shimmer 3s linear infinite;
+    pointer-events:none;
+  }
+  .health-seg{ height:100%; transition:width .6s ease; }
+  .health-seg.up{ background:linear-gradient(90deg, #22B07A, #34D399); }
+  .health-seg.down{ background:linear-gradient(90deg, #DC2626, #F87171); }
+
   .banner{
     padding:14px 18px;
     font-size:13px;
@@ -125,7 +278,7 @@
     flex-wrap:wrap;
     padding:22px 24px;
     margin-bottom:28px;
-    background:linear-gradient(135deg, #FFFFFF 0%, #FBF7EF 50%, #F5EDE0 100%);
+    background:linear-gradient(135deg, rgba(255,255,255,.75) 0%, rgba(251,247,239,.65) 50%, rgba(245,237,224,.6) 100%);
     border:1px solid rgba(219,154,52,.25);
     border-left:4px solid var(--saffron);
     position:relative;
@@ -228,6 +381,84 @@
     margin:0 0 16px;
   }
 
+  .when-panel{
+    padding:20px 22px;
+  }
+  .timeline-strip{
+    display:flex;
+    gap:3px;
+    margin:14px 0 8px;
+    height:36px;
+    border-radius:10px;
+    overflow:visible;
+    padding:2px;
+    background:rgba(30,37,48,.06);
+    border:1px solid rgba(30,37,48,.08);
+  }
+  .timeline-seg{
+    flex:1;
+    min-width:0;
+    position:relative;
+    transition:transform .2s;
+    border-radius:5px;
+    border:1px solid rgba(0,0,0,.06);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .timeline-seg.tier-cool{ background:var(--heat-cool); border-color:rgba(21,128,61,.35); }
+  .timeline-seg.tier-okay{ background:var(--heat-okay); border-color:rgba(180,83,9,.35); }
+  .timeline-seg.tier-rush{ background:var(--heat-rush); border-color:rgba(185,28,28,.35); }
+  .timeline-seg.tier-nodata{
+    background:repeating-linear-gradient(-45deg, #E2E8F0, #E2E8F0 3px, #CBD5E1 3px, #CBD5E1 6px);
+    border-color:#94A3B8;
+  }
+  .timeline-seg.current{
+    outline:2px solid var(--amber-vivid);
+    outline-offset:2px;
+    z-index:1;
+    animation:pulse-ring 2s ease-in-out infinite;
+    transform:scaleY(1.08);
+  }
+  .timeline-labels{
+    display:flex;
+    justify-content:space-between;
+    font-size:10px;
+    color:var(--ink-soft);
+    margin-bottom:16px;
+    padding:0 2px;
+  }
+  .insight-lists{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  @media (max-width:640px){
+    .insight-lists{ grid-template-columns:1fr; }
+  }
+  .insight-list h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--indigo-dark);
+    margin:0 0 10px;
+  }
+  .insight-list.try h3{ color:var(--ok-vivid); }
+  .insight-list.avoid h3{ color:var(--warn-vivid); }
+  .insight-row.try-row{ background:rgba(34,180,110,.1); border:1px solid rgba(34,180,110,.25); }
+  .insight-row.avoid-row{ background:rgba(220,38,38,.08); border:1px solid rgba(220,38,38,.22); }
+  .insight-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:8px;
+    padding:8px 10px;
+    border-radius:var(--radius-sm);
+    background:rgba(255,255,255,.4);
+    margin-bottom:6px;
+    font-size:13px;
+  }
+  .insight-row .portal{ font-weight:600; color:var(--indigo-dark); }
+  .insight-row .reason{ font-size:11.5px; color:var(--ink-soft); text-align:right; flex-shrink:0; max-width:55%; }
+
   .cat-block{
     margin-bottom:20px;
   }
@@ -247,7 +478,7 @@
   }
   .grid-cards{
     display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
     gap:12px;
   }
   .pcard{
@@ -256,18 +487,76 @@
     color:inherit;
     display:block;
     transition:box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+    animation:fadeUp .4s ease both;
   }
   .pcard:hover{
     box-shadow:var(--shadow-hover);
     transform:translateY(-2px);
     border-color:rgba(45,58,92,.15);
   }
-  .pcard-top{
+  .pcard.is-up{
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(145deg, rgba(255,255,255,.72) 0%, rgba(220,252,231,.55) 100%);
+    border:1px solid rgba(34,180,110,.35);
+    border-left:4px solid var(--ok-vivid);
+    animation:fadeUp .4s ease both, pulse-up-glow 3.2s ease-in-out infinite;
+  }
+  .pcard.is-up::before{
+    content:'';
+    position:absolute;
+    top:-60%;
+    right:-25%;
+    width:120px;
+    height:120px;
+    background:radial-gradient(circle, rgba(34,180,110,.22) 0%, transparent 68%);
+    pointer-events:none;
+    animation:drift 5s ease-in-out infinite alternate;
+  }
+  .pcard.is-up::after{
+    content:'';
+    position:absolute;
+    top:0; left:-40%;
+    width:40%;
+    height:100%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+    pointer-events:none;
+    animation:up-shimmer 4.5s ease-in-out infinite;
+  }
+  .pcard.is-down{
+    border-left:4px solid var(--warn-vivid);
+    background:linear-gradient(145deg, rgba(255,255,255,.65) 0%, rgba(254,226,226,.35) 100%);
+    border-color:rgba(220,38,38,.25);
+  }
+  .pcard.is-unknown{ border-left:4px solid var(--unknown); }
+  .pcard-header{
     display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:8px;
-    margin-bottom:12px;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+    position:relative;
+    z-index:1;
+  }
+  .status-dot{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    flex-shrink:0;
+  }
+  .status-dot.up{
+    background:var(--ok-vivid);
+    animation:pulse-dot-up 2.5s ease-in-out infinite;
+    box-shadow:0 0 10px rgba(34,180,110,.5);
+  }
+  .status-dot.down{
+    background:var(--warn-vivid);
+    animation:pulse-down 2s ease-in-out infinite;
+    box-shadow:0 0 10px rgba(220,38,38,.4);
+  }
+  .status-dot.unknown{ background:var(--unknown); }
+  @keyframes pulse-down{
+    0%, 100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:.65; transform:scale(.92); }
   }
   .pcard .name{
     font-weight:600;
@@ -275,47 +564,70 @@
     color:var(--indigo-dark);
     line-height:1.3;
   }
-  .status-pill{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:10px;
+  .pcard-status-label{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;
     font-weight:600;
-    letter-spacing:.04em;
-    padding:3px 8px;
-    border-radius:999px;
-    flex-shrink:0;
+    margin-bottom:10px;
+    position:relative;
+    z-index:1;
   }
-  .status-pill.up{ background:var(--ok-bg); color:var(--ok); }
-  .status-pill.down{
-    background:var(--warn-bg);
-    color:var(--warn);
-    animation:pulse-down 2s ease-in-out infinite;
+  .pcard-status-label.up{ color:var(--ok); font-weight:700; }
+  .pcard-status-label.down{ color:var(--warn); font-weight:700; }
+  .pcard-status-label.unknown{ color:var(--unknown); }
+  .speed-meter{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+    position:relative;
+    z-index:1;
   }
-  .status-pill.unknown{ background:var(--unknown-bg); color:var(--unknown); }
-  @keyframes pulse-down{
-    0%, 100%{ opacity:1; }
-    50%{ opacity:.7; }
+  .speed-bars{
+    display:flex;
+    gap:3px;
+    align-items:flex-end;
+    height:16px;
   }
-  .pcard-latency{
+  .speed-bar{
+    width:6px;
+    border-radius:2px;
+    background:rgba(30,37,48,.1);
+    transition:background .2s;
+  }
+  .speed-bar.filled{ background:var(--ok-vivid); box-shadow:0 0 4px rgba(34,180,110,.4); }
+  .speed-bar.filled.warn{ background:var(--amber-vivid); box-shadow:0 0 4px rgba(245,158,11,.35); }
+  .speed-bar.filled.crit{ background:var(--warn-vivid); box-shadow:0 0 4px rgba(220,38,38,.35); }
+  .speed-bar:nth-child(1){ height:6px; }
+  .speed-bar:nth-child(2){ height:9px; }
+  .speed-bar:nth-child(3){ height:12px; }
+  .speed-bar:nth-child(4){ height:14px; }
+  .speed-bar:nth-child(5){ height:16px; }
+  .speed-label{
+    font-size:11px;
+    font-weight:500;
+    color:var(--ink-soft);
+  }
+  .pcard-meta{
     font-family:'IBM Plex Mono',monospace;
-    font-size:22px;
-    font-weight:600;
-    color:var(--ink);
-    line-height:1;
-    margin-bottom:4px;
-  }
-  .pcard-latency.slow{ color:var(--amber); }
-  .pcard-latency.critical{ color:var(--warn); }
-  .pcard-latency-label{
     font-size:11px;
     color:var(--ink-soft);
-    margin-bottom:10px;
+    margin-bottom:8px;
+    position:relative;
+    z-index:1;
   }
-  .pcard-footer{
+  .pcard-best{
     font-size:11.5px;
-    color:var(--ink-soft);
-    padding-top:10px;
+    color:var(--indigo);
+    padding-top:8px;
     border-top:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    gap:5px;
+    position:relative;
+    z-index:1;
   }
+  .pcard-best svg{ flex-shrink:0; opacity:.7; }
 
   .heatmap-shell{
     padding:18px;
@@ -340,39 +652,86 @@
     font-weight:500;
     color:var(--ink-soft);
     padding-bottom:6px;
+    line-height:1.2;
+  }
+  table.heatmap th.hour-label.current-hour{
+    color:var(--amber-vivid);
+    font-weight:700;
+  }
+  table.heatmap td.current-hour-col .cell{
+    outline:2px solid var(--amber-vivid);
+    outline-offset:1px;
   }
   .cell{
-    width:22px;
-    height:20px;
-    border-radius:4px;
+    width:24px;
+    height:22px;
+    border-radius:5px;
     margin:1.5px;
     display:inline-block;
+    border:1px solid rgba(0,0,0,.1);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.06);
   }
-  .heat-legend{
+  .cell-nodata{
+    background:repeating-linear-gradient(-45deg, #E2E8F0, #E2E8F0 2px, #CBD5E1 2px, #CBD5E1 4px) !important;
+    border:1px solid #94A3B8 !important;
+    opacity:1 !important;
+    box-shadow:none;
+  }
+  .heat-legend, .timeline-legend{
     display:flex;
     flex-wrap:wrap;
     align-items:center;
-    gap:8px;
+    gap:10px;
     margin-top:16px;
     padding-top:14px;
     border-top:1px solid var(--line);
   }
+  .timeline-legend{ margin-top:0; padding-top:0; border-top:none; margin-bottom:18px; }
   .legend-pill{
     display:inline-flex;
     align-items:center;
-    gap:6px;
-    font-size:11.5px;
-    color:var(--ink-soft);
-    background:rgba(30,37,48,.04);
-    padding:4px 10px;
+    gap:7px;
+    font-size:12px;
+    font-weight:600;
+    padding:6px 12px;
     border-radius:999px;
+    border:1px solid transparent;
+  }
+  .legend-pill.tier-cool{
+    color:#15803D;
+    background:rgba(34,180,110,.16);
+    border-color:rgba(34,180,110,.4);
+  }
+  .legend-pill.tier-okay{
+    color:#B45309;
+    background:rgba(245,158,11,.18);
+    border-color:rgba(245,158,11,.45);
+  }
+  .legend-pill.tier-rush{
+    color:#B91C1C;
+    background:rgba(220,38,38,.14);
+    border-color:rgba(220,38,38,.4);
+  }
+  .legend-pill.tier-nodata{
+    color:#475569;
+    background:rgba(148,163,184,.2);
+    border-color:#94A3B8;
   }
   .legend-swatch{
-    width:12px;
-    height:12px;
-    border-radius:3px;
+    width:14px;
+    height:14px;
+    border-radius:4px;
     display:inline-block;
     flex-shrink:0;
+    border:1px solid rgba(0,0,0,.12);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.35);
+  }
+  .legend-swatch.tier-cool{ background:var(--heat-cool); border-color:rgba(21,128,61,.4); }
+  .legend-swatch.tier-okay{ background:var(--heat-okay); border-color:rgba(180,83,9,.4); }
+  .legend-swatch.tier-rush{ background:var(--heat-rush); border-color:rgba(185,28,28,.4); }
+  .legend-swatch.tier-nodata{
+    background:repeating-linear-gradient(-45deg, #E2E8F0, #E2E8F0 2px, #CBD5E1 2px, #CBD5E1 4px);
+    border-color:#94A3B8;
   }
 
   .empty-state{
@@ -382,7 +741,7 @@
     text-align:center;
     border:1px dashed rgba(30,37,48,.15);
     border-radius:var(--radius-sm);
-    background:rgba(255,255,255,.5);
+    background:rgba(255,255,255,.35);
   }
 
   footer{
@@ -402,83 +761,213 @@
   <header class="top">
     <div class="brand">
       <h1>Ping</h1>
-      <p>Live status and historical peak-hour patterns for India's exam &amp; recruitment portals.</p>
+      <p id="brandSub" data-i18n="brandSub">Live status and historical peak-hour patterns for India's exam &amp; recruitment portals.</p>
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" data-lang="en" class="active">EN</button>
+      <button type="button" data-lang="hi">हिं</button>
     </div>
   </header>
 
   <div class="kpi-strip" id="kpiStrip">
-    <div class="bento-card kpi-card"><div class="kpi-label">Up</div><div class="kpi-value ok" id="kpiUp">—</div></div>
-    <div class="bento-card kpi-card"><div class="kpi-label">Down</div><div class="kpi-value warn" id="kpiDown">—</div></div>
-    <div class="bento-card kpi-card"><div class="kpi-label">Avg latency</div><div class="kpi-value mono" id="kpiLatency">—</div></div>
-    <div class="bento-card kpi-card"><div class="kpi-label">Last check</div><div class="kpi-value mono" id="kpiLastCheck" style="font-size:16px;">Loading…</div></div>
+    <div class="bento-card kpi-card"><div class="kpi-label" data-i18n="kpiUp">Up</div><div class="kpi-value ok" id="kpiUp">—</div></div>
+    <div class="bento-card kpi-card"><div class="kpi-label" data-i18n="kpiDown">Down</div><div class="kpi-value warn" id="kpiDown">—</div></div>
+    <div class="bento-card kpi-card"><div class="kpi-label" data-i18n="kpiLatency">Avg speed</div><div class="kpi-value mono" id="kpiLatency">—</div></div>
+    <div class="bento-card kpi-card"><div class="kpi-label" data-i18n="kpiLastCheck">Last check</div><div class="kpi-value mono" id="kpiLastCheck" style="font-size:16px;">Loading…</div></div>
+  </div>
+
+  <div class="pulse-banner bento-card" id="pulseBanner">
+    <p class="pulse-verdict" id="pulseVerdict">Loading…</p>
+    <div class="pulse-meta"><span class="context-chip neutral" id="contextChip">—</span></div>
+    <div class="health-bar" id="healthBar"><div class="health-seg up" style="width:50%"></div><div class="health-seg down" style="width:50%"></div></div>
   </div>
 
   <div class="banner bento-card">
-    <b>Independent, unofficial project.</b> Not affiliated with UPSC, SSC, NTA, IBPS, Railways, or any government body. Checks run every ~15 minutes against each portal's public homepage only — read‑only, no login, no form data touched.
+    <span data-i18n-html="disclaimer"><b>Independent, unofficial project.</b> Not affiliated with UPSC, SSC, NTA, IBPS, Railways, or any government body. Checks run every ~15 minutes against each portal's public homepage only — read‑only, no login, no form data touched.</span>
   </div>
 
   <div class="snapix-hero bento-card" id="snapixHero">
     <div class="snapix-content">
-      <span class="snapix-badge">Recommended for applicants</span>
-      <h3>Resize photo, signature &amp; PDF to exam portal specs — in seconds.</h3>
-      <p>Meet KB limits, pixel dimensions, and aspect ratios for SSC, UPSC, IBPS, and state PSC uploads without last-minute rejections.</p>
+      <span class="snapix-badge" data-i18n="snapixBadge">Recommended for applicants</span>
+      <h3 data-i18n="snapixTitle">Resize photo, signature &amp; PDF to exam portal specs — in seconds.</h3>
+      <p data-i18n="snapixDesc">Meet KB limits, pixel dimensions, and aspect ratios for SSC, UPSC, IBPS, and state PSC uploads without last-minute rejections.</p>
       <div class="snapix-icons">
         <span class="snapix-icon">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          Photo
+          <span data-i18n="snapixPhoto">Photo</span>
         </span>
         <span class="snapix-icon">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-          Signature
+          <span data-i18n="snapixSig">Signature</span>
         </span>
         <span class="snapix-icon">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          PDF
+          <span data-i18n="snapixPdf">PDF</span>
         </span>
       </div>
     </div>
     <a class="snapix-cta" href="https://snapix.surge.sh" target="_blank" rel="noopener noreferrer">
-      Try Snapix free
+      <span data-i18n="snapixCta">Try Snapix free</span>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
     </a>
   </div>
 
   <section id="liveSection">
-    <h2>Live status</h2>
-    <p class="section-sub">Most recent check per portal. Updates every ~15 minutes.</p>
+    <h2 data-i18n="liveTitle">Live status</h2>
+    <p class="section-sub" data-i18n="liveSub">Most recent check per portal. Updates every ~15 minutes.</p>
     <div id="liveContainer"><div class="empty-state">Loading latest status…</div></div>
   </section>
 
+  <section id="whenSection">
+    <h2 data-i18n="whenTitle">When to apply</h2>
+    <p class="section-sub" data-i18n="whenSub">Best and worst hours to fill forms, based on historical checks (IST).</p>
+    <div id="whenContainer"><div class="empty-state">Loading insights…</div></div>
+  </section>
+
   <section id="heatSection">
-    <h2>Peak‑hour heatmap (IST)</h2>
-    <p class="section-sub">Average latency &amp; downtime by hour of day, based on this and last month's checks. Darker red = slower or down more often at that hour.</p>
+    <h2 data-i18n="heatTitle">Peak-hour heatmap (IST)</h2>
+    <p class="section-sub" data-i18n="heatSub">When portals tend to slow down. Darker red = slower or down more often at that hour.</p>
     <div id="heatContainer"><div class="empty-state">Building heatmap from historical data…</div></div>
   </section>
 
   <footer>
-    ©2026 Nk | Fill your exam forms with confidence. No more last-minute chaos.
+    <span data-i18n="footer">©2026 Nk | Fill your exam forms with confidence. No more last-minute chaos.</span>
   </footer>
 </div>
 
 <script>
-const CATEGORY_LABELS = { central: "Central", banking: "Banking", state: "State PSC" };
+const STRINGS = {
+  en: {
+    brandSub: "Live status and historical peak-hour patterns for India's exam & recruitment portals.",
+    kpiUp: "Up", kpiDown: "Down", kpiLatency: "Avg speed", kpiLastCheck: "Last check",
+    disclaimer: "<b>Independent, unofficial project.</b> Not affiliated with UPSC, SSC, NTA, IBPS, Railways, or any government body. Checks run every ~15 minutes against each portal's public homepage only — read‑only, no login, no form data touched.",
+    snapixBadge: "Recommended for applicants",
+    snapixTitle: "Resize photo, signature & PDF to exam portal specs — in seconds.",
+    snapixDesc: "Meet KB limits, pixel dimensions, and aspect ratios for SSC, UPSC, IBPS, and state PSC uploads without last-minute rejections.",
+    snapixPhoto: "Photo", snapixSig: "Signature", snapixPdf: "PDF", snapixCta: "Try Snapix free",
+    liveTitle: "Live status", liveSub: "Most recent check per portal. Updates every ~15 minutes.",
+    whenTitle: "When to apply", whenSub: "Best and worst hours to fill forms, based on historical checks (IST).",
+    heatTitle: "Peak-hour heatmap (IST)", heatSub: "When portals tend to slow down. Darker red = slower or down more often at that hour.",
+    footer: "©2026 Nk | Fill your exam forms with confidence. No more last-minute chaos.",
+    cat_central: "Central", cat_banking: "Banking", cat_state: "State PSC",
+    status_up: "Working fine", status_down: "Slow or down", status_unknown: "No data yet",
+    speed_fast: "Fast", speed_ok: "Okay", speed_slow: "Slow", speed_critical: "Very slow", speed_down: "Unreachable",
+    checked: "checked", best_time: "Best time", building_data: "Building data…",
+    rush_hour: "Rush hour — expect slowness", good_window: "Good window to apply", cool_hours: "Cool hours",
+    verdict: (up, down) => `${up} portals working · ${down} struggling right now`,
+    no_data_yet: "No data yet", loading: "Loading…",
+    try_now: "Try now", avoid_now: "Avoid for now",
+    reason_down: "Down now", reason_up: "Working now", reason_slow_hour: (h) => `Usually slow around ${h}`,
+    reason_good_hour: (h) => `Usually fast around ${h}`,
+    patterns_empty: "Patterns appear after a few days of checks — keep checking back.",
+    heat_empty: "Not enough historical data yet — the heatmap fills in over the first few days as the scheduled check runs.",
+    live_empty: "config/portals.json not found or empty.",
+    heat_fast: "Usually fast", heat_slower: "Often slow", heat_down: "Often down", heat_nodata: "No data",
+    legend_fast: "fast & up", legend_slower: "slower", legend_down: "slow / down", legend_nodata: "no data",
+    timeline_6am: "6 AM", timeline_12pm: "12 PM", timeline_6pm: "6 PM", timeline_12am: "12 AM",
+    legend_cool: "Cool hours", legend_okay: "Okay", legend_rush: "Rush hours",
+    time_just_now: "just now", time_never: "never", time_no_data: "no data yet",
+    open_portal: (name) => `Open ${name}`
+  },
+  hi: {
+    brandSub: "India ke exam & recruitment portals ka live status aur peak-hour pattern.",
+    kpiUp: "ठीक", kpiDown: "Down", kpiLatency: "औसत speed", kpiLastCheck: "Last check",
+    disclaimer: "<b>Independent, unofficial project.</b> UPSC, SSC, NTA, IBPS, Railways ya kisi sarkari body se linked nahi. Har ~15 minute mein sirf public homepage check hoti hai — read‑only, koi login ya form data nahi.",
+    snapixBadge: "Applicants ke liye recommended",
+    snapixTitle: "Photo, signature & PDF ko exam portal specs ke hisaab se resize karo — seconds mein.",
+    snapixDesc: "SSC, UPSC, IBPS aur state PSC uploads ke liye KB limits, pixel size aur aspect ratio match karo — last-minute rejection se bacho.",
+    snapixPhoto: "Photo", snapixSig: "Signature", snapixPdf: "PDF", snapixCta: "Snapix free try karo",
+    liveTitle: "Live status", liveSub: "Har portal ka latest check. Har ~15 minute update.",
+    whenTitle: "Kab apply karein", whenSub: "Form bharnе ke best aur worst hours, historical checks ke basis par (IST).",
+    heatTitle: "Peak-hour heatmap (IST)", heatSub: "Portals kab slow hote hain. Dark red = us hour mein zyada slow ya down.",
+    footer: "©2026 Nk | Exam forms bharo confidently. Last-minute chaos nahi.",
+    cat_central: "Central", cat_banking: "Banking", cat_state: "State PSC",
+    status_up: "ठीक चल रहा है", status_down: "धीमा या बंद", status_unknown: "Abhi data nahi",
+    speed_fast: "Fast", speed_ok: "Theek", speed_slow: "Slow", speed_critical: "Bahut slow", speed_down: "Reach nahi ho raha",
+    checked: "checked", best_time: "Form bharnе ka best time", building_data: "Data build ho raha hai…",
+    rush_hour: "भीड़ का time — slow ho sakta hai", good_window: "Apply karne ka achha time", cool_hours: "शांत hours",
+    verdict: (up, down) => `${up} portals ठीक · ${down} abhi slow/down`,
+    no_data_yet: "Abhi data nahi", loading: "Loading…",
+    try_now: "Abhi try karo", avoid_now: "Abhi avoid karo",
+    reason_down: "Abhi down hai", reason_up: "Abhi chal raha hai", reason_slow_hour: (h) => `${h} ke aas-paas usually slow`,
+    reason_good_hour: (h) => `${h} ke aas-paas usually fast`,
+    patterns_empty: "Patterns kuch din checks ke baad dikhenge — wapas check karte raho.",
+    heat_empty: "Abhi historical data kam hai — heatmap kuch din mein bharega.",
+    live_empty: "config/portals.json nahi mila ya khali hai.",
+    heat_fast: "Usually fast", heat_slower: "Aksar slow", heat_down: "Aksar down", heat_nodata: "No data",
+    legend_fast: "fast & up", legend_slower: "slow", legend_down: "slow / down", legend_nodata: "no data",
+    timeline_6am: "6 AM", timeline_12pm: "12 PM", timeline_6pm: "6 PM", timeline_12am: "12 AM",
+    legend_cool: "Cool hours", legend_okay: "Theek", legend_rush: "Rush hours",
+    time_just_now: "abhi", time_never: "kabhi nahi", time_no_data: "abhi data nahi",
+    open_portal: (name) => `${name} kholo`
+  }
+};
+
+let currentLang = localStorage.getItem("ping-lang") || "en";
+let appState = { portals: [], latest: {}, allRows: [], agg: null, globalHours: null };
+
+function t(key, ...args){
+  const s = STRINGS[currentLang][key];
+  if(typeof s === "function") return s(...args);
+  return s ?? STRINGS.en[key] ?? key;
+}
+
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem("ping-lang", lang);
+  document.documentElement.lang = lang === "hi" ? "hi" : "en";
+  document.querySelectorAll(".lang-toggle button").forEach(btn=>{
+    btn.classList.toggle("active", btn.dataset.lang === lang);
+  });
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-html]").forEach(el=>{
+    el.innerHTML = t(el.dataset.i18nHtml);
+  });
+  if(appState.portals.length) renderAll();
+}
+
+document.querySelectorAll(".lang-toggle button").forEach(btn=>{
+  btn.addEventListener("click", ()=> setLang(btn.dataset.lang));
+});
 
 function timeAgo(isoString){
-  if(!isoString) return "never";
+  if(!isoString) return t("time_never");
   const diffMs = Date.now() - new Date(isoString).getTime();
   const mins = Math.round(diffMs/60000);
-  if(mins < 1) return "just now";
+  if(mins < 1) return t("time_just_now");
   if(mins < 60) return mins + "m ago";
   const hrs = Math.round(mins/60);
   if(hrs < 24) return hrs + "h ago";
   return Math.round(hrs/24) + "d ago";
 }
 
+function currentISTHour(){
+  const now = new Date();
+  const utcMinutes = now.getUTCHours()*60 + now.getUTCMinutes();
+  return Math.floor(((utcMinutes + 330) % 1440) / 60);
+}
+
 function toISTHour(utcIsoString){
   const d = new Date(utcIsoString.endsWith("Z") ? utcIsoString : utcIsoString + "Z");
   const utcMinutes = d.getUTCHours()*60 + d.getUTCMinutes();
-  const istMinutes = (utcMinutes + 330) % 1440;
-  return Math.floor(istMinutes/60);
+  return Math.floor(((utcMinutes + 330) % 1440) / 60);
+}
+
+function formatHour(h, lang){
+  const ampm = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 || 12;
+  return `${h12} ${ampm}`;
+}
+
+function formatHourRange(hours){
+  if(!hours || hours.length === 0) return "";
+  const sorted = [...hours].sort((a,b)=>a-b);
+  const start = sorted[0];
+  const end = sorted[sorted.length - 1];
+  if(start === end) return `${formatHour(start)} IST`;
+  return `${formatHour(start)}–${formatHour(end)} IST`;
 }
 
 async function loadJSON(path){
@@ -513,18 +1002,88 @@ function monthKey(date){
   return date.getUTCFullYear() + "-" + String(date.getUTCMonth()+1).padStart(2,"0");
 }
 
+const HEAT_RGB = {
+  cool: [34, 176, 122],
+  okay: [245, 158, 11],
+  rush: [220, 38, 38],
+  nodata: [148, 163, 184]
+};
+
 function heatColor(score){
   score = Math.max(0, Math.min(1, score));
   const stops = [
-    {p:0.0, c:[228,241,233]},
-    {p:0.5, c:[243,221,178]},
-    {p:1.0, c:[193,68,60]}
+    {p:0.0, c:HEAT_RGB.cool},
+    {p:0.5, c:HEAT_RGB.okay},
+    {p:1.0, c:HEAT_RGB.rush}
   ];
   let a=stops[0], b=stops[1];
   if(score > 0.5){ a=stops[1]; b=stops[2]; }
-  const t = a.p===b.p ? 0 : (score-a.p)/(b.p-a.p);
-  const c = a.c.map((v,i)=> Math.round(v + (b.c[i]-v)*t));
+  const tVal = a.p===b.p ? 0 : (score-a.p)/(b.p-a.p);
+  const c = a.c.map((v,i)=> Math.round(v + (b.c[i]-v)*tVal));
   return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+
+function heatTier(score){
+  if(score === null || score === undefined) return "nodata";
+  if(score <= 0.35) return "cool";
+  if(score <= 0.65) return "okay";
+  return "rush";
+}
+
+function legendPill(tier, label){
+  return `<span class="legend-pill tier-${tier}"><span class="legend-swatch tier-${tier}"></span>${label}</span>`;
+}
+
+function bucketScore(b){
+  const downRate = b.downCount / b.count;
+  const avgLatency = b.latencySum / b.count;
+  return Math.min(1, downRate*1.0 + Math.min(avgLatency/8000, 1)*0.6);
+}
+
+function buildAggregation(allRows){
+  const agg = {};
+  allRows.forEach(row=>{
+    if(!row.timestamp_utc || !row.portal_id) return;
+    const hour = toISTHour(row.timestamp_utc);
+    agg[row.portal_id] ||= Array.from({length:24}, ()=>({count:0, downCount:0, latencySum:0}));
+    const bucket = agg[row.portal_id][hour];
+    bucket.count += 1;
+    const up = row.up === "1" || row.up === "True" || row.up === "true";
+    if(!up) bucket.downCount += 1;
+    bucket.latencySum += parseFloat(row.latency_ms) || 0;
+  });
+  return agg;
+}
+
+function buildGlobalHours(agg, portalIds){
+  const global = Array.from({length:24}, ()=>({count:0, scoreSum:0}));
+  portalIds.forEach(pid=>{
+    const row = agg[pid];
+    if(!row) return;
+    row.forEach((b,h)=>{
+      if(b.count === 0) return;
+      global[h].count += b.count;
+      global[h].scoreSum += bucketScore(b) * b.count;
+    });
+  });
+  return global.map(g=> g.count > 0 ? g.scoreSum / g.count : null);
+}
+
+function computePortalHours(portalId, agg, minSamples){
+  minSamples = minSamples || 2;
+  const row = agg[portalId];
+  if(!row) return { bestHours: [], worstHours: [] };
+  const scored = row.map((b,h)=> ({ h, score: b.count >= minSamples ? bucketScore(b) : null, count: b.count }))
+    .filter(x=> x.score !== null);
+  if(scored.length === 0) return { bestHours: [], worstHours: [] };
+  scored.sort((a,b)=> a.score - b.score);
+  const bestHours = scored.slice(0, 3).map(x=> x.h);
+  const worstHours = scored.slice(-3).map(x=> x.h);
+  return { bestHours, worstHours };
+}
+
+function hasEnoughHistory(allRows){
+  return allRows.length >= 10;
 }
 
 function computeSummary(portals, latest){
@@ -542,93 +1101,220 @@ function computeSummary(portals, latest){
       mostRecent = rec.timestamp_utc;
     }
   });
-  return {
-    upCount,
-    downCount,
-    avgLatency: latencyCount > 0 ? Math.round(latencySum / latencyCount) : null,
-    mostRecent
-  };
+  return { upCount, downCount, avgLatency: latencyCount > 0 ? Math.round(latencySum / latencyCount) : null, mostRecent };
+}
+
+function friendlyStatus(rec){
+  if(!rec) return { cls: "unknown", label: t("status_unknown") };
+  if(rec.up) return { cls: "up", label: t("status_up") };
+  return { cls: "down", label: t("status_down") };
+}
+
+function speedBars(latency_ms, up){
+  if(!up) return { filled: 0, label: t("speed_down"), tier: "crit" };
+  let filled = 1;
+  if(latency_ms < 1000) filled = 5;
+  else if(latency_ms < 2000) filled = 4;
+  else if(latency_ms < 3000) filled = 3;
+  else if(latency_ms < 5000) filled = 2;
+  let label = t("speed_slow");
+  let tier = "warn";
+  if(filled >= 4){ label = filled === 5 ? t("speed_fast") : t("speed_ok"); tier = "ok"; }
+  if(filled <= 1){ label = t("speed_critical"); tier = "crit"; }
+  return { filled, label, tier };
+}
+
+function heatTierLabel(score){
+  if(score <= 0.35) return t("heat_fast");
+  if(score <= 0.65) return t("heat_slower");
+  return t("heat_down");
 }
 
 function renderKPIs(summary){
   document.getElementById("kpiUp").textContent = summary.mostRecent ? summary.upCount : "0";
   document.getElementById("kpiDown").textContent = summary.mostRecent ? summary.downCount : "0";
-  document.getElementById("kpiLatency").textContent = summary.avgLatency != null
-    ? summary.avgLatency + " ms"
-    : "—";
-  document.getElementById("kpiLastCheck").textContent = summary.mostRecent
-    ? timeAgo(summary.mostRecent)
-    : "No data yet";
+  document.getElementById("kpiLatency").textContent = summary.avgLatency != null ? summary.avgLatency + " ms" : "—";
+  document.getElementById("kpiLastCheck").textContent = summary.mostRecent ? timeAgo(summary.mostRecent) : t("no_data_yet");
 }
 
-function statusPill(rec){
-  if(!rec) return { cls: "unknown", label: "UNKNOWN" };
-  if(rec.up) return { cls: "up", label: "UP" };
-  return { cls: "down", label: "DOWN" };
+function renderPulseBanner(summary, globalHours){
+  const total = summary.upCount + summary.downCount;
+  const verdictEl = document.getElementById("pulseVerdict");
+  const chipEl = document.getElementById("contextChip");
+  const healthBar = document.getElementById("healthBar");
+
+  if(!summary.mostRecent || total === 0){
+    verdictEl.textContent = t("no_data_yet");
+    chipEl.textContent = t("building_data");
+    chipEl.className = "context-chip neutral";
+    healthBar.innerHTML = '<div class="health-seg up" style="width:50%"></div><div class="health-seg down" style="width:50%"></div>';
+    return;
+  }
+
+  verdictEl.textContent = t("verdict", summary.upCount, summary.downCount);
+  const upPct = Math.round((summary.upCount / total) * 100);
+  const downPct = 100 - upPct;
+  healthBar.innerHTML = `<div class="health-seg up" style="width:${upPct}%"></div><div class="health-seg down" style="width:${downPct}%"></div>`;
+
+  const istHour = currentISTHour();
+  let chipText = t("building_data");
+  let chipCls = "neutral";
+  if(globalHours && hasEnoughHistory(appState.allRows)){
+    const validScores = globalHours.filter(s=> s !== null);
+    if(validScores.length > 0){
+      const avgScore = validScores.reduce((a,b)=>a+b,0) / validScores.length;
+      const curScore = globalHours[istHour];
+      if(curScore !== null){
+        if(curScore > avgScore + 0.15){ chipText = t("rush_hour"); chipCls = "warn"; }
+        else if(curScore < avgScore - 0.1){ chipText = t("good_window"); chipCls = "good"; }
+        else { chipText = t("cool_hours"); chipCls = "good"; }
+      }
+    }
+  }
+  chipEl.textContent = chipText;
+  chipEl.className = "context-chip " + chipCls;
 }
 
-function latencyClass(rec){
-  if(!rec || !rec.up) return "";
-  if(rec.latency_ms > 5000) return "critical";
-  if(rec.latency_ms > 3000) return "slow";
-  return "";
-}
-
-function renderLiveGrid(portals, latest){
+function renderLiveGrid(portals, latest, agg){
   const liveContainer = document.getElementById("liveContainer");
   if(portals.length === 0){
-    liveContainer.innerHTML = '<div class="empty-state bento-card">config/portals.json not found or empty.</div>';
+    liveContainer.innerHTML = `<div class="empty-state bento-card">${t("live_empty")}</div>`;
     return;
   }
   const byCategory = {};
   portals.forEach(p => { (byCategory[p.category] ||= []).push(p); });
+  let cardIdx = 0;
   let html = "";
   Object.keys(byCategory).forEach(cat=>{
-    html += `<div class="cat-block"><span class="cat-label">${CATEGORY_LABELS[cat] || cat}</span><div class="grid-cards">`;
-    byCategory[cat].forEach(p=>{
+    const sorted = [...byCategory[cat]].sort((a,b)=>{
+      const aUp = latest[a.id]?.up ? 1 : 0;
+      const bUp = latest[b.id]?.up ? 1 : 0;
+      return aUp - bUp;
+    });
+    html += `<div class="cat-block"><span class="cat-label">${t("cat_" + cat) || cat}</span><div class="grid-cards">`;
+    sorted.forEach(p=>{
       const rec = latest[p.id];
-      const pill = statusPill(rec);
-      const latCls = latencyClass(rec);
+      const status = friendlyStatus(rec);
+      const speed = rec ? speedBars(rec.latency_ms, rec.up) : { filled: 0, label: t("speed_down"), tier: "crit" };
       const latencyTxt = rec ? rec.latency_ms + " ms" : "—";
-      const lastTxt = rec ? timeAgo(rec.timestamp_utc) : "no data yet";
-      const title = rec && !rec.up ? `HTTP ${rec.status_code}` : "";
+      const lastTxt = rec ? timeAgo(rec.timestamp_utc) : t("time_no_data");
+      const { bestHours } = agg ? computePortalHours(p.id, agg) : { bestHours: [] };
+      const bestTxt = bestHours.length > 0 ? `${t("best_time")}: ${formatHourRange(bestHours)}` : "";
+
+      let barsHtml = "";
+      for(let i = 1; i <= 5; i++){
+        const filled = i <= speed.filled;
+        const cls = filled ? (speed.tier === "ok" ? "filled" : speed.tier === "warn" ? "filled warn" : "filled crit") : "";
+        barsHtml += `<span class="speed-bar ${cls}"></span>`;
+      }
+
       html += `
-        <a class="pcard bento-card" href="${p.url}" target="_blank" rel="noopener noreferrer" title="Open ${p.name}">
-          <div class="pcard-top">
+        <a class="pcard bento-card is-${status.cls}" href="${p.url}" target="_blank" rel="noopener noreferrer" title="${t("open_portal", p.name)}" style="animation-delay:${cardIdx * 40}ms">
+          <div class="pcard-header">
+            <span class="status-dot ${status.cls}"></span>
             <div class="name">${p.name}</div>
-            <span class="status-pill ${pill.cls}" title="${title}">${pill.label}</span>
           </div>
-          <div class="pcard-latency ${latCls}">${latencyTxt}</div>
-          <div class="pcard-latency-label">response time</div>
-          <div class="pcard-footer">checked ${lastTxt}</div>
+          <div class="pcard-status-label ${status.cls}">${status.label}</div>
+          <div class="speed-meter">
+            <div class="speed-bars">${barsHtml}</div>
+            <span class="speed-label">${speed.label}</span>
+          </div>
+          <div class="pcard-meta">${latencyTxt} · ${t("checked")} ${lastTxt}</div>
+          ${bestTxt ? `<div class="pcard-best"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${bestTxt}</div>` : ""}
         </a>`;
+      cardIdx++;
     });
     html += `</div></div>`;
   });
   liveContainer.innerHTML = html;
 }
 
-function renderHeatmap(portals, allRows){
-  const heatContainer = document.getElementById("heatContainer");
-  if(allRows.length === 0 || portals.length === 0){
-    heatContainer.innerHTML = '<div class="empty-state bento-card">Not enough historical data yet — the heatmap fills in over the first few days as the scheduled check runs.</div>';
+function renderWhenToApply(portals, latest, globalHours, agg){
+  const container = document.getElementById("whenContainer");
+  const istHour = currentISTHour();
+
+  if(!hasEnoughHistory(appState.allRows)){
+    container.innerHTML = `<div class="when-panel bento-card"><div class="empty-state" style="border:none;background:transparent;padding:12px 0;">${t("patterns_empty")}</div></div>`;
     return;
   }
-  const agg = {};
-  allRows.forEach(row=>{
-    if(!row.timestamp_utc || !row.portal_id) return;
-    const hour = toISTHour(row.timestamp_utc);
-    agg[row.portal_id] ||= Array.from({length:24}, ()=>({count:0, downCount:0, latencySum:0}));
-    const bucket = agg[row.portal_id][hour];
-    bucket.count += 1;
-    const up = row.up === "1" || row.up === "True" || row.up === "true";
-    if(!up) bucket.downCount += 1;
-    bucket.latencySum += parseFloat(row.latency_ms) || 0;
+
+  let timelineHtml = '<div class="timeline-strip">';
+  for(let h = 0; h < 24; h++){
+    const score = globalHours[h];
+    const tier = score !== null ? heatTier(score) : "nodata";
+    const color = score !== null ? heatColor(score) : "";
+    const cur = h === istHour ? " current" : "";
+    const style = score !== null ? ` style="background:${color}"` : "";
+    timelineHtml += `<div class="timeline-seg tier-${tier}${cur}"${style} title="${formatHour(h)} IST"></div>`;
+  }
+  timelineHtml += '</div>';
+  timelineHtml += `<div class="timeline-labels"><span>${t("timeline_6am")}</span><span>${t("timeline_12pm")}</span><span>${t("timeline_6pm")}</span><span>${t("timeline_12am")}</span></div>`;
+  timelineHtml += `<div class="timeline-legend">
+    ${legendPill("cool", t("legend_cool"))}
+    ${legendPill("okay", t("legend_okay"))}
+    ${legendPill("rush", t("legend_rush"))}
+  </div>`;
+
+  const tryList = [];
+  const avoidList = [];
+  const curGlobalScore = globalHours[istHour];
+
+  portals.forEach(p=>{
+    const rec = latest[p.id];
+    const { bestHours, worstHours } = computePortalHours(p.id, agg);
+    const inGoodHour = bestHours.includes(istHour);
+    const inBadHour = worstHours.includes(istHour);
+
+    if(rec && rec.up){
+      if(inGoodHour || (curGlobalScore !== null && curGlobalScore < 0.4)){
+        tryList.push({ name: p.name, reason: inGoodHour ? t("reason_good_hour", formatHour(istHour)) : t("reason_up") });
+      } else if(inBadHour){
+        avoidList.push({ name: p.name, reason: t("reason_slow_hour", formatHour(istHour)) });
+      }
+    } else if(rec && !rec.up){
+      avoidList.push({ name: p.name, reason: t("reason_down") });
+    }
   });
+
+  if(tryList.length === 0){
+    portals.filter(p=> latest[p.id]?.up).slice(0, 5).forEach(p=>{
+      tryList.push({ name: p.name, reason: t("reason_up") });
+    });
+  }
+
+  function listHtml(items, cls){
+    const rowCls = cls === "try" ? "try-row" : "avoid-row";
+    let h = `<div class="insight-list ${cls}"><h3>${t(cls === "try" ? "try_now" : "avoid_now")}</h3>`;
+    if(items.length === 0){
+      h += `<div class="insight-row ${rowCls}"><span class="portal">—</span><span class="reason">${t("no_data_yet")}</span></div>`;
+    } else {
+      items.slice(0, 6).forEach(item=>{
+        h += `<div class="insight-row ${rowCls}"><span class="portal">${item.name}</span><span class="reason">${item.reason}</span></div>`;
+      });
+    }
+    return h + "</div>";
+  }
+
+  container.innerHTML = `<div class="when-panel bento-card">${timelineHtml}<div class="insight-lists">${listHtml(tryList,"try")}${listHtml(avoidList,"avoid")}</div></div>`;
+}
+
+function renderHeatmap(portals, allRows, agg){
+  const heatContainer = document.getElementById("heatContainer");
+  const istHour = currentISTHour();
+
+  if(allRows.length === 0 || portals.length === 0){
+    heatContainer.innerHTML = `<div class="empty-state bento-card">${t("heat_empty")}</div>`;
+    return;
+  }
 
   const hours = Array.from({length:24}, (_,h)=>h);
   let html = '<div class="heatmap-shell bento-card"><table class="heatmap"><tr><th></th>';
-  hours.forEach(h=> html += `<th class="hour-label">${h}</th>`);
+  hours.forEach(h=>{
+    const isCurrent = h === istHour;
+    const showAmpm = h === 0 || h === 6 || h === 12 || h === 18;
+    const label = showAmpm ? `${h}<br><small>${formatHour(h).split(" ")[1]}</small>` : String(h);
+    html += `<th class="hour-label${isCurrent ? " current-hour" : ""}">${label}</th>`;
+  });
   html += '</tr>';
 
   portals.forEach(p=>{
@@ -636,41 +1322,53 @@ function renderHeatmap(portals, allRows){
     const rowAgg = agg[p.id];
     hours.forEach(h=>{
       const b = rowAgg ? rowAgg[h] : null;
+      const colCls = h === istHour ? " current-hour-col" : "";
       if(!b || b.count === 0){
-        html += `<td><span class="cell" style="background:var(--line); opacity:.35;" title="${p.name} · ${h}:00 IST — no data"></span></td>`;
+        html += `<td class="${colCls}"><span class="cell cell-nodata" title="${p.name} · ${formatHour(h)} IST — ${t("heat_nodata")}"></span></td>`;
       } else {
         const downRate = b.downCount / b.count;
         const avgLatency = b.latencySum / b.count;
-        const score = Math.min(1, downRate*1.0 + Math.min(avgLatency/8000, 1)*0.6);
+        const score = bucketScore(b);
         const color = heatColor(score);
-        const title = `${p.name} · ${h}:00 IST — avg ${Math.round(avgLatency)}ms, ${Math.round(downRate*100)}% down (n=${b.count})`;
-        html += `<td><span class="cell" style="background:${color};" title="${title}"></span></td>`;
+        const tier = heatTierLabel(score);
+        const title = `${p.name} · ${formatHour(h)} IST — ${tier} (avg ${Math.round(avgLatency)}ms, ${Math.round(downRate*100)}% down)`;
+        html += `<td class="${colCls}"><span class="cell" style="background:${color}" title="${title}"></span></td>`;
       }
     });
     html += `</tr>`;
   });
   html += `</table>
     <div class="heat-legend">
-      <span class="legend-pill"><span class="legend-swatch" style="background:${heatColor(0)}"></span>fast &amp; up</span>
-      <span class="legend-pill"><span class="legend-swatch" style="background:${heatColor(0.5)}"></span>slower</span>
-      <span class="legend-pill"><span class="legend-swatch" style="background:${heatColor(1)}"></span>slow / down</span>
-      <span class="legend-pill"><span class="legend-swatch" style="background:var(--line); opacity:.35;"></span>no data</span>
+      ${legendPill("cool", t("legend_fast"))}
+      ${legendPill("okay", t("legend_slower"))}
+      ${legendPill("rush", t("legend_down"))}
+      ${legendPill("nodata", t("legend_nodata"))}
     </div></div>`;
   heatContainer.innerHTML = html;
 }
 
-async function main(){
-  const portals = await loadJSON("config/portals.json") || [];
-  const latest = await loadJSON("data/latest.json") || {};
-
+function renderAll(){
+  const { portals, latest, allRows, agg, globalHours } = appState;
   const summary = computeSummary(portals, latest);
   renderKPIs(summary);
-  renderLiveGrid(portals, latest);
+  renderPulseBanner(summary, globalHours);
+  renderLiveGrid(portals, latest, agg);
+  renderWhenToApply(portals, latest, globalHours, agg);
+  renderHeatmap(portals, allRows, agg);
+}
+
+async function main(){
+  appState.portals = await loadJSON("config/portals.json") || [];
+  appState.latest = await loadJSON("data/latest.json") || {};
 
   const now = new Date();
   const prev = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth()-1, 1));
   const [curRows, prevRows] = await Promise.all([loadMonthCSV(monthKey(now)), loadMonthCSV(monthKey(prev))]);
-  renderHeatmap(portals, prevRows.concat(curRows));
+  appState.allRows = prevRows.concat(curRows);
+  appState.agg = buildAggregation(appState.allRows);
+  appState.globalHours = buildGlobalHours(appState.agg, appState.portals.map(p=>p.id));
+
+  setLang(currentLang);
 }
 
 main();

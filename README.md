@@ -29,7 +29,6 @@ beyond GitHub's free tier for public repos.
 5. Data accumulates every 15 minutes from there. The live status grid is useful
    immediately; the peak-hour heatmap becomes meaningful after a few days of data.
 
--->
 
 ## Customizing
 
@@ -40,6 +39,7 @@ beyond GitHub's free tier for public repos.
 - **Data format:** each month gets its own file, `data/uptime-YYYY-MM.csv`, with columns
   `timestamp_utc, portal_id, status_code, latency_ms, up`. Plain CSV, easy to analyze
   separately (pandas, Excel, whatever) if you want to go further than the built-in heatmap.
+-->
 
 ## Things worth knowing
 
