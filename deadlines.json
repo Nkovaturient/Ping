@@ -1,0 +1,58 @@
+[
+  {
+    "portal": "ibps",
+    "displayName": "IBPS CRP PO/MT-XVI 2026",
+    "url": "https://www.ibps.in",
+    "deadline": "2026-07-21T23:59:00",
+    "source": "https://www.ibps.in (Detailed Notification CRP PO/MT-XVI, released 30.06.2026)",
+    "verifiedOn": "2026-07-07"
+  },
+  {
+    "portal": "sbi",
+    "displayName": "SBI Probationary Officer Recruitment 2026 (CRPD/PO/2026-27/09)",
+    "url": "https://sbi.bank.in/web/careers/current-openings",
+    "deadline": "2026-07-08T23:59:00",
+    "source": "https://sbi.bank.in/web/careers/current-openings",
+    "verifiedOn": "2026-07-07"
+  },
+  {
+    "portal": "uppsc",
+    "displayName": "UPPSC Combined State/Upper Subordinate Services (PCS) 2026",
+    "url": "https://uppsc.up.nic.in",
+    "deadline": "2026-07-27T23:59:00",
+    "source": "https://uppsc.up.nic.in (Advt. No. A-1/E-1/2026, dated 25 June 2026)",
+    "verifiedOn": "2026-07-07"
+  },
+  {
+    "portal": "upsssc",
+    "displayName": "UPSSSC Cane Supervisor Recruitment 2026",
+    "url": "https://upsssc.gov.in",
+    "deadline": "2026-07-28T23:59:00",
+    "source": "https://upsssc.gov.in (notification released 12 May 2026)",
+    "verifiedOn": "2026-07-07"
+  },
+  {
+    "portal": "mppsc",
+    "displayName": "MPPSC State Services Examination (SSE) Mains 2026",
+    "url": "https://mppsc.mp.gov.in",
+    "deadline": "2026-07-15T23:59:00",
+    "source": "https://mppsc.mp.gov.in",
+    "verifiedOn": "2026-07-07"
+  },
+  {
+    "portal": "mpsc",
+    "displayName": "MPSC Group C Services Joint Preliminary Examination 2026",
+    "url": "https://mpsc.gov.in",
+    "deadline": "2026-07-17T23:59:00",
+    "source": "https://mpsconline.gov.in (Advertisement No. 017/2026)",
+    "verifiedOn": "2026-07-07"
+  },
+  {
+    "portal": "tnpsc",
+    "displayName": "TNPSC Combined Civil Services Examination \u2013 I (Group I Services) 2026",
+    "url": "https://www.tnpsc.gov.in",
+    "deadline": "2026-07-29T23:59:00",
+    "source": "https://tnpsc.gov.in (Notification No. 05/2026, Advt. No. 736, dated 23.06.2026)",
+    "verifiedOn": "2026-07-07"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "name": "portal-pulse-bot",
+  "version": "0.1.0",
+  "description": "Interactive Telegram bot skeleton for Portal Pulse — phase 2, per-user subscriptions",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

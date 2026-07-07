@@ -1,0 +1,30 @@
+name: Deadline Notify
+
+on:
+  schedule:
+    - cron: "0 */3 * * *"   # every 3 hours — adjust as needed
+  workflow_dispatch: {}      # lets you trigger it manually from the Actions tab
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run notifier
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python notify.py
+
+      - name: Commit updated state
+        run: |
+          git config user.name "portal-pulse-bot"
+          git config user.email "actions@github.com"
+          git add sent_state.json || true
+          git diff --quiet --cached || git commit -m "update notify state [skip ci]"
+          git push || true
