@@ -40,11 +40,262 @@ const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/$
 const SUBS_FILE = path.join(__dirname, "subscriptions.json");
 const DEADLINES_FILE = path.join(__dirname, "deadlines.json");
 const FANOUT_STATE_FILE = path.join(__dirname, "fanout_state.json");
+const PORTALS_FILE = path.join(__dirname, "config", "portals.json");
 
-const KNOWN_PORTALS = [
-  "ssc", "upsc", "neet", "jee", "ibps", "sbi", "rrb",
-  "rbi", "uppsc", "upsssc", "bpsc", "mppsc", "rpsc", "mpsc", "tnpsc", "wbpsc"
-];
+function loadPortals() {
+  if (!fs.existsSync(PORTALS_FILE)) {
+    console.warn("[warn] config/portals.json missing — using empty portal list");
+    return [];
+  }
+  return JSON.parse(fs.readFileSync(PORTALS_FILE, "utf8")).map((p) => ({ id: p.id, name: p.name }));
+}
+
+const PORTALS = loadPortals();
+const KNOWN_PORTALS = PORTALS.map((p) => p.id);
+const PICKER_PAGE_SIZE = 8;
+
+function portalName(id) {
+  const p = PORTALS.find((x) => x.id === id);
+  return p ? p.name : id.toUpperCase();
+}
+
+function levenshtein(a, b) {
+  const m = a.length;
+  const n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+  const dp = Array.from({ length: m + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
+    }
+  }
+  return dp[m][n];
+}
+
+function fuzzyPortalMatch(input) {
+  const q = input.toLowerCase();
+  if (KNOWN_PORTALS.includes(q)) return q;
+  const prefixHits = KNOWN_PORTALS.filter((id) => id.startsWith(q) || q.startsWith(id));
+  if (prefixHits.length === 1) return prefixHits[0];
+  const maxDist = q.length < 4 ? 1 : 2;
+  let best = null;
+  let bestDist = Infinity;
+  for (const id of KNOWN_PORTALS) {
+    const dist = levenshtein(q, id);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = id;
+    }
+  }
+  return bestDist <= maxDist ? best : null;
+}
+
+function resolvePortal(input) {
+  if (!input) return { ok: false, reason: "missing" };
+  const id = input.toLowerCase();
+  if (KNOWN_PORTALS.includes(id)) return { ok: true, portal: id };
+  const suggestion = fuzzyPortalMatch(id);
+  if (suggestion) return { ok: false, reason: "fuzzy", portal: id, suggestion };
+  return { ok: false, reason: "unknown", portal: id };
+}
+
+function actionLabel(action) {
+  switch (action) {
+    case "sub": return "Subscribe";
+    case "unsub": return "Unsubscribe";
+    case "peak": return "Peak";
+    case "status": return "Status";
+    case "history": return "History";
+    default: {
+      const _exhaustive = action;
+      return _exhaustive;
+    }
+  }
+}
+
+function actionExample(action) {
+  switch (action) {
+    case "sub": return "/subscribe ssc";
+    case "unsub": return "/unsubscribe ssc";
+    case "peak": return "/peak ssc";
+    case "status": return "/status ssc";
+    case "history": return "/history ssc";
+    default: {
+      const _exhaustive = action;
+      return `/unknown ${_exhaustive}`;
+    }
+  }
+}
+
+function pickerPromptText(action) {
+  switch (action) {
+    case "sub": return "Pick a portal to subscribe:";
+    case "unsub": return "Pick a subscription to remove:";
+    case "peak": return "Pick a portal for peak-hour analysis:";
+    default: {
+      const _exhaustive = action;
+      return `Pick a portal (${_exhaustive}):`;
+    }
+  }
+}
+
+function pickerPortalIds(action, chatId) {
+  if (action === "unsub") return loadSubs()[String(chatId)] || [];
+  return KNOWN_PORTALS;
+}
+
+function portalGridKeyboard(action, page, portalIds) {
+  const total = portalIds.length;
+  const start = page * PICKER_PAGE_SIZE;
+  const slice = portalIds.slice(start, start + PICKER_PAGE_SIZE);
+  const rows = [];
+  for (let i = 0; i < slice.length; i += 2) {
+    const row = [{ text: portalName(slice[i]), callback_data: `a:${action}:${slice[i]}` }];
+    if (slice[i + 1]) row.push({ text: portalName(slice[i + 1]), callback_data: `a:${action}:${slice[i + 1]}` });
+    rows.push(row);
+  }
+  const nav = [];
+  if (page > 0) nav.push({ text: "◀ Prev", callback_data: `p:${action}:${page - 1}` });
+  if (start + PICKER_PAGE_SIZE < total) nav.push({ text: "Next ▶", callback_data: `p:${action}:${page + 1}` });
+  if (nav.length) rows.push(nav);
+  return { inline_keyboard: rows };
+}
+
+function fuzzyConfirmKeyboard(action, portalId) {
+  const pickerAction = action === "unsub" ? "sub" : action;
+  return {
+    inline_keyboard: [
+      [{ text: `${actionLabel(action)} ${portalName(portalId)}`, callback_data: `a:${action}:${portalId}` }],
+      [{ text: "See all portals", callback_data: `p:${pickerAction}:0` }],
+    ],
+  };
+}
+
+function usageFooterKeyboard(action) {
+  const pickerAction = action === "unsub" ? "sub" : action;
+  return { inline_keyboard: [[{ text: "See all portals", callback_data: `p:${pickerAction}:0` }]] };
+}
+
+/**
+ * Single source of truth for bot commands — drives /help, /start, BotFather
+ * menu, usage prompts, and the unknown-command fallback.
+ */
+const COMMAND_SPECS = {
+  start: {
+    name: "start",
+    shortDescription: "Welcome and command menu",
+    summary: "Welcome message with full command list",
+    args: [{ name: "payload", required: false, hint: "Deep link, e.g. sub_ssc" }],
+    examples: ["/start", "/start sub_ssc"],
+  },
+  status: {
+    name: "status",
+    shortDescription: "Live portal status",
+    summary: "Live status of monitored portals",
+    args: [{ name: "portal", required: false, type: "portal" }],
+    examples: ["/status", "/status ssc"],
+  },
+  subscribe: {
+    name: "subscribe",
+    shortDescription: "Get deadline alerts",
+    summary: "Subscribe to deadline alerts for a portal",
+    args: [{ name: "portal", required: true, type: "portal" }],
+    examples: ["/subscribe ssc", "/subscribe ibps"],
+  },
+  unsubscribe: {
+    name: "unsubscribe",
+    shortDescription: "Stop deadline alerts",
+    summary: "Unsubscribe from a portal's alerts",
+    args: [{ name: "portal", required: true, type: "portal" }],
+    examples: ["/unsubscribe ssc"],
+  },
+  mysubs: {
+    name: "mysubs",
+    shortDescription: "Your active subscriptions",
+    summary: "List portals you're subscribed to",
+    args: [],
+    examples: ["/mysubs"],
+  },
+  history: {
+    name: "history",
+    shortDescription: "24h uptime trends",
+    summary: "24h uptime summary or one portal's trend",
+    args: [{ name: "portal", required: false, type: "portal" }],
+    examples: ["/history", "/history ssc"],
+  },
+  peak: {
+    name: "peak",
+    shortDescription: "Best/worst hours (IST)",
+    summary: "Historically best and worst hours to use a portal",
+    args: [{ name: "portal", required: true, type: "portal" }],
+    examples: ["/peak ssc", "/peak ibps"],
+  },
+  portals: {
+    name: "portals",
+    shortDescription: "All monitored portals",
+    summary: "List all portal IDs with quick command links",
+    args: [],
+    examples: ["/portals"],
+  },
+  help: {
+    name: "help",
+    shortDescription: "Full command reference",
+    summary: "Show this command reference",
+    args: [],
+    examples: ["/help"],
+  },
+};
+
+const COMMAND_NAMES = new Set(Object.values(COMMAND_SPECS).map((c) => c.name));
+
+function unknownCommandReply(rawCmd) {
+  const known = Object.values(COMMAND_SPECS)
+    .filter((c) => c.name !== "start")
+    .map((c) => `/${c.name} — ${c.shortDescription}`)
+    .join("\n");
+  return [
+    `Unknown command \`/${rawCmd}\`.`,
+    "",
+    "*Available commands:*",
+    known,
+    "",
+    "Full reference: /help",
+  ].join("\n");
+}
+
+function buildWelcomeText() {
+  const cmds = Object.values(COMMAND_SPECS)
+    .filter((c) => c.name !== "start" && c.name !== "help")
+    .map((c) => {
+      const example = c.examples.find((e) => e.includes(" ")) || c.examples[0];
+      return `${example} — ${c.summary.charAt(0).toLowerCase()}${c.summary.slice(1)}`;
+    });
+  return [
+    "👋 *Welcome to PortalPulseBot* ⚡",
+    "",
+    "Your exam lifeline. 🎯",
+    "I track live status of SSC, UPSC, NTA, IBPS, RRB & major state portals and send timely alerts.",
+    "",
+    "*Commands:*",
+    ...cmds,
+    "/help — full command reference",
+  ].join("\n");
+}
+
+function buildHelpText() {
+  const lines = ["*PortalPulseBot — Command Reference*", ""];
+  Object.values(COMMAND_SPECS).forEach((spec) => {
+    if (spec.name === "start") return;
+    spec.examples.forEach((ex, i) => {
+      lines.push(`${ex} — ${i === 0 ? spec.summary : "variant"}`);
+    });
+  });
+  lines.push("", "*Portal IDs:*", KNOWN_PORTALS.join(", "));
+  return lines.join("\n");
+}
 
 // check_uptime.py runs every ~15 min (see .github/workflows/uptime-check.yml).
 // Keep these thresholds in sync with notify.py's MIN_SAMPLES_FOR_ADVISORY /
@@ -188,9 +439,94 @@ function daysUntil(dateStr) {
   return (new Date(iso).getTime() - Date.now()) / 86400000;
 }
 
+function formatHour12(h) {
+  return `${h % 12 || 12} ${h >= 12 ? "PM" : "AM"}`;
+}
+
+function recentUptimeStats(history, portal, windowHours = 24) {
+  const cutoff = Date.now() - windowHours * 3_600_000;
+  const rows = history.filter((r) => {
+    if (r.portal !== portal || !r.timestamp) return false;
+    return new Date(r.timestamp.endsWith("Z") ? r.timestamp : r.timestamp + "Z").getTime() >= cutoff;
+  });
+  if (rows.length === 0) return null;
+  const upCount = rows.filter((r) => r.status === "up").length;
+  const lats = rows.filter((r) => r.latencyMs).map((r) => r.latencyMs);
+  const avgLat = lats.length ? Math.round(lats.reduce((a, b) => a + b, 0) / lats.length) : null;
+  return { upPct: Math.round((upCount / rows.length) * 100), avgLat, count: rows.length };
+}
+
+function portalHourBreakdown(history, portal) {
+  const samples = history.filter((h) => h.portal === portal);
+  if (samples.length < 10) return null;
+  const byHour = {};
+  samples.forEach((s) => {
+    if (!s.timestamp) return;
+    const ts = new Date(s.timestamp.endsWith("Z") ? s.timestamp : s.timestamp + "Z");
+    (byHour[istHour(ts)] ||= []).push(s);
+  });
+  return Object.entries(byHour)
+    .filter(([, rows]) => rows.length >= 2)
+    .map(([h, rows]) => {
+      const downCount = rows.filter((r) => r.status !== "up").length;
+      const lats = rows.filter((r) => r.latencyMs).map((r) => r.latencyMs);
+      return {
+        hour: +h,
+        downRate: downCount / rows.length,
+        avgLat: lats.length ? Math.round(lats.reduce((a, b) => a + b, 0) / lats.length) : null,
+        count: rows.length,
+      };
+    })
+    .sort((a, b) => a.downRate - b.downRate || (a.avgLat || 0) - (b.avgLat || 0));
+}
+
+const WELCOME_TEXT = buildWelcomeText();
+const HELP_TEXT = buildHelpText();
+
 const bot = new TelegramBot(TOKEN, { polling: true });
 
-// Shared by /subscribe and the /start sub_<portal> deep-link payload.
+function sendPortalReply(chatId, { action, result }) {
+  const opts = { parse_mode: "Markdown" };
+  if (result.reason === "missing") {
+    const portalIds = pickerPortalIds(action, chatId);
+    if (action === "unsub" && portalIds.length === 0) {
+      bot.sendMessage(chatId, "You have no active subscriptions.\n\nUse /subscribe to get started.", opts);
+      return;
+    }
+    bot.sendMessage(chatId, pickerPromptText(action), {
+      ...opts,
+      reply_markup: portalGridKeyboard(action, 0, portalIds),
+    });
+    return;
+  }
+  if (result.reason === "fuzzy") {
+    bot.sendMessage(
+      chatId,
+      `Did you mean *${portalName(result.suggestion)}*? (you typed \`${result.portal}\`)`,
+      { ...opts, reply_markup: fuzzyConfirmKeyboard(action, result.suggestion) }
+    );
+    return;
+  }
+  if (result.reason === "unknown") {
+    bot.sendMessage(
+      chatId,
+      `❌ Unknown portal *"${result.portal}"*.\n\nExample: \`${actionExample(action)}\``,
+      { ...opts, reply_markup: usageFooterKeyboard(action) }
+    );
+  }
+}
+
+function sendPortalsList(chatId) {
+  const lines = [
+    "📋 *Monitored portals*",
+    "",
+    ...KNOWN_PORTALS.map((p) => `• *${portalName(p)}* — /subscribe ${p} · /peak ${p}`),
+    "",
+    "Use portal ID with commands, e.g. /status ssc",
+  ];
+  bot.sendMessage(chatId, lines.join("\n"), { parse_mode: "Markdown" });
+}
+
 function subscribeUserToPortal(chatId, portal) {
   if (!KNOWN_PORTALS.includes(portal)) return false;
   const subs = loadSubs();
@@ -201,41 +537,220 @@ function subscribeUserToPortal(chatId, portal) {
   return true;
 }
 
-// /start alone shows the help text. /start sub_ssc (from a
-// t.me/<bot>?start=sub_ssc deep link on Ping/Snapix) subscribes immediately.
+async function doSubscribe(chatId, portal) {
+  subscribeUserToPortal(chatId, portal);
+  await bot.sendMessage(
+    chatId,
+    `✅ Subscribed to *${portalName(portal)}* alerts.\nYou'll be notified when its form deadline is within ${DANGER_WINDOW_DAYS} days.\n\n/mysubs — review · /unsubscribe ${portal} — stop`,
+    { parse_mode: "Markdown" }
+  );
+}
+
+async function doUnsubscribe(chatId, portal) {
+  const subs = loadSubs();
+  const userId = String(chatId);
+  const mine = subs[userId] || [];
+  if (!mine.includes(portal)) {
+    await bot.sendMessage(
+      chatId,
+      `You're not subscribed to *${portalName(portal)}*.\n\nYour subs: ${mine.length ? mine.map((p) => portalName(p)).join(", ") : "none"}\n\n/mysubs — review · /subscribe ${portal} — add`,
+      { parse_mode: "Markdown" }
+    );
+    return;
+  }
+  subs[userId] = mine.filter((p) => p !== portal);
+  saveSubs(subs);
+  await bot.sendMessage(chatId, `🔕 Unsubscribed from *${portalName(portal)}*.`, { parse_mode: "Markdown" });
+}
+
+async function doStatus(chatId, portal) {
+  try {
+    const latest = await fetchLatestStatus();
+    const s = latest[portal];
+    if (!s) {
+      await bot.sendMessage(chatId, `${portal}: no data`);
+      return;
+    }
+    const emoji = s.status === "up" ? "🟢" : "🔴";
+    await bot.sendMessage(chatId, `${emoji} ${portal}: ${s.status} (${s.latencyMs ?? "—"}ms)`);
+  } catch (e) {
+    await bot.sendMessage(chatId, "Couldn't fetch status right now — try again shortly.");
+  }
+}
+
+async function doHistory(chatId, portal) {
+  try {
+    const [history, latest] = await Promise.all([fetchHistoryRows(), fetchLatestStatus()]);
+    const stats = recentUptimeStats(history, portal);
+    const live = latest[portal];
+    const liveStr = live
+      ? `${live.status === "up" ? "🟢" : "🔴"} *Currently:* ${live.status} (${live.latencyMs ?? "—"}ms)`
+      : "⚪ No live data";
+    if (!stats) {
+      await bot.sendMessage(chatId, `${liveStr}\n\nNo 24h history for ${portalName(portal)} yet.`, { parse_mode: "Markdown" });
+      return;
+    }
+    const filled = Math.round(stats.upPct / 10);
+    const bar = "█".repeat(filled) + "░".repeat(10 - filled);
+    await bot.sendMessage(
+      chatId,
+      [
+        `📈 *${portalName(portal)} — last 24h*`,
+        liveStr,
+        `Uptime: \`${bar}\` ${stats.upPct}%`,
+        `Avg latency: ${stats.avgLat ?? "—"}ms`,
+        `Checks in window: ${stats.count}`,
+      ].join("\n"),
+      { parse_mode: "Markdown" }
+    );
+  } catch (e) {
+    await bot.sendMessage(chatId, "Couldn't fetch data right now — try again shortly.");
+  }
+}
+
+async function doPeak(chatId, portal) {
+  try {
+    const history = await fetchHistoryRows();
+    const breakdown = portalHourBreakdown(history, portal);
+    if (!breakdown || breakdown.length === 0) {
+      await bot.sendMessage(
+        chatId,
+        `Not enough history for ${portalName(portal)} yet — check back in a few days once the scheduler has run.`
+      );
+      return;
+    }
+    const fmt = (h) =>
+      `${formatHour12(h.hour)} IST — ${Math.round(h.downRate * 100)}% down, avg ${h.avgLat ?? "—"}ms (${h.count} checks)`;
+    const best = breakdown.slice(0, 3);
+    const worst = [...breakdown].reverse().slice(0, 3);
+    await bot.sendMessage(
+      chatId,
+      [
+        `📊 *${portalName(portal)} — peak-hour analysis (IST)*`,
+        "",
+        "✅ *Best hours to fill forms:*",
+        ...best.map((h) => `  ${fmt(h)}`),
+        "",
+        "🔴 *Worst hours to avoid:*",
+        ...worst.map((h) => `  ${fmt(h)}`),
+        "",
+        `_Based on ${history.filter((r) => r.portal === portal).length} total checks._`,
+      ].join("\n"),
+      { parse_mode: "Markdown" }
+    );
+  } catch (e) {
+    await bot.sendMessage(chatId, "Couldn't fetch history right now — try again shortly.");
+  }
+}
+
+async function executeAction(action, chatId, portal) {
+  switch (action) {
+    case "sub":
+      await doSubscribe(chatId, portal);
+      break;
+    case "unsub":
+      await doUnsubscribe(chatId, portal);
+      break;
+    case "peak":
+      await doPeak(chatId, portal);
+      break;
+    case "status":
+      await doStatus(chatId, portal);
+      break;
+    case "history":
+      await doHistory(chatId, portal);
+      break;
+    default: {
+      const _exhaustive = action;
+      console.warn("[warn] unknown action:", _exhaustive);
+    }
+  }
+}
+
+bot.setMyCommands(
+  Object.values(COMMAND_SPECS)
+    .filter((c) => c.name !== "start")
+    .map((c) => ({ command: c.name, description: c.shortDescription }))
+).catch((e) => console.warn("[warn] setMyCommands failed:", e.message));
+
+bot.on("message", (msg) => {
+  if (!msg.text?.startsWith("/")) return;
+  const token = msg.text.trim().split(/\s+/)[0];
+  const cmd = token.split("@")[0].slice(1).toLowerCase();
+  if (!cmd || COMMAND_NAMES.has(cmd)) return;
+  bot.sendMessage(msg.chat.id, unknownCommandReply(cmd), { parse_mode: "Markdown" });
+});
+
+bot.on("callback_query", async (query) => {
+  const chatId = query.message.chat.id;
+  const data = query.data;
+  await bot.answerCallbackQuery(query.id).catch(() => {});
+
+  if (data.startsWith("a:")) {
+    const parts = data.split(":");
+    const action = parts[1];
+    const portal = parts.slice(2).join(":");
+    const resolved = resolvePortal(portal);
+    if (!resolved.ok) {
+      sendPortalReply(chatId, { action, result: resolved });
+      return;
+    }
+    await executeAction(action, chatId, resolved.portal);
+    return;
+  }
+
+  if (data.startsWith("p:")) {
+    const [, action, pageStr] = data.split(":");
+    const page = parseInt(pageStr, 10) || 0;
+    const portalIds = pickerPortalIds(action, chatId);
+    if (portalIds.length === 0) {
+      bot.sendMessage(chatId, "You have no active subscriptions.\n\nUse /subscribe to get started.", { parse_mode: "Markdown" });
+      return;
+    }
+    const keyboard = portalGridKeyboard(action, page, portalIds);
+    await bot
+      .editMessageReplyMarkup(keyboard, { chat_id: chatId, message_id: query.message.message_id })
+      .catch(() => {
+        bot.sendMessage(chatId, pickerPromptText(action), {
+          parse_mode: "Markdown",
+          reply_markup: keyboard,
+        });
+      });
+  }
+});
+
+// /start alone → welcome. /start sub_ssc (deep-link from Ping/Snapix) → auto-subscribe.
 bot.onText(/\/start(?:\s+(\S+))?/, (msg, match) => {
   const payload = match[1];
   const subMatch = payload && /^sub_(\w+)$/.exec(payload);
   if (subMatch) {
-    const portal = subMatch[1].toLowerCase();
-    if (subscribeUserToPortal(msg.chat.id, portal)) {
-      bot.sendMessage(
-        msg.chat.id,
-        `👋 Subscribed you to *${portal}* alerts. Use /mysubs to review, /unsubscribe ${portal} to stop.`,
-        { parse_mode: "Markdown" }
-      );
+    const resolved = resolvePortal(subMatch[1]);
+    if (resolved.ok) {
+      doSubscribe(msg.chat.id, resolved.portal);
       return;
     }
-    bot.sendMessage(msg.chat.id, `Don't recognise "${portal}" — showing the full menu instead.`);
+    sendPortalReply(msg.chat.id, { action: "sub", result: resolved });
+    return;
   }
-  bot.sendMessage(
-    msg.chat.id,
-    "👋 Portal Pulse bot.\n\n" +
-    "/status — current status of all tracked portals\n" +
-    "/status ssc — status of one portal\n" +
-    "/subscribe ssc — get alerted when SSC's window is closing soon\n" +
-    "/unsubscribe ssc — stop those alerts\n" +
-    "/mysubs — see what you're subscribed to"
-  );
+  bot.sendMessage(msg.chat.id, WELCOME_TEXT, { parse_mode: "Markdown" });
 });
 
 bot.onText(/\/status(?:\s+(\w+))?/, async (msg, match) => {
   const portalFilter = match[1]?.toLowerCase();
+  if (portalFilter) {
+    const resolved = resolvePortal(portalFilter);
+    if (!resolved.ok) {
+      sendPortalReply(msg.chat.id, { action: "status", result: resolved });
+      return;
+    }
+    await doStatus(msg.chat.id, resolved.portal);
+    return;
+  }
   try {
     const latest = await fetchLatestStatus();
-    const portals = portalFilter ? [portalFilter] : Object.keys(latest);
+    const portals = Object.keys(latest);
     if (portals.length === 0) {
-      bot.sendMessage(msg.chat.id, "No status data yet.");
+      bot.sendMessage(msg.chat.id, "No status data yet — check back shortly after the first uptime run.");
       return;
     }
     const lines = portals.map((p) => {
@@ -251,27 +766,98 @@ bot.onText(/\/status(?:\s+(\w+))?/, async (msg, match) => {
 });
 
 bot.onText(/\/subscribe\s+(\w+)/, (msg, match) => {
-  const portal = match[1].toLowerCase();
-  if (!subscribeUserToPortal(msg.chat.id, portal)) {
-    bot.sendMessage(msg.chat.id, `Don't recognise "${portal}". Known: ${KNOWN_PORTALS.join(", ")}`);
+  const resolved = resolvePortal(match[1]);
+  if (!resolved.ok) {
+    sendPortalReply(msg.chat.id, { action: "sub", result: resolved });
     return;
   }
-  bot.sendMessage(msg.chat.id, `Subscribed to ${portal}. Use /mysubs to review.`);
+  doSubscribe(msg.chat.id, resolved.portal);
+});
+
+bot.onText(/\/subscribe$/, (msg) => {
+  sendPortalReply(msg.chat.id, { action: "sub", result: { ok: false, reason: "missing" } });
 });
 
 bot.onText(/\/unsubscribe\s+(\w+)/, (msg, match) => {
-  const portal = match[1].toLowerCase();
-  const subs = loadSubs();
-  const userId = String(msg.chat.id);
-  subs[userId] = (subs[userId] || []).filter((p) => p !== portal);
-  saveSubs(subs);
-  bot.sendMessage(msg.chat.id, `Unsubscribed from ${portal}.`);
+  const resolved = resolvePortal(match[1]);
+  if (!resolved.ok) {
+    sendPortalReply(msg.chat.id, { action: "unsub", result: resolved });
+    return;
+  }
+  doUnsubscribe(msg.chat.id, resolved.portal);
+});
+
+bot.onText(/\/unsubscribe$/, (msg) => {
+  sendPortalReply(msg.chat.id, { action: "unsub", result: { ok: false, reason: "missing" } });
 });
 
 bot.onText(/\/mysubs/, (msg) => {
   const subs = loadSubs();
   const mine = subs[String(msg.chat.id)] || [];
-  bot.sendMessage(msg.chat.id, mine.length ? `You're subscribed to: ${mine.join(", ")}` : "No subscriptions yet.");
+  if (mine.length === 0) {
+    bot.sendMessage(msg.chat.id, "No subscriptions yet.\n\nUse /subscribe to pick a portal.", { parse_mode: "Markdown" });
+    return;
+  }
+  bot.sendMessage(
+    msg.chat.id,
+    `📋 *Your subscriptions:*\n${mine.map((p) => `• ${portalName(p)}`).join("\n")}\n\n/unsubscribe — remove one`,
+    { parse_mode: "Markdown" }
+  );
+});
+
+bot.onText(/\/help/, (msg) => {
+  bot.sendMessage(msg.chat.id, HELP_TEXT, { parse_mode: "Markdown" });
+});
+
+bot.onText(/\/portals/, (msg) => {
+  sendPortalsList(msg.chat.id);
+});
+
+bot.onText(/\/history(?:\s+(\w+))?/, async (msg, match) => {
+  const portalFilter = match[1]?.toLowerCase();
+  try {
+    const [history, latest] = await Promise.all([fetchHistoryRows(), fetchLatestStatus()]);
+
+    if (portalFilter) {
+      const resolved = resolvePortal(portalFilter);
+      if (!resolved.ok) {
+        sendPortalReply(msg.chat.id, { action: "history", result: resolved });
+        return;
+      }
+      await doHistory(msg.chat.id, resolved.portal);
+      return;
+    }
+    const portals = KNOWN_PORTALS.filter((p) => latest[p]);
+    if (portals.length === 0) {
+      bot.sendMessage(msg.chat.id, "No data yet — check back shortly after the first run.");
+      return;
+    }
+    const lines = ["📈 *24h uptime summary*", ""];
+    portals.forEach((p) => {
+      const stats = recentUptimeStats(history, p);
+      const live = latest[p];
+      const emoji = live ? (live.status === "up" ? "🟢" : "🔴") : "⚪";
+      lines.push(`${emoji} *${portalName(p)}* — ${stats ? `${stats.upPct}%` : "—"} up · ${stats?.avgLat ? `${stats.avgLat}ms` : "—"}`);
+    });
+    lines.push("", "Tap /history ssc for a portal's detail.");
+    bot.sendMessage(msg.chat.id, lines.join("\n"), { parse_mode: "Markdown" });
+  } catch (e) {
+    bot.sendMessage(msg.chat.id, "Couldn't fetch data right now — try again shortly.");
+  }
+});
+
+bot.onText(/\/peak(?:\s+(\w+))?/, async (msg, match) => {
+  const portalArg = match[1]?.toLowerCase();
+  if (!portalArg) {
+    sendPortalReply(msg.chat.id, { action: "peak", result: { ok: false, reason: "missing" } });
+    return;
+  }
+  const resolved = resolvePortal(portalArg);
+  if (!resolved.ok) {
+    sendPortalReply(msg.chat.id, { action: "peak", result: resolved });
+    return;
+  }
+  await doPeak(msg.chat.id, resolved.portal);
 });
 
 // Per-user fan-out: DMs each subscriber only about the portals they asked
