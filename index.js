@@ -24,6 +24,7 @@
 
 const TelegramBot = require("node-telegram-bot-api");
 const fs = require("fs");
+const http = require("http");
 const path = require("path");
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -921,3 +922,5 @@ setInterval(() => {
 runFanout().catch((e) => console.error("[fanout] initial run error:", e));
 
 console.log("Bot running (long polling)...");
+
+http.createServer((req, res) => res.end("ok")).listen(process.env.PORT || 3000);
