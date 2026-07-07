@@ -2,16 +2,26 @@
 Deadline-aware Telegram notifier for Portal Pulse (Ping).
 
 Design goal: zero hosting cost. This script is meant to run as a scheduled
-GitHub Action in the SAME repo as Ping, every 2-4 hours. It does two jobs:
+GitHub Action in the SAME repo as Ping, hourly (see notify.yml cron). It does
+two jobs:
 
-  1. Deadline-window alerts (works from day one — no historical data needed):
-     if a portal's form-filling window closes within DANGER_WINDOW_DAYS,
-     send a reminder.
+  1. Deadline-window alerts with ESCALATING CADENCE:
+     - 2-3 days out: once every 24 hours
+     - 1-2 days out: once every 8 hours
+     - Last day: once every 4 hours
+     - Final 12 hours: once every 2 hours
+     This keeps things quiet when users aren't stressed, sharp when they are.
 
   2. Peak-hour advisory (only activates once Ping has real history — see
      load_ping_history() below): if the current hour has historically been a
-     slow/unstable hour for that portal, add a "avoid filling right now"
+     slow/unstable hour for that portal, add an "avoid filling right now"
      note instead of guessing.
+
+STATE FORMAT
+------------
+sent_state.json stores {state_key: ISO_timestamp} so we can gate on elapsed
+hours since last send rather than calendar day. The hourly cron ensures we can
+catch tight windows (2h in the final stretch).
 
 DATA SOURCE
 -----------
@@ -151,6 +161,20 @@ def days_until(date_str):
     return (target - datetime.now(timezone.utc)).total_seconds() / 86400
 
 
+def alert_interval_hours(remaining_days):
+    """
+    Escalating alert cadence — quiet early, sharp near deadline.
+    Returns the minimum hours that must elapse before sending the next alert.
+    """
+    if remaining_days <= 0.5:
+        return 2   # final ~12 hours: every 2h
+    if remaining_days <= 1:
+        return 4   # last day: every 4h
+    if remaining_days <= 2:
+        return 8   # 1-2 days out: every 8h
+    return 24      # 2-3 days out: once per day
+
+
 def _ist_hour(ts_iso):
     """Ping's dashboard buckets everything by IST (UTC+5:30) — stay consistent with it."""
     ts = datetime.fromisoformat(ts_iso.replace("Z", "+00:00"))
@@ -219,9 +243,18 @@ def main():
             continue  # not in the danger window
 
         state_key = f'{exam["portal"]}:{exam["deadline"]}'
-        already_sent_today = state.get(state_key) == now.date().isoformat()
-        if already_sent_today:
-            continue
+        last_sent_iso = state.get(state_key)
+
+        # Escalating cadence: check if enough time has passed since last alert
+        if last_sent_iso:
+            try:
+                last_sent = datetime.fromisoformat(last_sent_iso)
+                hours_since = (now - last_sent).total_seconds() / 3600
+                required_interval = alert_interval_hours(remaining)
+                if hours_since < required_interval:
+                    continue  # too soon based on escalating cadence
+            except ValueError:
+                pass  # corrupted state entry, proceed to send
 
         advisory = peak_hour_advisory(history, portal, current_hour)
 
@@ -235,7 +268,7 @@ def main():
             lines.append("No historical red flags for this hour — but don't wait for the last day.")
 
         send_telegram("\n".join(lines))
-        state[state_key] = now.date().isoformat()
+        state[state_key] = now.isoformat()  # store full timestamp for hour-based gating
 
     save_state(state)
 

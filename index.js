@@ -52,7 +52,18 @@ const KNOWN_PORTALS = [
 const MIN_SAMPLES_FOR_ADVISORY = 300;
 const MIN_SAMPLES_PER_HOUR = 5;
 const DANGER_WINDOW_DAYS = 3;
-const FANOUT_INTERVAL_MS = 3 * 60 * 60 * 1000; // 3h, matches notify.yml's cadence
+const FANOUT_INTERVAL_MS = 1 * 60 * 60 * 1000; // 1h — runs often so we can catch tight windows
+
+/**
+ * Escalating alert cadence — quiet early, sharp near deadline.
+ * Keep in sync with notify.py's alert_interval_hours().
+ */
+function alertIntervalHours(remainingDays) {
+  if (remainingDays <= 0.5) return 2;   // final ~12 hours: every 2h
+  if (remainingDays <= 1)   return 4;   // last day: every 4h
+  if (remainingDays <= 2)   return 8;   // 1-2 days out: every 8h
+  return 24;                            // 2-3 days out: once per day
+}
 
 function loadSubs() {
   if (!fs.existsSync(SUBS_FILE)) return {};
@@ -264,10 +275,9 @@ bot.onText(/\/mysubs/, (msg) => {
 });
 
 // Per-user fan-out: DMs each subscriber only about the portals they asked
-// for, reusing the same deadline-window + peak-hour-advisory logic as
-// notify.py's broadcast, just targeted per chat_id instead of one channel.
-// Dedup key includes userId so each subscriber gets exactly one alert per
-// exam per day, independent of everyone else's send history.
+// for, reusing the same deadline-window + peak-hour-advisory + escalating
+// cadence logic as notify.py's broadcast, just targeted per chat_id.
+// State stores ISO timestamps so we can gate on elapsed hours.
 async function runFanout() {
   const subs = loadSubs();
   const subscribedUserIds = Object.keys(subs).filter((id) => subs[id].length > 0);
@@ -278,8 +288,8 @@ async function runFanout() {
 
   const history = await fetchHistoryRows();
   const state = loadFanoutState();
-  const currentHour = istHour(new Date());
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const currentHour = istHour(now);
 
   for (const exam of deadlines) {
     const remaining = daysUntil(exam.deadline);
@@ -295,14 +305,21 @@ async function runFanout() {
     ];
     const text = lines.join("\n");
 
+    const requiredInterval = alertIntervalHours(remaining);
+
     for (const userId of subscribedUserIds) {
       if (!subs[userId].includes(exam.portal)) continue;
       const stateKey = `${userId}:${exam.portal}:${exam.deadline}`;
-      if (state[stateKey] === today) continue;
+      const lastSentIso = state[stateKey];
+
+      if (lastSentIso) {
+        const hoursSince = (now - new Date(lastSentIso)) / (1000 * 60 * 60);
+        if (hoursSince < requiredInterval) continue; // too soon per escalating cadence
+      }
 
       try {
         await bot.sendMessage(userId, text, { parse_mode: "Markdown" });
-        state[stateKey] = today;
+        state[stateKey] = now.toISOString();
       } catch (e) {
         console.warn(`[warn] could not DM ${userId}: ${e.message}`);
       }
