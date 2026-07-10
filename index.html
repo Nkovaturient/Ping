@@ -3,11 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Pulse</title>
-<link rel="icon" href="./asset/ping.jpeg" >
+<title>Ping | Portal Pulse</title>
+<meta name="description" content="Live status and historical peak-hour patterns for India's exam and recruitment portals. Check UPSC, SSC, NTA, IBPS and more before you apply.">
+<link rel="canonical" href="https://nkovaturient.github.io/Ping/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nkovaturient.github.io/Ping/">
+<meta property="og:title" content="Ping — Live exam portal status | Portal Pulse">
+<meta property="og:description" content="Live status and historical peak-hour patterns for India's exam and recruitment portals.">
+<meta property="og:image" content="https://nkovaturient.github.io/Ping/asset/ping.jpeg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ping — Live exam portal status | Portal Pulse">
+<meta name="twitter:description" content="Live status and historical peak-hour patterns for India's exam and recruitment portals.">
+<meta name="twitter:image" content="https://nkovaturient.github.io/Ping/asset/ping.jpeg">
+<link rel="icon" href="./asset/ping.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Ping — Portal Pulse",
+  "url": "https://nkovaturient.github.io/Ping/",
+  "description": "Live status and historical peak-hour patterns for India's exam and recruitment portals."
+}
+</script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
-
   :root{
     --paper:#F5F0E4;
     --paper-raised:rgba(255,255,255,0.55);
@@ -183,6 +205,19 @@
   @media (prefers-reduced-motion: reduce){
     *, *::before, *::after{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
   }
+  .skip-link{
+    position:absolute;
+    left:-9999px;
+    top:0;
+    z-index:100;
+    padding:10px 16px;
+    background:var(--indigo-dark);
+    color:#fff;
+    font-weight:600;
+    text-decoration:none;
+    border-radius:0 0 8px 0;
+  }
+  .skip-link:focus{ left:0; }
   .wrap{ max-width:1120px; margin:0 auto; position:relative; z-index:1; }
 
   header.top{
@@ -617,6 +652,47 @@
 
   .when-panel{
     padding:20px 22px;
+    min-height:280px;
+  }
+  #whenContainer{
+    min-height:280px;
+  }
+  .when-skeleton .skel-block{
+    border-radius:8px;
+    background:linear-gradient(90deg, rgba(30,37,48,.06) 25%, rgba(30,37,48,.1) 50%, rgba(30,37,48,.06) 75%);
+    background-size:200% 100%;
+    animation:shimmer 1.4s ease infinite;
+  }
+  .when-skeleton .skel-timeline{
+    height:36px;
+    margin:14px 0 8px;
+  }
+  .when-skeleton .skel-labels{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:16px;
+  }
+  .when-skeleton .skel-labels span{
+    display:block;
+    width:40px;
+    height:10px;
+  }
+  .when-skeleton .skel-lists{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  @media (max-width:640px){
+    .when-skeleton .skel-lists{ grid-template-columns:1fr; }
+  }
+  .when-skeleton .skel-heading{
+    width:88px;
+    height:14px;
+    margin-bottom:10px;
+  }
+  .when-skeleton .skel-row{
+    height:44px;
+    margin-bottom:8px;
   }
   .timeline-strip{
     display:flex;
@@ -804,7 +880,7 @@
     font-size:11px;
     text-transform:uppercase;
     letter-spacing:.06em;
-    color:var(--saffron);
+    color:#92400E;
     font-weight:600;
     background:var(--saffron-soft);
     padding:5px 12px;
@@ -1545,6 +1621,7 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div class="wrap">
 
   <header class="top">
@@ -1558,6 +1635,8 @@
       <button type="button" data-lang="hi">हिं</button>
     </div>
   </header>
+
+  <main id="main">
 
   <div class="kpi-strip" id="kpiStrip">
     <div class="bento-card kpi-card"><div class="kpi-label" data-i18n="kpiUp">Up</div><div class="kpi-value ok" id="kpiUp">—</div></div>
@@ -1576,7 +1655,26 @@
   <section id="whenSection">
     <h2 data-i18n="whenTitle">When to apply</h2>
     <p class="section-sub" data-i18n="whenSub">Best and worst hours to fill forms, based on historical checks (IST).</p>
-    <div id="whenContainer"><div class="empty-state">Loading insights…</div></div>
+    <div id="whenContainer">
+      <div class="when-panel bento-card when-skeleton" aria-busy="true" aria-label="Loading insights">
+        <div class="skel-block skel-timeline"></div>
+        <div class="skel-labels"><span class="skel-block"></span><span class="skel-block"></span><span class="skel-block"></span><span class="skel-block"></span></div>
+        <div class="skel-lists">
+          <div>
+            <div class="skel-block skel-heading"></div>
+            <div class="skel-block skel-row"></div>
+            <div class="skel-block skel-row"></div>
+            <div class="skel-block skel-row"></div>
+          </div>
+          <div>
+            <div class="skel-block skel-heading"></div>
+            <div class="skel-block skel-row"></div>
+            <div class="skel-block skel-row"></div>
+            <div class="skel-block skel-row"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- <div class="banner bento-card">
@@ -1672,6 +1770,8 @@
     <div id="heatSeverityChips" class="heat-severity-chips" role="group" aria-label="Portal severity filter"></div>
     <div id="heatContainer"><div class="empty-state">Building heatmap from historical data…</div></div>
   </section>
+
+  </main>
 
   <footer>
     <span data-i18n="footer">©2026 Nk | Fill your exam forms with confidence. No more last-minute chaos.</span>
@@ -1813,6 +1913,7 @@ let appState = {
   agg: null,
   globalHours: null,
   loadedMonths: new Set(),
+  availableMonths: new Set(),
   deadlines: [],
   severityFilter: "all",
   heatFilter: { active: true, mode: "single", startKey: null, endKey: null },
@@ -2098,7 +2199,9 @@ function monthKeysBetween(startKey, endKey){
 
 async function ensureMonthsLoaded(startKey, endKey){
   const months = monthKeysBetween(startKey.slice(0, 7), endKey.slice(0, 7));
-  const missing = months.filter((m)=> !appState.loadedMonths.has(m));
+  const missing = months.filter((m)=> !appState.loadedMonths.has(m) && (
+    appState.availableMonths.size === 0 || appState.availableMonths.has(m)
+  ));
   if(missing.length === 0) return;
   const batches = await Promise.all(missing.map(loadMonthCSV));
   missing.forEach((month, i)=>{
@@ -2729,17 +2832,35 @@ function renderAll(){
 async function main(){
   initMyPortalsFromURL();
   initHeatFilterUI();
-  appState.portals = await loadJSON("config/portals.json") || [];
-  appState.latest = await loadJSON("data/latest.json") || {};
-  appState.deadlines = await loadJSON("deadlines.json") || [];
 
-  const now = new Date();
-  const prev = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth()-1, 1));
-  const curMonth = monthKey(now);
-  const prevMonth = monthKey(prev);
-  const [curRows, prevRows] = await Promise.all([loadMonthCSV(curMonth), loadMonthCSV(prevMonth)]);
-  appState.loadedMonths = new Set([curMonth, prevMonth]);
-  appState.allRows = prevRows.concat(curRows);
+  const [portals, latest, deadlines, monthsList] = await Promise.all([
+    loadJSON("config/portals.json"),
+    loadJSON("data/latest.json"),
+    loadJSON("deadlines.json"),
+    loadJSON("data/months.json"),
+  ]);
+  appState.portals = portals || [];
+  appState.latest = latest || {};
+  appState.deadlines = deadlines || [];
+  appState.availableMonths = new Set(Array.isArray(monthsList) ? monthsList : []);
+  appState.agg = {};
+  appState.globalHours = Array.from({length:24}, ()=> null);
+  appState.allRows = [];
+
+  const summary = computeSummary(appState.portals, appState.latest);
+  renderKPIs(summary);
+  renderPulseBanner(summary, appState.globalHours);
+  renderLiveGrid(appState.portals, appState.latest, appState.agg);
+  renderSeverityChips();
+
+  const curMonth = monthKey(new Date());
+  const monthsToLoad = appState.availableMonths.size > 0
+    ? [...appState.availableMonths].sort()
+    : [curMonth];
+
+  const batches = await Promise.all(monthsToLoad.map(loadMonthCSV));
+  appState.loadedMonths = new Set(monthsToLoad);
+  appState.allRows = batches.flat();
   appState.agg = buildAggregation(appState.allRows);
   appState.globalHours = buildGlobalHours(appState.agg, appState.portals.map(p=>p.id));
 

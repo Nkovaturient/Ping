@@ -76,6 +76,14 @@ def main():
     with open(os.path.join(DATA_DIR, "latest.json"), "w") as f:
         json.dump(latest, f, indent=2)
 
+    months = sorted(
+        name[len("uptime-"):-len(".csv")]
+        for name in os.listdir(DATA_DIR)
+        if name.startswith("uptime-") and name.endswith(".csv")
+    )
+    with open(os.path.join(DATA_DIR, "months.json"), "w") as f:
+        json.dump(months, f)
+
 
 if __name__ == "__main__":
     main()
