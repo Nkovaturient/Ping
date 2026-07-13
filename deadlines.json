@@ -72,5 +72,23 @@
     "source": "https://sbi.bank.in/web/careers/current-openings",
     "verifiedOn": "2026-07-13",
     "autoScraped": true
+  },
+  {
+    "portal": "ssc",
+    "displayName": "Constables (GD) in Central Armed Police Forces (CAPFs), NIA, SSF and Rifleman (GD) in Assam Rifles Examination, 2027",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq134",
+    "deadline": "2026-10-31T23:59:00",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "verifiedOn": "2026-07-13",
+    "autoScraped": true
+  },
+  {
+    "portal": "ssc",
+    "displayName": "Multi-Tasking (Non-Technical) Staff & Havaldar (CBIC & CBN) Examination, 2026",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq132",
+    "deadline": "2026-07-31T23:59:00",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "verifiedOn": "2026-07-13",
+    "autoScraped": true
   }
 ]
