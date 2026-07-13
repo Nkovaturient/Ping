@@ -1,5 +1,112 @@
 {
   "seenIds": {},
-  "pendingIds": {},
-  "portalStatus": {}
+  "pendingIds": {
+    "3a5c538996bb7304": 1,
+    "57632865a93b1a6e": 1,
+    "17adbbdd0df4392c": 1,
+    "7b74cdd4756ab4a6": 1,
+    "fa5f80303cd67b22": 1,
+    "fc1094dfb69cad61": 1,
+    "cb81463da9f11da0": 1,
+    "92e057606e14a046": 1,
+    "c8b97541fd43f6bd": 1,
+    "e91681ddc5d49a81": 1,
+    "20c9ef14df215539": 1,
+    "a19b16bd4f6db30d": 1,
+    "bb409f3a47b4248b": 1,
+    "b44b5510600a6fa2": 1,
+    "d8f4e8599c3afc10": 1,
+    "19d166effadec5df": 1,
+    "980ef8546818f963": 1,
+    "6eb779ddcf42ae2b": 1,
+    "4965fca848644ac8": 1,
+    "2406603a3f73b761": 1
+  },
+  "portalStatus": {
+    "upsc": {
+      "status": "error: HTTPSConnectionPool(host='upsc.gov.in', port=443): Max retries exceeded with url: /examinations/active-exams (Caused by ConnectTimeoutError(<HTTPSConnection(host='upsc.gov.in', port=443) at 0x7f29c9573450>, 'Connection to upsc.gov.in timed out. (connect timeout=10)'))",
+      "lastRun": "2026-07-13T12:02:59.577533Z",
+      "count": 0
+    },
+    "ssc": {
+      "status": "ok",
+      "lastRun": "2026-07-13T12:03:02.121688Z",
+      "count": 0
+    },
+    "nta": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:02.121714Z",
+      "count": 0
+    },
+    "ibps": {
+      "status": "error: HTTPSConnectionPool(host='www.ibps.in', port=443): Max retries exceeded with url: /index.php/exam-notification/ (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))",
+      "lastRun": "2026-07-13T12:03:03.076597Z",
+      "count": 0
+    },
+    "rrb": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:03.076630Z",
+      "count": 0
+    },
+    "rrb_apply": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:03.076640Z",
+      "count": 0
+    },
+    "indiapost_gds": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:03.076646Z",
+      "count": 0
+    },
+    "rbi": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:03.076657Z",
+      "count": 0
+    },
+    "sbi": {
+      "status": "ok",
+      "lastRun": "2026-07-13T12:03:04.596801Z",
+      "count": 20
+    },
+    "uppsc": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:04.596822Z",
+      "count": 0
+    },
+    "upsssc": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:04.596828Z",
+      "count": 0
+    },
+    "bpsc": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:04.596834Z",
+      "count": 0
+    },
+    "mppsc": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:04.596838Z",
+      "count": 0
+    },
+    "rpsc": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:04.596842Z",
+      "count": 0
+    },
+    "mpsc": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:04.596845Z",
+      "count": 0
+    },
+    "tnpsc": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:04.596849Z",
+      "count": 0
+    },
+    "wbpsc": {
+      "status": "skipped",
+      "lastRun": "2026-07-13T12:03:04.596852Z",
+      "count": 0
+    }
+  }
 }
