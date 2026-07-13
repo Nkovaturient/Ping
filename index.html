@@ -1711,14 +1711,20 @@
        once the bot is deployed (see PULSE-BOT.md). -->
   <div class="telegram-hero bento-card" id="telegramHero">
     <div class="telegram-content">
-      <h3 data-i18n="telegramTitle">Get notified before a deadline sneaks up</h3>
-      <p data-i18n="telegramDesc">Subscribe on Telegram for just the portals you care about — tap buttons to pick a portal, get deadline reminders, and a heads-up if the current hour is historically slow.</p>
+      <h3 data-i18n="telegramTitle">New vacancies, deadlines & uptime alerts</h3>
+      <p data-i18n="telegramDesc">Subscribe on Telegram for the portals you care about — get instant alerts when new notifications drop, deadlines approach, or a portal goes down.</p>
     </div>
     <a class="telegram-cta" href="http://t.me/portal_pulse_bot" target="_blank" rel="noopener noreferrer">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.14-.002.44.032.622.184a.65.65 0 0 1 .208.489c-.008.14-.117.436-.24.618-.29.42-.928 1.028-1.585 1.593-.428.362-1.28 1.033-1.28 1.033l-.176 3.323c-.058.79-.34 1.043-.66 1.043-.32 0-.494-.15-.72-.35-.245-.217-1.53-1.28-1.87-1.556l-.9.867s-.246.24-.5.24l.18-1.985 3.61-3.263c.155-.14-.033-.218-.19-.09l-4.44 2.796-1.9-.59s-.35-.128-.28-.42c.06-.24.28-.35.28-.35l7.62-2.945s.4-.14.451.05z"/></svg>
       <span data-i18n="telegramCta">Get Telegram alerts</span>
     </a>
   </div>
+
+  <section id="notifSection">
+    <h2 data-i18n="notifTitle">Latest notifications</h2>
+    <p class="section-sub" data-i18n="notifSub">Recent career &amp; vacancy posts scraped from official portals. Updates every ~30 minutes.</p>
+    <div id="notifContainer"><div class="empty-state" data-i18n="loading">Loading…</div></div>
+  </section>
 
   <section id="liveSection">
     <h2 data-i18n="liveTitle">Live status</h2>
@@ -1762,7 +1768,7 @@
             <span class="chip-dot" aria-hidden="true"></span>
             <span id="heatFilterStatusText"></span>
           </div>
-          <button type="button" id="heatFilterClear" class="heat-filter-showall-btn" data-i18n="heatFilterClear">Show all</button>
+          <button type="button" id="heatFilterClear" class="heat-filter-showall-btn" data-i18n="heatFilterClear">Enhanced Mode</button>
         </div>
         <p id="heatFilterError" class="heat-filter-error" hidden></p>
       </div>
@@ -1788,9 +1794,12 @@ const STRINGS = {
     snapixTitle: "Resize photo, signature & PDF to exam portal specs — in seconds.",
     snapixDesc: "Meet KB limits, pixel dimensions, and aspect ratios for SSC, UPSC, IBPS, and state PSC uploads without last-minute rejections.",
     snapixPhoto: "Photo", snapixSig: "Signature", snapixPdf: "PDF", snapixCta: "Try Snapix free",
-    telegramTitle: "Get notified before a deadline sneaks up",
-    telegramDesc: "Subscribe on Telegram for just the portals you care about — tap buttons to pick a portal, get deadline reminders, and a heads-up if the current hour is historically slow.",
+    telegramTitle: "New vacancies, deadlines & uptime alerts",
+    telegramDesc: "Subscribe on Telegram for the portals you care about — get instant alerts when new notifications drop, deadlines approach, or a portal goes down.",
     telegramCta: "Get Telegram alerts",
+    notifTitle: "Latest notifications",
+    notifSub: "Recent career & vacancy posts scraped from official portals. Updates every ~30 minutes.",
+    notifEmpty: "No scraped notifications yet. Please check back later.",
     liveTitle: "Live status", liveSub: "Most recent check per portal. Updates every ~15 minutes.",
     whenTitle: "When to apply", whenSub: "Best and worst hours to fill forms, based on historical checks (IST).",
     heatTitle: "Peak-hour heatmap (IST)", heatSub: "When portals tend to slow down. Darker red = slower or down more often at that hour.",
@@ -1811,7 +1820,7 @@ const STRINGS = {
     heat_no_data_sub: (from, to) => `Records are available from ${from} to ${to} (IST). Try a date within this range.`,
     heatFilterModeSingle: "Single day", heatFilterModeRange: "Date range",
     heatFilterSingleLabel: "Day", heatFilterFrom: "From", heatFilterTo: "To",
-    heatFilterApply: "Apply", heatFilterClear: "Show all",
+    heatFilterApply: "Apply", heatFilterClear: "Enhanced Mode",
     heatFilterInvalidDate: "Use DD/MM/YYYY (e.g. 07/07/2026).",
     heatFilterRangeOrder: "End date must be on or after the start date.",
     heatFilterActiveSingle: (d) => `Showing ${d}`,
@@ -1848,8 +1857,11 @@ const STRINGS = {
     snapixDesc: "SSC, UPSC, IBPS aur state PSC uploads ke liye KB limits, pixel size aur aspect ratio match karo — last-minute rejection se bacho.",
     snapixPhoto: "Photo", snapixSig: "Signature", snapixPdf: "PDF", snapixCta: "Snapix free try karo",
     telegramTitle: "Deadline nikalne se pehle alert paao",
-    telegramDesc: "Telegram par sirf unhi portals ke liye subscribe karo — button tap karke portal chuno, deadline reminders paao, aur agar abhi ka hour historically slow raha hai to heads-up.",
+    telegramDesc: "Telegram par subscribe karo — nayi notifications, deadline reminders, aur portal down hone par turant alert.",
     telegramCta: "Telegram alerts lo",
+    notifTitle: "Latest notifications",
+    notifSub: "Official portals se scrape ki gayi nayi vacancies. Har ~30 minute update.",
+    notifEmpty: "Abhi koi notification nahi — pehli scrape ke baad yahan dikhega.",
     liveTitle: "Live status", liveSub: "Har portal ka latest check. Har ~15 minute update.",
     whenTitle: "Kab apply karein", whenSub: "Form bharnе ke best aur worst hours, historical checks ke basis par (IST).",
     heatTitle: "Peak-hour heatmap (IST)", heatSub: "Portals kab slow hote hain. Dark red = us hour mein zyada slow ya down.",
@@ -1915,6 +1927,7 @@ let appState = {
   loadedMonths: new Set(),
   availableMonths: new Set(),
   deadlines: [],
+  notifications: [],
   severityFilter: "all",
   heatFilter: { active: true, mode: "single", startKey: null, endKey: null },
 };
@@ -2567,6 +2580,26 @@ function renderPulseBanner(summary, globalHours){
   chipEl.className = "context-chip " + chipCls;
 }
 
+function renderNotifications(notifications, portals){
+  const container = document.getElementById("notifContainer");
+  if(!container) return;
+  const byId = Object.fromEntries((portals || []).map(p=> [p.id, p.name]));
+  const items = (notifications || []).slice(0, 30);
+  if(items.length === 0){
+    container.innerHTML = `<div class="empty-state bento-card">${t("notifEmpty")}</div>`;
+    return;
+  }
+  container.innerHTML = `<div class="grid-cards">${items.map((n, i)=>{
+    const pname = byId[n.portal] || n.portal?.toUpperCase() || "—";
+    const when = n.scrapedAt ? timeAgo(n.scrapedAt) : "";
+    return `<a class="pcard bento-card" href="${n.url || "#"}" target="_blank" rel="noopener noreferrer" style="animation-delay:${i * 30}ms">
+      <div class="pcard-header"><span class="cat-label">${pname}</span></div>
+      <div class="name" style="font-size:0.95rem;line-height:1.35">${n.title || "—"}</div>
+      <div class="pcard-meta">${when ? `${t("checked")} ${when}` : ""}</div>
+    </a>`;
+  }).join("")}</div>`;
+}
+
 function renderLiveGrid(portals, latest, agg){
   const liveContainer = document.getElementById("liveContainer");
   if(portals.length === 0){
@@ -2819,10 +2852,11 @@ async function renderHeatmapFromFilter(){
 }
 
 function renderAll(){
-  const { portals, latest, agg, globalHours } = appState;
+  const { portals, latest, agg, globalHours, notifications } = appState;
   const summary = computeSummary(portals, latest);
   renderKPIs(summary);
   renderPulseBanner(summary, globalHours);
+  renderNotifications(notifications, portals);
   renderLiveGrid(portals, latest, agg);
   renderWhenToApply(portals, latest, globalHours, agg);
   renderHeatmapFromFilter().catch((e)=> console.error("[heatmap]", e));
@@ -2833,15 +2867,17 @@ async function main(){
   initMyPortalsFromURL();
   initHeatFilterUI();
 
-  const [portals, latest, deadlines, monthsList] = await Promise.all([
+  const [portals, latest, deadlines, notifications, monthsList] = await Promise.all([
     loadJSON("config/portals.json"),
     loadJSON("data/latest.json"),
     loadJSON("deadlines.json"),
+    loadJSON("data/notifications.json"),
     loadJSON("data/months.json"),
   ]);
   appState.portals = portals || [];
   appState.latest = latest || {};
   appState.deadlines = deadlines || [];
+  appState.notifications = Array.isArray(notifications) ? notifications : [];
   appState.availableMonths = new Set(Array.isArray(monthsList) ? monthsList : []);
   appState.agg = {};
   appState.globalHours = Array.from({length:24}, ()=> null);
@@ -2850,6 +2886,7 @@ async function main(){
   const summary = computeSummary(appState.portals, appState.latest);
   renderKPIs(summary);
   renderPulseBanner(summary, appState.globalHours);
+  renderNotifications(appState.notifications, appState.portals);
   renderLiveGrid(appState.portals, appState.latest, appState.agg);
   renderSeverityChips();
 

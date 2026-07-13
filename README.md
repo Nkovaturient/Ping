@@ -15,7 +15,8 @@ Live uptime & peak-hour patterns for India’s exam and recruitment portals (UPS
 | **Live status** | Homepage checks every ~15 minutes |
 | **When to apply** | Best / worst hours from history (IST) |
 | **Heatmap** | Peak-hour slowdowns by portal |
-| **Alerts** | Optional Telegram bot for deadlines & slow hours |
+| **Alerts** | Telegram bot — new notifications, deadlines, uptime (Supabase-backed subs) |
+| **Notifications scrape** | GHA scrapes careers/notices every ~30 min → `data/notifications.json` |
 
 No server, no database — GitHub Actions writes CSV + JSON; the static dashboard reads them from the repo.
 

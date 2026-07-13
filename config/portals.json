@@ -1,19 +1,137 @@
 [
-  { "id": "upsc",        "name": "UPSC",              "url": "https://upsc.gov.in",                       "category": "central" },
-  { "id": "ssc",         "name": "SSC",               "url": "https://ssc.gov.in",                        "category": "central" },
-  { "id": "nta",         "name": "NTA (NEET/JEE/CUET)","url": "https://nta.ac.in",                         "category": "central" },
-  { "id": "ibps",        "name": "IBPS",              "url": "https://www.ibps.in",                       "category": "banking" },
-  { "id": "rrb",         "name": "RRB (unified)",     "url": "https://rrb.indianrailways.gov.in",         "category": "central" },
-  { "id": "rrb_apply",   "name": "RRB Apply (CEN portal)", "url": "https://www.rrbapply.gov.in",          "category": "central" },
-  { "id": "indiapost_gds","name": "India Post GDS",   "url": "https://indiapostgdsonline.gov.in",         "category": "central" },
-  { "id": "rbi",         "name": "RBI",               "url": "https://www.rbi.org.in",                    "category": "banking" },
-  { "id": "sbi",         "name": "SBI",               "url": "https://sbi.co.in",                         "category": "banking" },
-  { "id": "uppsc",       "name": "UPPSC",             "url": "https://uppsc.up.nic.in",                   "category": "state" },
-  { "id": "upsssc",      "name": "UPSSSC",            "url": "https://upsssc.gov.in",                     "category": "state" },
-  { "id": "bpsc",        "name": "BPSC",              "url": "https://bpsc.bihar.gov.in",                 "category": "state" },
-  { "id": "mppsc",       "name": "MPPSC",             "url": "https://mppsc.mp.gov.in",                   "category": "state" },
-  { "id": "rpsc",        "name": "RPSC",              "url": "https://rpsc.rajasthan.gov.in",             "category": "state" },
-  { "id": "mpsc",        "name": "MPSC",              "url": "https://mpsc.gov.in",                       "category": "state" },
-  { "id": "tnpsc",       "name": "TNPSC",             "url": "https://www.tnpsc.gov.in",                  "category": "state" },
-  { "id": "wbpsc",       "name": "WBPSC",             "url": "https://psc.wb.gov.in",                     "category": "state" }
+  {
+    "id": "upsc",
+    "name": "UPSC",
+    "url": "https://upsc.gov.in",
+    "category": "central",
+    "notifications": {
+      "strategy": "module",
+      "module": "upsc",
+      "listUrl": "https://upsc.gov.in/examinations/active-exams"
+    }
+  },
+  {
+    "id": "ssc",
+    "name": "SSC",
+    "url": "https://ssc.gov.in",
+    "category": "central",
+    "notifications": {
+      "strategy": "module",
+      "module": "ssc",
+      "listUrl": "https://ssc.gov.in/api/attachment/uploads/masterData/NoticeBoardExamination"
+    }
+  },
+  {
+    "id": "nta",
+    "name": "NTA (NEET/JEE/CUET)",
+    "url": "https://nta.ac.in",
+    "category": "central",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "ibps",
+    "name": "IBPS",
+    "url": "https://www.ibps.in",
+    "category": "banking",
+    "notifications": {
+      "strategy": "module",
+      "module": "ibps",
+      "listUrl": "https://www.ibps.in/index.php/exam-notification/"
+    }
+  },
+  {
+    "id": "rrb",
+    "name": "RRB (unified)",
+    "url": "https://rrb.indianrailways.gov.in",
+    "category": "central",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "rrb_apply",
+    "name": "RRB Apply (CEN portal)",
+    "url": "https://www.rrbapply.gov.in",
+    "category": "central",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "indiapost_gds",
+    "name": "India Post GDS",
+    "url": "https://indiapostgdsonline.gov.in",
+    "category": "central",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "rbi",
+    "name": "RBI",
+    "url": "https://www.rbi.org.in",
+    "category": "banking",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "sbi",
+    "name": "SBI",
+    "url": "https://sbi.co.in",
+    "category": "banking",
+    "notifications": {
+      "strategy": "module",
+      "module": "sbi",
+      "listUrl": "https://sbi.bank.in/web/careers/current-openings"
+    }
+  },
+  {
+    "id": "uppsc",
+    "name": "UPPSC",
+    "url": "https://uppsc.up.nic.in",
+    "category": "state",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "upsssc",
+    "name": "UPSSSC",
+    "url": "https://upsssc.gov.in",
+    "category": "state",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "bpsc",
+    "name": "BPSC",
+    "url": "https://bpsc.bihar.gov.in",
+    "category": "state",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "mppsc",
+    "name": "MPPSC",
+    "url": "https://mppsc.mp.gov.in",
+    "category": "state",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "rpsc",
+    "name": "RPSC",
+    "url": "https://rpsc.rajasthan.gov.in",
+    "category": "state",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "mpsc",
+    "name": "MPSC",
+    "url": "https://mpsc.gov.in",
+    "category": "state",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "tnpsc",
+    "name": "TNPSC",
+    "url": "https://www.tnpsc.gov.in",
+    "category": "state",
+    "notifications": { "strategy": "manual_only" }
+  },
+  {
+    "id": "wbpsc",
+    "name": "WBPSC",
+    "url": "https://psc.wb.gov.in",
+    "category": "state",
+    "notifications": { "strategy": "manual_only" }
+  }
 ]

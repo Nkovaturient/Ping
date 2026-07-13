@@ -1,6 +1,10 @@
 .env
 __pycache__/
+subscriptions.json
+fanout_state.json
 PORTAL-NOTIFY.md
 PULSE-BOT.md
 outreach-templates.md
 deadlines-notes.md
+supabase/
+node_modules/

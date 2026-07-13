@@ -1,31 +1,19 @@
 /**
- * Portal Pulse bot — interactive skeleton (Phase 2).
- *
- * Ship the broadcast version (../telegram-broadcast) first — it needs zero
- * hosting. Come back to this once you want per-user subscriptions like
- * "only alert me about SSC and IBPS" or a /status command people can
- * message on demand.
- *
- * Needs an always-on-ish process — deployed to Render's free web service
- * tier (see PULSE-BOT.md), long-polling as written here.
+ * Portal Pulse bot
  *
  * Setup:
  *   npm install
- *   TELEGRAM_BOT_TOKEN=xxxx node index.js
+ *   TELEGRAM_BOT_TOKEN=xxxx SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node index.js
  *
- * DATA SOURCE: this process has no repo checkout (unlike notify.py's
- * GitHub Action), so it always fetches Ping's real data — data/latest.json
- * and data/uptime-YYYY-MM.csv — over HTTPS from raw.githubusercontent.com.
- * Configure PING_REPO_OWNER/PING_REPO_NAME/PING_REPO_BRANCH if this bot
- * doesn't live in the same repo as Ping. The CSV parsing below mirrors
- * index.html's parseCSV() so both consumers stay in lockstep with Ping's
- * actual columns (timestamp_utc, portal_id, status_code, latency_ms, up).
+ * DATA SOURCE: fetches Ping repo data over HTTPS from raw.githubusercontent.com
+ * (latest.json, uptime CSV, deadlines.json, notifications.json).
  */
 
 const TelegramBot = require("node-telegram-bot-api");
 const fs = require("fs");
 const http = require("http");
 const path = require("path");
+const db = require("./db");
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 if (!TOKEN) {
@@ -36,11 +24,9 @@ if (!TOKEN) {
 const REPO_OWNER = process.env.PING_REPO_OWNER || "nkovaturient";
 const REPO_NAME = process.env.PING_REPO_NAME || "Ping";
 const REPO_BRANCH = process.env.PING_REPO_BRANCH || "main";
-const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}/data`;
+const RAW_REPO_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}`;
+const RAW_DATA_BASE = `${RAW_REPO_BASE}/data`;
 
-const SUBS_FILE = path.join(__dirname, "subscriptions.json");
-const DEADLINES_FILE = path.join(__dirname, "deadlines.json");
-const FANOUT_STATE_FILE = path.join(__dirname, "fanout_state.json");
 const PORTALS_FILE = path.join(__dirname, "config", "portals.json");
 
 function loadPortals() {
@@ -58,6 +44,13 @@ const PICKER_PAGE_SIZE = 8;
 function portalName(id) {
   const p = PORTALS.find((x) => x.id === id);
   return p ? p.name : id.toUpperCase();
+}
+
+function subscriberMeta(msg) {
+  return {
+    username: msg.from?.username,
+    first_name: msg.from?.first_name,
+  };
 }
 
 function levenshtein(a, b) {
@@ -143,8 +136,8 @@ function pickerPromptText(action) {
   }
 }
 
-function pickerPortalIds(action, chatId) {
-  if (action === "unsub") return loadSubs()[String(chatId)] || [];
+async function pickerPortalIds(action, chatId) {
+  if (action === "unsub") return db.getUserPortals(chatId);
   return KNOWN_PORTALS;
 }
 
@@ -180,10 +173,6 @@ function usageFooterKeyboard(action) {
   return { inline_keyboard: [[{ text: "See all portals", callback_data: `p:${pickerAction}:0` }]] };
 }
 
-/**
- * Single source of truth for bot commands — drives /help, /start, BotFather
- * menu, usage prompts, and the unknown-command fallback.
- */
 const COMMAND_SPECS = {
   start: {
     name: "start",
@@ -201,14 +190,14 @@ const COMMAND_SPECS = {
   },
   subscribe: {
     name: "subscribe",
-    shortDescription: "Get deadline alerts",
-    summary: "Subscribe to deadline alerts for a portal",
+    shortDescription: "Get portal alerts",
+    summary: "Subscribe to new notifications, deadlines, and uptime alerts for a portal",
     args: [{ name: "portal", required: true, type: "portal" }],
     examples: ["/subscribe ssc", "/subscribe ibps"],
   },
   unsubscribe: {
     name: "unsubscribe",
-    shortDescription: "Stop deadline alerts",
+    shortDescription: "Stop portal alerts",
     summary: "Unsubscribe from a portal's alerts",
     args: [{ name: "portal", required: true, type: "portal" }],
     examples: ["/unsubscribe ssc"],
@@ -278,7 +267,7 @@ function buildWelcomeText() {
     "👋 *Welcome to PortalPulseBot* ⚡",
     "",
     "Your exam lifeline. 🎯",
-    "I track live status of SSC, UPSC, NTA, IBPS, RRB & major state portals and send timely alerts.",
+    "I track SSC, UPSC, NTA, IBPS, RRB & state portals — new vacancies, deadline reminders, and uptime changes.",
     "",
     "*Commands:*",
     ...cmds,
@@ -298,42 +287,24 @@ function buildHelpText() {
   return lines.join("\n");
 }
 
-// check_uptime.py runs every ~15 min (see .github/workflows/uptime-check.yml).
-// Keep these thresholds in sync with notify.py's MIN_SAMPLES_FOR_ADVISORY /
-// MIN_SAMPLES_PER_HOUR if you tune one, tune the other.
 const MIN_SAMPLES_FOR_ADVISORY = 300;
 const MIN_SAMPLES_PER_HOUR = 5;
 const DANGER_WINDOW_DAYS = 3;
-const FANOUT_INTERVAL_MS = 1 * 60 * 60 * 1000; // 1h — runs often so we can catch tight windows
+const DEADLINE_FANOUT_INTERVAL_MS = 1 * 60 * 60 * 1000;
+const FAST_POLL_INTERVAL_MS = 5 * 60 * 1000;
+const UPTIME_SLOW_MS = 5000;
+const UPTIME_ALERT_COOLDOWN_HOURS = 0.5;
+const TELEGRAM_SEND_DELAY_MS = 50;
 
 /**
  * Escalating alert cadence — quiet early, sharp near deadline.
  * Keep in sync with notify.py's alert_interval_hours().
  */
 function alertIntervalHours(remainingDays) {
-  if (remainingDays <= 0.5) return 2;   // final ~12 hours: every 2h
-  if (remainingDays <= 1)   return 4;   // last day: every 4h
-  if (remainingDays <= 2)   return 8;   // 1-2 days out: every 8h
-  return 24;                            // 2-3 days out: once per day
-}
-
-function loadSubs() {
-  if (!fs.existsSync(SUBS_FILE)) return {};
-  return JSON.parse(fs.readFileSync(SUBS_FILE, "utf8"));
-}
-function saveSubs(subs) {
-  fs.writeFileSync(SUBS_FILE, JSON.stringify(subs, null, 2));
-}
-function loadDeadlines() {
-  if (!fs.existsSync(DEADLINES_FILE)) return [];
-  return JSON.parse(fs.readFileSync(DEADLINES_FILE, "utf8"));
-}
-function loadFanoutState() {
-  if (!fs.existsSync(FANOUT_STATE_FILE)) return {};
-  return JSON.parse(fs.readFileSync(FANOUT_STATE_FILE, "utf8"));
-}
-function saveFanoutState(state) {
-  fs.writeFileSync(FANOUT_STATE_FILE, JSON.stringify(state, null, 2));
+  if (remainingDays <= 0.5) return 2;
+  if (remainingDays <= 1) return 4;
+  if (remainingDays <= 2) return 8;
+  return 24;
 }
 
 async function fetchText(url) {
@@ -347,7 +318,39 @@ async function fetchText(url) {
   }
 }
 
-// Same shape as index.html's parseCSV() — one row per check.
+async function fetchJson(url) {
+  const text = await fetchText(url);
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    console.warn(`[warn] invalid JSON from ${url}: ${e.message}`);
+    return null;
+  }
+}
+
+async function fetchDeadlines() {
+  const remote = await fetchJson(`${RAW_REPO_BASE}/deadlines.json`);
+  if (remote) return remote;
+  const local = path.join(__dirname, "deadlines.json");
+  if (fs.existsSync(local)) return JSON.parse(fs.readFileSync(local, "utf8"));
+  return [];
+}
+
+async function fetchNotifications() {
+  return (await fetchJson(`${RAW_DATA_BASE}/notifications.json`)) || [];
+}
+
+async function fetchNotificationState() {
+  return (
+    (await fetchJson(`${RAW_DATA_BASE}/notifications_state.json`)) || {
+      seenIds: {},
+      pendingIds: {},
+      portalStatus: {},
+    }
+  );
+}
+
 function parseCSV(text) {
   const lines = text.trim().split(/\r\n|\n/);
   if (lines.length < 2) return [];
@@ -373,13 +376,12 @@ function monthKey(date) {
   return date.getUTCFullYear() + "-" + String(date.getUTCMonth() + 1).padStart(2, "0");
 }
 
-// Full check-by-check history (current + previous month), for peak-hour scoring.
 async function fetchHistoryRows() {
   const now = new Date();
   const prev = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));
   const [curText, prevText] = await Promise.all([
-    fetchText(`${RAW_BASE}/uptime-${monthKey(now)}.csv`),
-    fetchText(`${RAW_BASE}/uptime-${monthKey(prev)}.csv`),
+    fetchText(`${RAW_DATA_BASE}/uptime-${monthKey(now)}.csv`),
+    fetchText(`${RAW_DATA_BASE}/uptime-${monthKey(prev)}.csv`),
   ]);
   const rows = [];
   if (prevText) rows.push(...parseCSV(prevText));
@@ -388,8 +390,7 @@ async function fetchHistoryRows() {
 }
 
 async function fetchLatestStatus() {
-  const text = await fetchText(`${RAW_BASE}/latest.json`);
-  const latest = text ? JSON.parse(text) : {};
+  const latest = (await fetchJson(`${RAW_DATA_BASE}/latest.json`)) || {};
   const latestByPortal = {};
   for (const [portalId, rec] of Object.entries(latest)) {
     latestByPortal[portalId] = {
@@ -406,7 +407,6 @@ function istHour(date) {
   return Math.floor(((utcMinutes + 330) % 1440) / 60);
 }
 
-// Ported 1:1 from notify.py's peak_hour_advisory() — keep both in sync.
 function peakHourAdvisory(history, portal, currentHour) {
   const samples = history.filter((h) => h.portal === portal);
   if (samples.length < MIN_SAMPLES_FOR_ADVISORY) return null;
@@ -486,10 +486,27 @@ const HELP_TEXT = buildHelpText();
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
-function sendPortalReply(chatId, { action, result }) {
+const lastKnownUptime = {};
+
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+async function sendDm(chatId, text) {
+  try {
+    await bot.sendMessage(chatId, text, { parse_mode: "Markdown" });
+    await sleep(TELEGRAM_SEND_DELAY_MS);
+    return true;
+  } catch (e) {
+    console.warn(`[warn] could not DM ${chatId}: ${e.message}`);
+    return false;
+  }
+}
+
+async function sendPortalReply(chatId, { action, result }) {
   const opts = { parse_mode: "Markdown" };
   if (result.reason === "missing") {
-    const portalIds = pickerPortalIds(action, chatId);
+    const portalIds = await pickerPortalIds(action, chatId);
     if (action === "unsub" && portalIds.length === 0) {
       bot.sendMessage(chatId, "You have no active subscriptions.\n\nUse /subscribe to get started.", opts);
       return;
@@ -528,40 +545,36 @@ function sendPortalsList(chatId) {
   bot.sendMessage(chatId, lines.join("\n"), { parse_mode: "Markdown" });
 }
 
-function subscribeUserToPortal(chatId, portal) {
-  if (!KNOWN_PORTALS.includes(portal)) return false;
-  const subs = loadSubs();
-  const userId = String(chatId);
-  subs[userId] = subs[userId] || [];
-  if (!subs[userId].includes(portal)) subs[userId].push(portal);
-  saveSubs(subs);
-  return true;
-}
-
-async function doSubscribe(chatId, portal) {
-  subscribeUserToPortal(chatId, portal);
-  await bot.sendMessage(
-    chatId,
-    `✅ Subscribed to *${portalName(portal)}* alerts.\nYou'll be notified when its form deadline is within ${DANGER_WINDOW_DAYS} days.\n\n/mysubs — review · /unsubscribe ${portal} — stop`,
-    { parse_mode: "Markdown" }
-  );
+async function doSubscribe(chatId, portal, meta = {}) {
+  if (!KNOWN_PORTALS.includes(portal)) return;
+  try {
+    await db.subscribeUserToPortal(chatId, portal, meta);
+    await bot.sendMessage(
+      chatId,
+      `✅ Subscribed to *${portalName(portal)}* alerts.\nYou'll get:\n• New vacancy/notification posts\n• Deadline reminders (within ${DANGER_WINDOW_DAYS} days)\n• Uptime down/slow alerts\n\n/mysubs — review · /unsubscribe ${portal} — stop`,
+      { parse_mode: "Markdown" }
+    );
+  } catch (e) {
+    await bot.sendMessage(chatId, "⚠️ Subscriptions temporarily unavailable. Please try again shortly.");
+  }
 }
 
 async function doUnsubscribe(chatId, portal) {
-  const subs = loadSubs();
-  const userId = String(chatId);
-  const mine = subs[userId] || [];
-  if (!mine.includes(portal)) {
-    await bot.sendMessage(
-      chatId,
-      `You're not subscribed to *${portalName(portal)}*.\n\nYour subs: ${mine.length ? mine.map((p) => portalName(p)).join(", ") : "none"}\n\n/mysubs — review · /subscribe ${portal} — add`,
-      { parse_mode: "Markdown" }
-    );
-    return;
+  try {
+    const mine = await db.getUserPortals(chatId);
+    if (!mine.includes(portal)) {
+      await bot.sendMessage(
+        chatId,
+        `You're not subscribed to *${portalName(portal)}*.\n\nYour subs: ${mine.length ? mine.map((p) => portalName(p)).join(", ") : "none"}\n\n/mysubs — review · /subscribe ${portal} — add`,
+        { parse_mode: "Markdown" }
+      );
+      return;
+    }
+    await db.unsubscribeUserFromPortal(chatId, portal);
+    await bot.sendMessage(chatId, `🔕 Unsubscribed from *${portalName(portal)}*.`, { parse_mode: "Markdown" });
+  } catch (e) {
+    await bot.sendMessage(chatId, "⚠️ Subscriptions temporarily unavailable. Please try again shortly.");
   }
-  subs[userId] = mine.filter((p) => p !== portal);
-  saveSubs(subs);
-  await bot.sendMessage(chatId, `🔕 Unsubscribed from *${portalName(portal)}*.`, { parse_mode: "Markdown" });
 }
 
 async function doStatus(chatId, portal) {
@@ -644,10 +657,10 @@ async function doPeak(chatId, portal) {
   }
 }
 
-async function executeAction(action, chatId, portal) {
+async function executeAction(action, chatId, portal, meta = {}) {
   switch (action) {
     case "sub":
-      await doSubscribe(chatId, portal);
+      await doSubscribe(chatId, portal, meta);
       break;
     case "unsub":
       await doUnsubscribe(chatId, portal);
@@ -693,17 +706,17 @@ bot.on("callback_query", async (query) => {
     const portal = parts.slice(2).join(":");
     const resolved = resolvePortal(portal);
     if (!resolved.ok) {
-      sendPortalReply(chatId, { action, result: resolved });
+      await sendPortalReply(chatId, { action, result: resolved });
       return;
     }
-    await executeAction(action, chatId, resolved.portal);
+    await executeAction(action, chatId, resolved.portal, subscriberMeta(query));
     return;
   }
 
   if (data.startsWith("p:")) {
     const [, action, pageStr] = data.split(":");
     const page = parseInt(pageStr, 10) || 0;
-    const portalIds = pickerPortalIds(action, chatId);
+    const portalIds = await pickerPortalIds(action, chatId);
     if (portalIds.length === 0) {
       bot.sendMessage(chatId, "You have no active subscriptions.\n\nUse /subscribe to get started.", { parse_mode: "Markdown" });
       return;
@@ -720,18 +733,22 @@ bot.on("callback_query", async (query) => {
   }
 });
 
-// /start alone → welcome. /start sub_ssc (deep-link from Ping/Snapix) → auto-subscribe.
-bot.onText(/\/start(?:\s+(\S+))?/, (msg, match) => {
+bot.onText(/\/start(?:\s+(\S+))?/, async (msg, match) => {
   const payload = match[1];
   const subMatch = payload && /^sub_(\w+)$/.exec(payload);
   if (subMatch) {
     const resolved = resolvePortal(subMatch[1]);
     if (resolved.ok) {
-      doSubscribe(msg.chat.id, resolved.portal);
+      await doSubscribe(msg.chat.id, resolved.portal, subscriberMeta(msg));
       return;
     }
-    sendPortalReply(msg.chat.id, { action: "sub", result: resolved });
+    await sendPortalReply(msg.chat.id, { action: "sub", result: resolved });
     return;
+  }
+  try {
+    await db.upsertSubscriber(msg.chat.id, subscriberMeta(msg));
+  } catch (e) {
+    /* non-fatal on welcome */
   }
   bot.sendMessage(msg.chat.id, WELCOME_TEXT, { parse_mode: "Markdown" });
 });
@@ -741,7 +758,7 @@ bot.onText(/\/status(?:\s+(\w+))?/, async (msg, match) => {
   if (portalFilter) {
     const resolved = resolvePortal(portalFilter);
     if (!resolved.ok) {
-      sendPortalReply(msg.chat.id, { action: "status", result: resolved });
+      await sendPortalReply(msg.chat.id, { action: "status", result: resolved });
       return;
     }
     await doStatus(msg.chat.id, resolved.portal);
@@ -766,44 +783,47 @@ bot.onText(/\/status(?:\s+(\w+))?/, async (msg, match) => {
   }
 });
 
-bot.onText(/\/subscribe\s+(\w+)/, (msg, match) => {
+bot.onText(/\/subscribe\s+(\w+)/, async (msg, match) => {
   const resolved = resolvePortal(match[1]);
   if (!resolved.ok) {
-    sendPortalReply(msg.chat.id, { action: "sub", result: resolved });
+    await sendPortalReply(msg.chat.id, { action: "sub", result: resolved });
     return;
   }
-  doSubscribe(msg.chat.id, resolved.portal);
+  await doSubscribe(msg.chat.id, resolved.portal, subscriberMeta(msg));
 });
 
-bot.onText(/\/subscribe$/, (msg) => {
-  sendPortalReply(msg.chat.id, { action: "sub", result: { ok: false, reason: "missing" } });
+bot.onText(/\/subscribe$/, async (msg) => {
+  await sendPortalReply(msg.chat.id, { action: "sub", result: { ok: false, reason: "missing" } });
 });
 
-bot.onText(/\/unsubscribe\s+(\w+)/, (msg, match) => {
+bot.onText(/\/unsubscribe\s+(\w+)/, async (msg, match) => {
   const resolved = resolvePortal(match[1]);
   if (!resolved.ok) {
-    sendPortalReply(msg.chat.id, { action: "unsub", result: resolved });
+    await sendPortalReply(msg.chat.id, { action: "unsub", result: resolved });
     return;
   }
-  doUnsubscribe(msg.chat.id, resolved.portal);
+  await doUnsubscribe(msg.chat.id, resolved.portal);
 });
 
-bot.onText(/\/unsubscribe$/, (msg) => {
-  sendPortalReply(msg.chat.id, { action: "unsub", result: { ok: false, reason: "missing" } });
+bot.onText(/\/unsubscribe$/, async (msg) => {
+  await sendPortalReply(msg.chat.id, { action: "unsub", result: { ok: false, reason: "missing" } });
 });
 
-bot.onText(/\/mysubs/, (msg) => {
-  const subs = loadSubs();
-  const mine = subs[String(msg.chat.id)] || [];
-  if (mine.length === 0) {
-    bot.sendMessage(msg.chat.id, "No subscriptions yet.\n\nUse /subscribe to pick a portal.", { parse_mode: "Markdown" });
-    return;
+bot.onText(/\/mysubs/, async (msg) => {
+  try {
+    const mine = await db.getUserPortals(msg.chat.id);
+    if (mine.length === 0) {
+      bot.sendMessage(msg.chat.id, "No subscriptions yet.\n\nUse /subscribe to pick a portal.", { parse_mode: "Markdown" });
+      return;
+    }
+    bot.sendMessage(
+      msg.chat.id,
+      `📋 *Your subscriptions:*\n${mine.map((p) => `• ${portalName(p)}`).join("\n")}\n\n/unsubscribe — remove one`,
+      { parse_mode: "Markdown" }
+    );
+  } catch (e) {
+    bot.sendMessage(msg.chat.id, "⚠️ Subscriptions temporarily unavailable. Please try again shortly.");
   }
-  bot.sendMessage(
-    msg.chat.id,
-    `📋 *Your subscriptions:*\n${mine.map((p) => `• ${portalName(p)}`).join("\n")}\n\n/unsubscribe — remove one`,
-    { parse_mode: "Markdown" }
-  );
 });
 
 bot.onText(/\/help/, (msg) => {
@@ -822,7 +842,7 @@ bot.onText(/\/history(?:\s+(\w+))?/, async (msg, match) => {
     if (portalFilter) {
       const resolved = resolvePortal(portalFilter);
       if (!resolved.ok) {
-        sendPortalReply(msg.chat.id, { action: "history", result: resolved });
+        await sendPortalReply(msg.chat.id, { action: "history", result: resolved });
         return;
       }
       await doHistory(msg.chat.id, resolved.portal);
@@ -850,31 +870,26 @@ bot.onText(/\/history(?:\s+(\w+))?/, async (msg, match) => {
 bot.onText(/\/peak(?:\s+(\w+))?/, async (msg, match) => {
   const portalArg = match[1]?.toLowerCase();
   if (!portalArg) {
-    sendPortalReply(msg.chat.id, { action: "peak", result: { ok: false, reason: "missing" } });
+    await sendPortalReply(msg.chat.id, { action: "peak", result: { ok: false, reason: "missing" } });
     return;
   }
   const resolved = resolvePortal(portalArg);
   if (!resolved.ok) {
-    sendPortalReply(msg.chat.id, { action: "peak", result: resolved });
+    await sendPortalReply(msg.chat.id, { action: "peak", result: resolved });
     return;
   }
   await doPeak(msg.chat.id, resolved.portal);
 });
 
-// Per-user fan-out: DMs each subscriber only about the portals they asked
-// for, reusing the same deadline-window + peak-hour-advisory + escalating
-// cadence logic as notify.py's broadcast, just targeted per chat_id.
-// State stores ISO timestamps so we can gate on elapsed hours.
-async function runFanout() {
-  const subs = loadSubs();
+async function runDeadlineFanout() {
+  const subs = await db.getAllSubsMap();
   const subscribedUserIds = Object.keys(subs).filter((id) => subs[id].length > 0);
   if (subscribedUserIds.length === 0) return;
 
-  const deadlines = loadDeadlines();
+  const deadlines = await fetchDeadlines();
   if (deadlines.length === 0) return;
 
   const history = await fetchHistoryRows();
-  const state = loadFanoutState();
   const now = new Date();
   const currentHour = istHour(now);
 
@@ -891,36 +906,122 @@ async function runFanout() {
         : "No historical red flags for this hour — but don't wait for the last day.",
     ];
     const text = lines.join("\n");
-
     const requiredInterval = alertIntervalHours(remaining);
 
     for (const userId of subscribedUserIds) {
       if (!subs[userId].includes(exam.portal)) continue;
-      const stateKey = `${userId}:${exam.portal}:${exam.deadline}`;
-      const lastSentIso = state[stateKey];
-
+      const stateKey = `${userId}:deadline:${exam.portal}:${exam.deadline}`;
+      const lastSentIso = await db.getAlertSentAt(stateKey);
       if (lastSentIso) {
         const hoursSince = (now - new Date(lastSentIso)) / (1000 * 60 * 60);
-        if (hoursSince < requiredInterval) continue; // too soon per escalating cadence
+        if (hoursSince < requiredInterval) continue;
       }
-
-      try {
-        await bot.sendMessage(userId, text, { parse_mode: "Markdown" });
-        state[stateKey] = now.toISOString();
-      } catch (e) {
-        console.warn(`[warn] could not DM ${userId}: ${e.message}`);
+      if (await sendDm(userId, text)) {
+        await db.setAlertSent(stateKey);
       }
     }
   }
+}
 
-  saveFanoutState(state);
+async function runNotificationFanout() {
+  const [notifications, notifState] = await Promise.all([fetchNotifications(), fetchNotificationState()]);
+  if (!notifications.length) return;
+
+  const seenIds = notifState.seenIds || {};
+  const pendingIds = notifState.pendingIds || {};
+  const confirmedIds = new Set(Object.keys(seenIds));
+  for (const [id, count] of Object.entries(pendingIds)) {
+    if (count >= 2) confirmedIds.add(id);
+  }
+
+  for (const notif of notifications) {
+    if (!confirmedIds.has(notif.id)) continue;
+
+    const subscribers = await db.getSubscribersForPortal(notif.portal);
+    if (subscribers.length === 0) continue;
+
+    const lines = [
+      `📢 *New on ${portalName(notif.portal)}*`,
+      notif.title,
+      notif.url ? `[Open notification](${notif.url})` : "",
+    ].filter(Boolean);
+    const text = lines.join("\n");
+
+    for (const userId of subscribers) {
+      const stateKey = `${userId}:new:${notif.portal}:${notif.id}`;
+      if (await db.getAlertSentAt(stateKey)) continue;
+      if (await sendDm(userId, text)) {
+        await db.setAlertSent(stateKey);
+      }
+    }
+  }
+}
+
+async function runUptimeFanout() {
+  const latest = await fetchLatestStatus();
+  const subs = await db.getAllSubsMap();
+
+  for (const [portalId, rec] of Object.entries(latest)) {
+    const prev = lastKnownUptime[portalId];
+    const slowNow = rec.status === "up" && rec.latencyMs && rec.latencyMs > UPTIME_SLOW_MS;
+
+    let alertType = null;
+    if (prev) {
+      if (prev.status === "up" && rec.status === "down") alertType = "down";
+      else if (prev.status === "down" && rec.status === "up") alertType = "up";
+      else if (slowNow && !prev.slow) alertType = "slow";
+    }
+
+    lastKnownUptime[portalId] = { status: rec.status, slow: !!slowNow };
+
+    if (!alertType) continue;
+
+    const subscribers = await db.getSubscribersForPortal(portalId);
+    if (subscribers.length === 0) continue;
+
+    let text;
+    switch (alertType) {
+      case "down":
+        text = `🔴 *${portalName(portalId)}* is down right now.\nLast check: ${rec.latencyMs ?? "—"}ms`;
+        break;
+      case "up":
+        text = `🟢 *${portalName(portalId)}* is back up.\nLatency: ${rec.latencyMs ?? "—"}ms`;
+        break;
+      case "slow":
+        text = `🐢 *${portalName(portalId)}* is very slow right now (${rec.latencyMs}ms).\nConsider trying again later.`;
+        break;
+      default: {
+        const _exhaustive = alertType;
+        continue;
+      }
+    }
+
+    for (const userId of subscribers) {
+      const stateKey = `${userId}:uptime:${portalId}:${alertType}`;
+      if (await db.wasAlertSentWithin(stateKey, UPTIME_ALERT_COOLDOWN_HOURS)) continue;
+      if (await sendDm(userId, text)) {
+        await db.setAlertSent(stateKey);
+      }
+    }
+  }
+}
+
+async function runFastPoll() {
+  await runNotificationFanout();
+  await runUptimeFanout();
 }
 
 setInterval(() => {
-  runFanout().catch((e) => console.error("[fanout] error:", e));
-}, FANOUT_INTERVAL_MS);
-runFanout().catch((e) => console.error("[fanout] initial run error:", e));
+  runDeadlineFanout().catch((e) => console.error("[deadline-fanout] error:", e));
+}, DEADLINE_FANOUT_INTERVAL_MS);
 
-console.log("Bot running (long polling)...");
+setInterval(() => {
+  runFastPoll().catch((e) => console.error("[fast-poll] error:", e));
+}, FAST_POLL_INTERVAL_MS);
+
+runDeadlineFanout().catch((e) => console.error("[deadline-fanout] initial error:", e));
+runFastPoll().catch((e) => console.error("[fast-poll] initial error:", e));
+
+console.log("Bot running (long polling + Supabase)...");
 
 http.createServer((req, res) => res.end("ok")).listen(process.env.PORT || 3000);
