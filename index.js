@@ -40,6 +40,7 @@ function loadPortals() {
 const PORTALS = loadPortals();
 const KNOWN_PORTALS = PORTALS.map((p) => p.id);
 const PICKER_PAGE_SIZE = 8;
+const NOTIF_PAGE_SIZE = 8;
 
 function portalName(id) {
   const p = PORTALS.find((x) => x.id === id);
@@ -230,6 +231,13 @@ const COMMAND_SPECS = {
     args: [],
     examples: ["/portals"],
   },
+  notifications: {
+    name: "notifications",
+    shortDescription: "Browse portal notices",
+    summary: "Browse current vacancy/notification posts (paginated)",
+    args: [{ name: "portal", required: false, type: "portal" }],
+    examples: ["/notifications", "/notifications ssc"],
+  },
   help: {
     name: "help",
     shortDescription: "Full command reference",
@@ -349,6 +357,156 @@ async function fetchNotificationState() {
       portalStatus: {},
     }
   );
+}
+
+function notifAlertKey(userId, portal, id) {
+  return `${userId}:new:${portal}:${id}`;
+}
+
+function getConfirmedNotifications(notifications, notifState) {
+  const seenIds = notifState.seenIds || {};
+  const pendingIds = notifState.pendingIds || {};
+  const confirmedIds = new Set(Object.keys(seenIds));
+  for (const [id, count] of Object.entries(pendingIds)) {
+    if (count >= 2) confirmedIds.add(id);
+  }
+  return notifications.filter((n) => confirmedIds.has(n.id));
+}
+
+function sortNotifications(items, notifState = {}) {
+  const seenIds = notifState.seenIds || {};
+  return [...items].sort((a, b) => {
+    const sa = a.scrapedAt || seenIds[a.id] || a.postedAt || "";
+    const sb = b.scrapedAt || seenIds[b.id] || b.postedAt || "";
+    if (sa !== sb) return String(sb).localeCompare(String(sa));
+    return (a.title || "").localeCompare(b.title || "");
+  });
+}
+
+async function getUnsentForUser(userId, portal, items) {
+  if (!items.length) return [];
+  const keys = items.map((n) => notifAlertKey(userId, portal, n.id));
+  const sent = await db.getSentStateKeys(keys);
+  return items.filter((n) => !sent.has(notifAlertKey(userId, portal, n.id)));
+}
+
+function formatDigestMessage(portalCounts, heading = "📢 *New exam portal updates*") {
+  const lines = [
+    heading,
+    "",
+    ...portalCounts.map(
+      ({ portal, count }) =>
+        `• *${portalName(portal)}* — ${count} update${count === 1 ? "" : "s"}`
+    ),
+    "",
+    "Tap a portal below to view details (newest first).",
+  ];
+  return lines.join("\n");
+}
+
+function truncateBtn(text, max = 40) {
+  const t = String(text || "Open")
+    .replace(/\s+/g, " ")
+    .trim();
+  return t.length <= max ? t : `${t.slice(0, max - 1)}…`;
+}
+
+function digestKeyboard(portalCounts) {
+  const rows = [];
+  for (let i = 0; i < portalCounts.length; i += 2) {
+    const row = [];
+    const a = portalCounts[i];
+    row.push({
+      text: `${portalName(a.portal)} · ${a.count}`,
+      callback_data: `n:v:${a.portal}:0`,
+    });
+    if (portalCounts[i + 1]) {
+      const b = portalCounts[i + 1];
+      row.push({
+        text: `${portalName(b.portal)} · ${b.count}`,
+        callback_data: `n:v:${b.portal}:0`,
+      });
+    }
+    rows.push(row);
+  }
+  return { inline_keyboard: rows };
+}
+
+function formatPortalPage(portal, items, page) {
+  const totalPages = Math.max(1, Math.ceil(items.length / NOTIF_PAGE_SIZE));
+  const safePage = Math.min(Math.max(0, page), totalPages - 1);
+  const start = safePage * NOTIF_PAGE_SIZE;
+  const slice = items.slice(start, start + NOTIF_PAGE_SIZE);
+  const lines = [
+    `📢 *${portalName(portal)}* — ${items.length} notice${items.length === 1 ? "" : "s"} (newest first)`,
+    "",
+  ];
+  slice.forEach((n, i) => {
+    const title = String(n.title || "Untitled").replace(/[*_`\[\]]/g, "");
+    lines.push(`${start + i + 1}. ${title}`);
+  });
+  if (totalPages > 1) lines.push("", `_Page ${safePage + 1}/${totalPages}_`);
+  lines.push("", "Tap a button below to open a notice.");
+  return { text: lines.join("\n"), slice, totalPages, page: safePage };
+}
+
+function portalPageKeyboard(portal, page, totalPages, pageItems) {
+  const rows = pageItems
+    .filter((n) => n.url)
+    .map((n, i) => [
+      {
+        text: `${page * NOTIF_PAGE_SIZE + i + 1}. ${truncateBtn(n.title, 36)}`,
+        url: n.url,
+      },
+    ]);
+  const nav = [];
+  if (page > 0) nav.push({ text: "◀ Prev", callback_data: `n:v:${portal}:${page - 1}` });
+  if (page + 1 < totalPages) nav.push({ text: "Next ▶", callback_data: `n:v:${portal}:${page + 1}` });
+  if (nav.length) rows.push(nav);
+  return { inline_keyboard: rows };
+}
+
+async function showPortalNotifications(chatId, portal, page, messageId = null) {
+  const [notifications, notifState] = await Promise.all([fetchNotifications(), fetchNotificationState()]);
+  const items = sortNotifications(
+    getConfirmedNotifications(notifications, notifState).filter((n) => n.portal === portal),
+    notifState
+  );
+  const optsBase = { parse_mode: "Markdown", disable_web_page_preview: true };
+  if (!items.length) {
+    const empty = `No confirmed notifications for *${portalName(portal)}* yet.`;
+    if (messageId) {
+      await bot
+        .editMessageText(empty, { chat_id: chatId, message_id: messageId, ...optsBase })
+        .catch(() => bot.sendMessage(chatId, empty, optsBase));
+    } else {
+      await bot.sendMessage(chatId, empty, optsBase);
+    }
+    return;
+  }
+  const { text, slice, totalPages, page: safePage } = formatPortalPage(portal, items, page);
+  const opts = { ...optsBase, reply_markup: portalPageKeyboard(portal, safePage, totalPages, slice) };
+  if (messageId) {
+    await bot
+      .editMessageText(text, { chat_id: chatId, message_id: messageId, ...opts })
+      .catch(() => bot.sendMessage(chatId, text, opts));
+  } else {
+    await bot.sendMessage(chatId, text, opts);
+  }
+}
+
+async function sendPortalBacklogDigest(chatId, portal) {
+  const [notifications, notifState] = await Promise.all([fetchNotifications(), fetchNotificationState()]);
+  const confirmed = getConfirmedNotifications(notifications, notifState).filter((n) => n.portal === portal);
+  const unsent = await getUnsentForUser(String(chatId), portal, confirmed);
+  if (!unsent.length) return;
+  const portalCounts = [{ portal, count: unsent.length }];
+  const ok = await sendDm(chatId, formatDigestMessage(portalCounts), {
+    reply_markup: digestKeyboard(portalCounts),
+  });
+  if (ok) {
+    await db.setAlertSentBatch(unsent.map((n) => notifAlertKey(chatId, portal, n.id)));
+  }
 }
 
 function parseCSV(text) {
@@ -492,9 +650,13 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-async function sendDm(chatId, text) {
+async function sendDm(chatId, text, extra = {}) {
   try {
-    await bot.sendMessage(chatId, text, { parse_mode: "Markdown" });
+    await bot.sendMessage(chatId, text, {
+      parse_mode: "Markdown",
+      disable_web_page_preview: true,
+      ...extra,
+    });
     await sleep(TELEGRAM_SEND_DELAY_MS);
     return true;
   } catch (e) {
@@ -551,9 +713,10 @@ async function doSubscribe(chatId, portal, meta = {}) {
     await db.subscribeUserToPortal(chatId, portal, meta);
     await bot.sendMessage(
       chatId,
-      `✅ Subscribed to *${portalName(portal)}* alerts.\nYou'll get:\n• New vacancy/notification posts\n• Deadline reminders (within ${DANGER_WINDOW_DAYS} days)\n• Uptime down/slow alerts\n\n/mysubs — review · /unsubscribe ${portal} — stop`,
-      { parse_mode: "Markdown" }
+      `✅ Subscribed to *${portalName(portal)}* alerts.\nYou'll get:\n• New vacancy/notification posts\n• Deadline reminders (within ${DANGER_WINDOW_DAYS} days)\n• Uptime down/slow alerts\n\n/mysubs — review · /unsubscribe ${portal} — stop · /notifications ${portal} — browse`,
+      { parse_mode: "Markdown", disable_web_page_preview: true }
     );
+    await sendPortalBacklogDigest(chatId, portal);
   } catch (e) {
     await bot.sendMessage(chatId, "⚠️ Subscriptions temporarily unavailable. Please try again shortly.");
   }
@@ -730,6 +893,19 @@ bot.on("callback_query", async (query) => {
           reply_markup: keyboard,
         });
       });
+    return;
+  }
+
+  if (data.startsWith("n:v:")) {
+    const parts = data.split(":");
+    const portal = parts[2];
+    const page = parseInt(parts[3], 10) || 0;
+    const resolved = resolvePortal(portal);
+    if (!resolved.ok) {
+      await bot.sendMessage(chatId, `Unknown portal \`${portal}\`.`, { parse_mode: "Markdown" });
+      return;
+    }
+    await showPortalNotifications(chatId, resolved.portal, page, query.message.message_id);
   }
 });
 
@@ -834,6 +1010,53 @@ bot.onText(/\/portals/, (msg) => {
   sendPortalsList(msg.chat.id);
 });
 
+bot.onText(/\/notifications(?:\s+(\w+))?/, async (msg, match) => {
+  const portalFilter = match[1]?.toLowerCase();
+  if (portalFilter) {
+    const resolved = resolvePortal(portalFilter);
+    if (!resolved.ok) {
+      await sendPortalReply(msg.chat.id, { action: "status", result: resolved });
+      return;
+    }
+    await showPortalNotifications(msg.chat.id, resolved.portal, 0);
+    return;
+  }
+  try {
+    const [notifications, notifState, mine] = await Promise.all([
+      fetchNotifications(),
+      fetchNotificationState(),
+      db.getUserPortals(msg.chat.id),
+    ]);
+    const confirmed = getConfirmedNotifications(notifications, notifState);
+    const preferred = mine.length ? mine : KNOWN_PORTALS;
+    const counts = {};
+    for (const n of confirmed) {
+      if (!preferred.includes(n.portal)) continue;
+      counts[n.portal] = (counts[n.portal] || 0) + 1;
+    }
+    const portalCounts = Object.entries(counts)
+      .map(([portal, count]) => ({ portal, count }))
+      .sort((a, b) => b.count - a.count || a.portal.localeCompare(b.portal));
+    if (!portalCounts.length) {
+      await bot.sendMessage(
+        msg.chat.id,
+        mine.length
+          ? "No confirmed notifications for your subscriptions yet.\n\nTry /notifications ssc to browse a portal."
+          : "No notifications yet. Subscribe first with /subscribe, or try /notifications ssc.",
+        { parse_mode: "Markdown", disable_web_page_preview: true }
+      );
+      return;
+    }
+    await bot.sendMessage(msg.chat.id, formatDigestMessage(portalCounts, "📢 *Exam portal notifications*"), {
+      parse_mode: "Markdown",
+      disable_web_page_preview: true,
+      reply_markup: digestKeyboard(portalCounts),
+    });
+  } catch (e) {
+    await bot.sendMessage(msg.chat.id, "Couldn't load notifications right now — try again shortly.");
+  }
+});
+
 bot.onText(/\/history(?:\s+(\w+))?/, async (msg, match) => {
   const portalFilter = match[1]?.toLowerCase();
   try {
@@ -924,35 +1147,36 @@ async function runDeadlineFanout() {
 }
 
 async function runNotificationFanout() {
-  const [notifications, notifState] = await Promise.all([fetchNotifications(), fetchNotificationState()]);
+  const [notifications, notifState, subs] = await Promise.all([
+    fetchNotifications(),
+    fetchNotificationState(),
+    db.getAllSubsMap(),
+  ]);
   if (!notifications.length) return;
 
-  const seenIds = notifState.seenIds || {};
-  const pendingIds = notifState.pendingIds || {};
-  const confirmedIds = new Set(Object.keys(seenIds));
-  for (const [id, count] of Object.entries(pendingIds)) {
-    if (count >= 2) confirmedIds.add(id);
+  const confirmed = getConfirmedNotifications(notifications, notifState);
+  if (!confirmed.length) return;
+
+  const byPortal = {};
+  for (const n of confirmed) {
+    (byPortal[n.portal] ||= []).push(n);
   }
 
-  for (const notif of notifications) {
-    if (!confirmedIds.has(notif.id)) continue;
-
-    const subscribers = await db.getSubscribersForPortal(notif.portal);
-    if (subscribers.length === 0) continue;
-
-    const lines = [
-      `📢 *New on ${portalName(notif.portal)}*`,
-      notif.title,
-      notif.url ? `[Open notification](${notif.url})` : "",
-    ].filter(Boolean);
-    const text = lines.join("\n");
-
-    for (const userId of subscribers) {
-      const stateKey = `${userId}:new:${notif.portal}:${notif.id}`;
-      if (await db.getAlertSentAt(stateKey)) continue;
-      if (await sendDm(userId, text)) {
-        await db.setAlertSent(stateKey);
-      }
+  for (const [userId, portals] of Object.entries(subs)) {
+    const portalCounts = [];
+    const keysToMark = [];
+    for (const portal of portals) {
+      const items = byPortal[portal] || [];
+      if (!items.length) continue;
+      const unsent = await getUnsentForUser(userId, portal, items);
+      if (!unsent.length) continue;
+      portalCounts.push({ portal, count: unsent.length });
+      for (const n of unsent) keysToMark.push(notifAlertKey(userId, portal, n.id));
+    }
+    if (!portalCounts.length) continue;
+    portalCounts.sort((a, b) => b.count - a.count || a.portal.localeCompare(b.portal));
+    if (await sendDm(userId, formatDigestMessage(portalCounts), { reply_markup: digestKeyboard(portalCounts) })) {
+      await db.setAlertSentBatch(keysToMark);
     }
   }
 }

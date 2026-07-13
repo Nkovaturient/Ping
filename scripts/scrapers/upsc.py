@@ -1,5 +1,7 @@
 """UPSC active / forthcoming / recruitment advertisement scraper."""
 
+import re
+
 from bs4 import BeautifulSoup
 
 from .base import (
@@ -39,6 +41,9 @@ def scrape(portal):
             if len(title) < 10:
                 continue
             url = absolute_url(href, final_url)
+            # Skip UPSC nav chrome (section labels without exam year)
+            if not re.search(r"20\d{2}", title) and not is_pdf_notice(url):
+                continue
             ctx = row.get_text(" ", strip=True)
             deadline = parse_deadline_from_text(ctx) or parse_deadline_from_text(title)
             item = normalize_item(portal_id, title, url, final_url, deadline=deadline)
@@ -52,6 +57,8 @@ def scrape(portal):
             title = a.get_text(" ", strip=True)
             url = absolute_url(a["href"], final_url)
             if len(title) < 12 and not is_pdf_notice(url):
+                continue
+            if not re.search(r"20\d{2}", title) and not is_pdf_notice(url):
                 continue
             deadline = parse_deadline_from_text(title)
             item = normalize_item(portal_id, title, url, final_url, deadline=deadline)

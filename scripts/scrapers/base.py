@@ -236,6 +236,10 @@ def is_actionable_notice(title, url, portal_id=None):
         return False
     t = (title or "").lower()
     u = (url or "").lower()
+    # UPSC nav sections ("Recruitment", "Active Examinations") match recruit/exam
+    # hints — require a year or PDF so only real exam notices pass.
+    if portal_id == "upsc" and not re.search(r"20\d{2}", title or "") and not is_pdf_notice(u):
+        return False
     if is_pdf_notice(u):
         return True
     if is_apply_link(u):

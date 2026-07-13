@@ -93,6 +93,33 @@ async function setAlertSent(stateKey) {
   if (error) dbError("setAlertSent", error);
 }
 
+async function setAlertSentBatch(stateKeys) {
+  if (!stateKeys.length) return;
+  const sentAt = new Date().toISOString();
+  const CHUNK = 100;
+  for (let i = 0; i < stateKeys.length; i += CHUNK) {
+    const rows = stateKeys.slice(i, i + CHUNK).map((state_key) => ({
+      state_key,
+      sent_at: sentAt,
+    }));
+    const { error } = await supabase.from("alert_sent").upsert(rows, { onConflict: "state_key" });
+    if (error) dbError("setAlertSentBatch", error);
+  }
+}
+
+async function getSentStateKeys(stateKeys) {
+  const sent = new Set();
+  if (!stateKeys.length) return sent;
+  const CHUNK = 100;
+  for (let i = 0; i < stateKeys.length; i += CHUNK) {
+    const chunk = stateKeys.slice(i, i + CHUNK);
+    const { data, error } = await supabase.from("alert_sent").select("state_key").in("state_key", chunk);
+    if (error) dbError("getSentStateKeys", error);
+    for (const row of data || []) sent.add(row.state_key);
+  }
+  return sent;
+}
+
 async function wasAlertSentWithin(stateKey, hours) {
   const sentAt = await getAlertSentAt(stateKey);
   if (!sentAt) return false;
@@ -109,5 +136,7 @@ module.exports = {
   unsubscribeUserFromPortal,
   getAlertSentAt,
   setAlertSent,
+  setAlertSentBatch,
+  getSentStateKeys,
   wasAlertSentWithin,
 };
