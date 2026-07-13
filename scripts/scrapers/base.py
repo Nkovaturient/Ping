@@ -7,6 +7,9 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
+from urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 TIMEOUT = 10
 USER_AGENT = (
@@ -16,7 +19,6 @@ USER_AGENT = (
 )
 HEADERS = {"User-Agent": USER_AGENT}
 
-# Common Indian govt date patterns in notification text
 DATE_PATTERNS = [
     re.compile(
         r"(?:last\s*date|closing\s*date|upto|up\s*to|till)\s*[:\-]?\s*"
@@ -26,14 +28,113 @@ DATE_PATTERNS = [
     re.compile(r"(\d{1,2}[\./\-]\d{1,2}[\./\-]\d{4})\s*(?:\(|$|\s)", re.I),
 ]
 
+NAV_JUNK_PHRASES = (
+    "contact us",
+    "our legacy",
+    "our leaders",
+    "learning",
+    "development",
+    "benefits",
+    "growth oriented",
+    "world of opportunities",
+    "what are we looking",
+    "employee onboarding",
+    "life at the",
+    "the sbi story",
+    "recruitment results",
+    "current openings",
+    "post your query",
+    "privacy policy",
+    "terms of use",
+    "sitemap",
+    "faq",
+    "about us",
+    "home",
+)
 
-def fetch_html(url):
+APPLY_HOST_HINTS = (
+    "ibpsreg",
+    "recruitment.",
+    "mpsconline",
+    "apply",
+    "crpd-",
+)
+
+RECRUITMENT_TITLE_HINTS = (
+    "recruit",
+    "notification",
+    "advertisement",
+    "vacancy",
+    "vacancies",
+    "examination",
+    "exam",
+    "crp",
+    "cgl",
+    "chsl",
+    "neet",
+    "jee",
+    "cuet",
+    "ugc",
+    "net",
+    "admit card",
+    "result",
+    "officer",
+    "probationary",
+    "apply online",
+    "public notice",
+    "advt",
+    "advertisement",
+)
+
+
+def portal_fetch_opts(portal):
+    cfg = portal.get("notifications") or {}
+    return {
+        "verify": cfg.get("sslVerify", True),
+        "timeout": cfg.get("timeout", TIMEOUT),
+    }
+
+
+def portal_list_urls(portal):
+    cfg = portal.get("notifications") or {}
+    urls = cfg.get("listUrls")
+    if urls:
+        return list(urls)
+    single = cfg.get("listUrl")
+    if single:
+        return [single]
+    return []
+
+
+def fetch_html(url, *, verify=True, timeout=TIMEOUT):
     try:
-        r = requests.get(url, headers=HEADERS, timeout=TIMEOUT, allow_redirects=True)
+        r = requests.get(
+            url,
+            headers=HEADERS,
+            timeout=timeout,
+            allow_redirects=True,
+            verify=verify,
+        )
         r.raise_for_status()
         return r.text, r.url
     except requests.RequestException as e:
         raise RuntimeError(str(e)) from e
+
+
+def fetch_first_ok(urls, *, verify=True, timeout=TIMEOUT):
+    if not urls:
+        raise RuntimeError("no URLs to fetch")
+    last_err = None
+    for url in urls:
+        try:
+            return fetch_html(url, verify=verify, timeout=timeout)
+        except RuntimeError as e:
+            last_err = e
+    raise RuntimeError(str(last_err) if last_err else "all URLs failed")
+
+
+class UnreachableError(RuntimeError):
+    """All configured list URLs failed (timeout / connect / SSL)."""
 
 
 def make_item_id(portal_id, title, url):
@@ -44,6 +145,8 @@ def make_item_id(portal_id, title, url):
 def normalize_item(portal_id, title, url, source, posted_at=None, deadline=None):
     title = " ".join(title.split())
     if not title or len(title) < 5:
+        return None
+    if not is_actionable_notice(title, url, portal_id):
         return None
     now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     return {
@@ -102,3 +205,51 @@ def extract_links(soup, base_url, min_title_len=10, limit=20):
 
 def is_same_domain(url, base_url):
     return urlparse(url).netloc == urlparse(base_url).netloc
+
+
+def is_pdf_notice(url):
+    path = urlparse(url).path.lower()
+    return path.endswith(".pdf") or ".pdf" in path
+
+
+def is_apply_link(url):
+    lower = url.lower()
+    return any(h in lower for h in APPLY_HOST_HINTS)
+
+
+def is_nav_junk(title, url=""):
+    t = (title or "").strip().lower()
+    u = (url or "").lower()
+    if not t:
+        return True
+    if any(p in t for p in NAV_JUNK_PHRASES):
+        return True
+    if t in ("english", "hindi", "english (443 kb)", "hindi / (370 kb)"):
+        # bare language labels without recruitment context — keep PDFs via other filters
+        if not is_pdf_notice(u):
+            return True
+    return False
+
+
+def is_actionable_notice(title, url, portal_id=None):
+    if is_nav_junk(title, url):
+        return False
+    t = (title or "").lower()
+    u = (url or "").lower()
+    if is_pdf_notice(u):
+        return True
+    if is_apply_link(u):
+        return True
+    if any(h in t for h in RECRUITMENT_TITLE_HINTS):
+        return True
+    if portal_id == "sbi":
+        return False
+    return False
+
+
+def absolute_url(href, base_url):
+    if not href:
+        return base_url
+    if href.startswith("http"):
+        return href
+    return urljoin(base_url, href)

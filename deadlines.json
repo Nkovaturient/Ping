@@ -54,5 +54,23 @@
     "deadline": "2026-07-29T23:59:00",
     "source": "https://tnpsc.gov.in (Notification No. 05/2026, Advt. No. 736, dated 23.06.2026)",
     "verifiedOn": "2026-07-07"
+  },
+  {
+    "portal": "sbi",
+    "displayName": "APPLY ONLINE (Online Registration extended till 21.07.2026) (NEW)",
+    "url": "https://ibpsreg.ibps.in/sbiscojun26/",
+    "deadline": "2026-07-21T23:59:00",
+    "source": "https://sbi.bank.in/web/careers/current-openings",
+    "verifiedOn": "2026-07-13",
+    "autoScraped": true
+  },
+  {
+    "portal": "sbi",
+    "displayName": "APPLY ONLINE (Online Registration extended till 18.07.2026) (NEW)",
+    "url": "https://recruitment.sbi.bank.in/crpd-sco-2026-27-10/apply",
+    "deadline": "2026-07-18T23:59:00",
+    "source": "https://sbi.bank.in/web/careers/current-openings",
+    "verifiedOn": "2026-07-13",
+    "autoScraped": true
   }
 ]

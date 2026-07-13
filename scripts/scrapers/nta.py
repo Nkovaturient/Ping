@@ -1,4 +1,4 @@
-"""IBPS homepage + recruitment scraper (sslVerify:false for broken cert chain)."""
+"""NTA homepage + notice board archive scraper."""
 
 from bs4 import BeautifulSoup
 
@@ -13,13 +13,28 @@ from .base import (
     portal_list_urls,
 )
 
+NTA_KEYWORDS = (
+    "neet", "jee", "cuet", "ugc", "net", "admission", "result",
+    "public notice", "admit card", "application", "exam", "examination",
+    "registration", "score", "answer key",
+)
+
+
+def _looks_nta(title, url):
+    t = (title or "").lower()
+    u = (url or "").lower()
+    if is_pdf_notice(u):
+        return True
+    return any(k in t for k in NTA_KEYWORDS)
+
 
 def scrape(portal):
     portal_id = portal["id"]
     opts = portal_fetch_opts(portal)
     urls = portal_list_urls(portal) or [
-        "https://www.ibps.in/",
-        "https://www.ibps.in/index.php/recruitment/",
+        "https://nta.ac.in/",
+        "https://www.nta.ac.in/",
+        "https://nta.ac.in/NoticeBoardArchive",
     ]
 
     try:
@@ -31,27 +46,15 @@ def scrape(portal):
     items = []
 
     for a in soup.find_all("a", href=True):
-        href = a["href"].strip()
         title = a.get_text(" ", strip=True)
-        url = absolute_url(href, final_url)
-        lower_u = url.lower()
-        lower_t = title.lower()
-
-        keep = (
-            is_pdf_notice(url)
-            or "wp-content/uploads" in lower_u
-            or "/index.php/management-trainees" in lower_u
-            or "/index.php/specialist-officers" in lower_u
-            or "/index.php/customer-service" in lower_u
-            or "crp" in lower_t
-            or "notification" in lower_t
-            or "recruitment" in lower_t
-            or "apply online" in lower_t
-        )
-        if not keep or len(title) < 8:
+        url = absolute_url(a["href"], final_url)
+        if len(title) < 12:
             continue
-
-        parent = a.find_parent(["tr", "li", "article", "div"])
+        if not _looks_nta(title, url):
+            continue
+        if url.rstrip("/").endswith("nta.ac.in"):
+            continue
+        parent = a.find_parent(["tr", "li", "div", "article"])
         ctx = parent.get_text(" ", strip=True) if parent else title
         deadline = parse_deadline_from_text(ctx) or parse_deadline_from_text(title)
         item = normalize_item(portal_id, title, url, final_url, deadline=deadline)

@@ -1,4 +1,4 @@
-"""IBPS homepage + recruitment scraper (sslVerify:false for broken cert chain)."""
+"""RBI homepage recruitment announcements (skip CAPTCHA opportunities portal)."""
 
 from bs4 import BeautifulSoup
 
@@ -7,20 +7,29 @@ from .base import (
     absolute_url,
     fetch_first_ok,
     is_pdf_notice,
+    is_same_domain,
     normalize_item,
     parse_deadline_from_text,
     portal_fetch_opts,
     portal_list_urls,
 )
 
+RBI_HINTS = (
+    "recruit",
+    "vacancy",
+    "vacancies",
+    "officer",
+    "grade",
+    "advertisement",
+    "notification",
+    "opportunity",
+)
+
 
 def scrape(portal):
     portal_id = portal["id"]
     opts = portal_fetch_opts(portal)
-    urls = portal_list_urls(portal) or [
-        "https://www.ibps.in/",
-        "https://www.ibps.in/index.php/recruitment/",
-    ]
+    urls = portal_list_urls(portal) or ["https://www.rbi.org.in/"]
 
     try:
         html, final_url = fetch_first_ok(urls, **opts)
@@ -31,33 +40,24 @@ def scrape(portal):
     items = []
 
     for a in soup.find_all("a", href=True):
-        href = a["href"].strip()
         title = a.get_text(" ", strip=True)
-        url = absolute_url(href, final_url)
-        lower_u = url.lower()
-        lower_t = title.lower()
-
-        keep = (
-            is_pdf_notice(url)
-            or "wp-content/uploads" in lower_u
-            or "/index.php/management-trainees" in lower_u
-            or "/index.php/specialist-officers" in lower_u
-            or "/index.php/customer-service" in lower_u
-            or "crp" in lower_t
-            or "notification" in lower_t
-            or "recruitment" in lower_t
-            or "apply online" in lower_t
-        )
-        if not keep or len(title) < 8:
+        url = absolute_url(a["href"], final_url)
+        if "opportunities.rbi.org.in" in url.lower():
             continue
-
-        parent = a.find_parent(["tr", "li", "article", "div"])
+        if not is_same_domain(url, final_url) and not is_pdf_notice(url):
+            continue
+        if len(title) < 10:
+            continue
+        lower = title.lower()
+        if not any(h in lower for h in RBI_HINTS) and not is_pdf_notice(url):
+            continue
+        parent = a.find_parent(["tr", "li", "div"])
         ctx = parent.get_text(" ", strip=True) if parent else title
         deadline = parse_deadline_from_text(ctx) or parse_deadline_from_text(title)
         item = normalize_item(portal_id, title, url, final_url, deadline=deadline)
         if item and not any(x["id"] == item["id"] for x in items):
             items.append(item)
-        if len(items) >= 25:
+        if len(items) >= 20:
             break
 
     return items

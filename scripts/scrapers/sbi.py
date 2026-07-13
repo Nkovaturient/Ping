@@ -1,42 +1,79 @@
-"""SBI careers current openings scraper."""
+"""SBI careers — APPLY ONLINE / PDF notice links only."""
 
 from bs4 import BeautifulSoup
 
-from .base import extract_links, fetch_html, normalize_item, parse_deadline_from_text
+from .base import (
+    UnreachableError,
+    absolute_url,
+    fetch_first_ok,
+    is_pdf_notice,
+    normalize_item,
+    parse_deadline_from_text,
+    portal_fetch_opts,
+    portal_list_urls,
+)
+
+
+def _keep_sbi(title, url):
+    t = (title or "").lower().strip()
+    u = (url or "").lower()
+    # Drop bare language/size PDF labels (duplicates of DOWNLOAD ADVERTISEMENT)
+    if t.startswith("english") or t.startswith("hindi") or t in ("apply now",):
+        return False
+    if is_pdf_notice(u) and "sbi.bank.in/documents" in u:
+        if any(k in t for k in ("advertisement", "corrigendum", "biodata", "detailed", "adv")):
+            return True
+        if "download" in t:
+            return True
+        return False
+    if "ibpsreg.ibps.in" in u or "recruitment.sbi.bank.in" in u:
+        return "apply" in t
+    return False
 
 
 def scrape(portal):
     portal_id = portal["id"]
-    cfg = portal.get("notifications", {})
-    list_url = cfg.get("listUrl", "https://sbi.bank.in/web/careers/current-openings")
+    opts = portal_fetch_opts(portal)
+    urls = portal_list_urls(portal) or [
+        "https://sbi.bank.in/web/careers/current-openings"
+    ]
 
-    html, final_url = fetch_html(list_url)
+    try:
+        html, final_url = fetch_first_ok(urls, **opts)
+    except RuntimeError as e:
+        raise UnreachableError(str(e)) from e
+
     soup = BeautifulSoup(html, "html.parser")
-
     items = []
-    for a in soup.select("a[href*='career'], a[href*='recruit'], a[href*='opening'], table a, .career a, li a"):
-        title = a.get_text(" ", strip=True)
-        href = a.get("href", "")
-        if len(title) < 10:
-            continue
-        lower = (title + href).lower()
-        if not any(k in lower for k in ("recruit", "officer", "opening", "vacancy", "crpd", "apply", "career")):
-            continue
-        url = href if href.startswith("http") else "https://sbi.bank.in" + (href if href.startswith("/") else "/" + href)
-        parent_text = a.find_parent(["tr", "li", "div"])
-        ctx = parent_text.get_text(" ", strip=True) if parent_text else title
-        deadline = parse_deadline_from_text(ctx) or parse_deadline_from_text(title)
-        item = normalize_item(portal_id, title, url, final_url, deadline=deadline)
-        if item and not any(x["id"] == item["id"] for x in items):
-            items.append(item)
-        if len(items) >= 20:
-            break
 
-    if not items:
-        for title, url in extract_links(soup, final_url, min_title_len=12, limit=15):
-            deadline = parse_deadline_from_text(title)
-            item = normalize_item(portal_id, title, url, final_url, deadline=deadline)
-            if item:
-                items.append(item)
+    for a in soup.find_all("a", href=True):
+        title = a.get_text(" ", strip=True)
+        url = absolute_url(a["href"], final_url)
+        if not _keep_sbi(title, url):
+            continue
+        # Prefer a more descriptive title from the parent row when link text is generic
+        display = title
+        if display.lower() in ("apply online", "english", "hindi") or len(display) < 12:
+            parent = a.find_parent(["tr", "li", "div"])
+            if parent:
+                richer = " ".join(parent.get_text(" ", strip=True).split())[:200]
+                if len(richer) > len(display) + 5:
+                    display = richer
+        if display.lower() in ("apply online",) and not is_pdf_notice(url):
+            display = f"SBI Apply — {url.split('/')[-2] if '/' in url else 'opening'}"
+
+        parent = a.find_parent(["tr", "li", "div"])
+        ctx = parent.get_text(" ", strip=True) if parent else display
+        deadline = parse_deadline_from_text(ctx) or parse_deadline_from_text(display)
+        item = normalize_item(portal_id, display, url, final_url, deadline=deadline)
+        if item and not any(x["id"] == item["id"] for x in items):
+            # Prefer unique destination URLs (drop duplicate Apply Now / APPLY ONLINE)
+            if any(x["url"].split("?")[0] == item["url"].split("?")[0] for x in items):
+                # Keep PDF variants; skip duplicate apply links
+                if not is_pdf_notice(url):
+                    continue
+            items.append(item)
+        if len(items) >= 15:
+            break
 
     return items

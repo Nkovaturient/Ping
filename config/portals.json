@@ -7,7 +7,12 @@
     "notifications": {
       "strategy": "module",
       "module": "upsc",
-      "listUrl": "https://upsc.gov.in/examinations/active-exams"
+      "timeout": 20,
+      "listUrls": [
+        "https://www.upsc.gov.in/examinations/active-exams",
+        "https://www.upsc.gov.in/examinations/forthcoming-exams",
+        "https://www.upsc.gov.in/recruitment/recruitment-advertisement"
+      ]
     }
   },
   {
@@ -18,7 +23,10 @@
     "notifications": {
       "strategy": "module",
       "module": "ssc",
-      "listUrl": "https://ssc.gov.in/api/attachment/uploads/masterData/NoticeBoardExamination"
+      "listUrls": [
+        "https://ssc.gov.in/api/general-website/portal/records",
+        "https://ssc.gov.in/home/notice-board"
+      ]
     }
   },
   {
@@ -26,7 +34,16 @@
     "name": "NTA (NEET/JEE/CUET)",
     "url": "https://nta.ac.in",
     "category": "central",
-    "notifications": { "strategy": "manual_only" }
+    "notifications": {
+      "strategy": "module",
+      "module": "nta",
+      "sslVerify": false,
+      "listUrls": [
+        "https://nta.ac.in/",
+        "https://nta.ac.in/NoticeBoardArchive",
+        "https://www.nta.ac.in/"
+      ]
+    }
   },
   {
     "id": "ibps",
@@ -36,7 +53,11 @@
     "notifications": {
       "strategy": "module",
       "module": "ibps",
-      "listUrl": "https://www.ibps.in/index.php/exam-notification/"
+      "sslVerify": false,
+      "listUrls": [
+        "https://www.ibps.in/",
+        "https://www.ibps.in/index.php/recruitment/"
+      ]
     }
   },
   {
@@ -65,7 +86,13 @@
     "name": "RBI",
     "url": "https://www.rbi.org.in",
     "category": "banking",
-    "notifications": { "strategy": "manual_only" }
+    "notifications": {
+      "strategy": "module",
+      "module": "rbi",
+      "listUrls": [
+        "https://www.rbi.org.in/"
+      ]
+    }
   },
   {
     "id": "sbi",
@@ -75,7 +102,9 @@
     "notifications": {
       "strategy": "module",
       "module": "sbi",
-      "listUrl": "https://sbi.bank.in/web/careers/current-openings"
+      "listUrls": [
+        "https://sbi.bank.in/web/careers/current-openings"
+      ]
     }
   },
   {
@@ -118,7 +147,13 @@
     "name": "MPSC",
     "url": "https://mpsc.gov.in",
     "category": "state",
-    "notifications": { "strategy": "manual_only" }
+    "notifications": {
+      "strategy": "module",
+      "module": "mpsc",
+      "listUrls": [
+        "https://mpsc.gov.in/adv_notification/8"
+      ]
+    }
   },
   {
     "id": "tnpsc",
