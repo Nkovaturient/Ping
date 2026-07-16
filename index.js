@@ -303,6 +303,7 @@ const FAST_POLL_INTERVAL_MS = 5 * 60 * 1000;
 const UPTIME_SLOW_MS = 5000;
 const UPTIME_ALERT_COOLDOWN_HOURS = 0.5;
 const TELEGRAM_SEND_DELAY_MS = 50;
+const RATE_LIMIT_MS = 2500;
 
 /**
  * Escalating alert cadence — quiet early, sharp near deadline.
@@ -400,6 +401,7 @@ function formatDigestMessage(portalCounts, heading = "📢 *New exam portal upda
     ),
     "",
     "Tap a portal below to view details (newest first).",
+    "Use *Block* to stop all alerts for a portal.",
   ];
   return lines.join("\n");
 }
@@ -411,7 +413,7 @@ function truncateBtn(text, max = 40) {
   return t.length <= max ? t : `${t.slice(0, max - 1)}…`;
 }
 
-function digestKeyboard(portalCounts) {
+function digestKeyboard(portalCounts, { includeBlock = true } = {}) {
   const rows = [];
   for (let i = 0; i < portalCounts.length; i += 2) {
     const row = [];
@@ -429,6 +431,32 @@ function digestKeyboard(portalCounts) {
     }
     rows.push(row);
   }
+  if (includeBlock) {
+    for (let i = 0; i < portalCounts.length; i += 2) {
+      const row = [];
+      const a = portalCounts[i];
+      row.push({ text: `Block ${portalName(a.portal)}`, callback_data: `n:b:${a.portal}` });
+      if (portalCounts[i + 1]) {
+        const b = portalCounts[i + 1];
+        row.push({ text: `Block ${portalName(b.portal)}`, callback_data: `n:b:${b.portal}` });
+      }
+      rows.push(row);
+    }
+  }
+  return { inline_keyboard: rows };
+}
+
+function removePortalFromKeyboard(markup, portal) {
+  if (!markup?.inline_keyboard) return markup;
+  const suffix = `:${portal}`;
+  const rows = markup.inline_keyboard
+    .map((row) =>
+      row.filter((btn) => {
+        const data = btn.callback_data || "";
+        return !(data.endsWith(suffix) || data.includes(`${suffix}:`));
+      })
+    )
+    .filter((row) => row.length > 0);
   return { inline_keyboard: rows };
 }
 
@@ -645,6 +673,30 @@ const HELP_TEXT = buildHelpText();
 const bot = new TelegramBot(TOKEN, { polling: true });
 
 const lastKnownUptime = {};
+const userLastActionAt = new Map();
+const userSlowDownUntil = new Map();
+
+async function blockIfRateLimited(chatId) {
+  const key = String(chatId);
+  const now = Date.now();
+  const last = userLastActionAt.get(key);
+  if (last != null && now - last < RATE_LIMIT_MS) {
+    if ((userSlowDownUntil.get(key) || 0) <= now) {
+      userSlowDownUntil.set(key, now + RATE_LIMIT_MS);
+      await bot.sendMessage(chatId, "⏳ Cool — Take a breath.").catch(() => {});
+    }
+    return true;
+  }
+  userLastActionAt.set(key, now);
+  return false;
+}
+
+function onCmd(regex, handler) {
+  bot.onText(regex, async (msg, match) => {
+    if (await blockIfRateLimited(msg.chat.id)) return;
+    return handler(msg, match);
+  });
+}
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -734,9 +786,25 @@ async function doUnsubscribe(chatId, portal) {
       return;
     }
     await db.unsubscribeUserFromPortal(chatId, portal);
-    await bot.sendMessage(chatId, `🔕 Unsubscribed from *${portalName(portal)}*.`, { parse_mode: "Markdown" });
+    await bot.sendMessage(
+      chatId,
+      `🔕 Unsubscribed from *${portalName(portal)}*.\n\n/subscribe ${portal} — re-enable alerts`,
+      { parse_mode: "Markdown", disable_web_page_preview: true }
+    );
   } catch (e) {
     await bot.sendMessage(chatId, "⚠️ Subscriptions temporarily unavailable. Please try again shortly.");
+  }
+}
+
+async function doBlockFromDigest(chatId, portal) {
+  try {
+    const mine = await db.getUserPortals(chatId);
+    if (!mine.includes(portal)) return false;
+    await db.unsubscribeUserFromPortal(chatId, portal);
+    return true;
+  } catch (e) {
+    console.warn(`[warn] digest block failed for ${chatId}/${portal}: ${e.message}`);
+    return false;
   }
 }
 
@@ -850,20 +918,25 @@ bot.setMyCommands(
     .map((c) => ({ command: c.name, description: c.shortDescription }))
 ).catch((e) => console.warn("[warn] setMyCommands failed:", e.message));
 
-bot.on("message", (msg) => {
+bot.on("message", async (msg) => {
   if (!msg.text?.startsWith("/")) return;
   const token = msg.text.trim().split(/\s+/)[0];
   const cmd = token.split("@")[0].slice(1).toLowerCase();
   if (!cmd || COMMAND_NAMES.has(cmd)) return;
+  if (await blockIfRateLimited(msg.chat.id)) return;
   bot.sendMessage(msg.chat.id, unknownCommandReply(cmd), { parse_mode: "Markdown" });
 });
 
 bot.on("callback_query", async (query) => {
   const chatId = query.message.chat.id;
+  if (await blockIfRateLimited(chatId)) {
+    await bot.answerCallbackQuery(query.id).catch(() => {});
+    return;
+  }
   const data = query.data;
-  await bot.answerCallbackQuery(query.id).catch(() => {});
 
   if (data.startsWith("a:")) {
+    await bot.answerCallbackQuery(query.id).catch(() => {});
     const parts = data.split(":");
     const action = parts[1];
     const portal = parts.slice(2).join(":");
@@ -877,6 +950,7 @@ bot.on("callback_query", async (query) => {
   }
 
   if (data.startsWith("p:")) {
+    await bot.answerCallbackQuery(query.id).catch(() => {});
     const [, action, pageStr] = data.split(":");
     const page = parseInt(pageStr, 10) || 0;
     const portalIds = await pickerPortalIds(action, chatId);
@@ -897,6 +971,7 @@ bot.on("callback_query", async (query) => {
   }
 
   if (data.startsWith("n:v:")) {
+    await bot.answerCallbackQuery(query.id).catch(() => {});
     const parts = data.split(":");
     const portal = parts[2];
     const page = parseInt(parts[3], 10) || 0;
@@ -906,10 +981,46 @@ bot.on("callback_query", async (query) => {
       return;
     }
     await showPortalNotifications(chatId, resolved.portal, page, query.message.message_id);
+    return;
+  }
+
+  if (data.startsWith("n:b:")) {
+    const portal = data.slice(4);
+    const resolved = resolvePortal(portal);
+    if (!resolved.ok) {
+      await bot.answerCallbackQuery(query.id, { text: "Unknown portal" }).catch(() => {});
+      return;
+    }
+    const blocked = await doBlockFromDigest(chatId, resolved.portal);
+    if (blocked) {
+      const updatedMarkup = removePortalFromKeyboard(query.message.reply_markup, resolved.portal);
+      if (updatedMarkup.inline_keyboard.length > 0) {
+        await bot
+          .editMessageReplyMarkup(updatedMarkup, {
+            chat_id: chatId,
+            message_id: query.message.message_id,
+          })
+          .catch(() => {});
+      } else {
+        await bot
+          .editMessageText(`${query.message.text}\n\n_All portals in this digest are now unsubscribed._`, {
+            chat_id: chatId,
+            message_id: query.message.message_id,
+            parse_mode: "Markdown",
+            disable_web_page_preview: true,
+          })
+          .catch(() => {});
+      }
+    }
+    await bot
+      .answerCallbackQuery(query.id, {
+        text: blocked ? `Unsubscribed from ${portalName(resolved.portal)}` : `${portalName(resolved.portal)} not active`,
+      })
+      .catch(() => {});
   }
 });
 
-bot.onText(/\/start(?:\s+(\S+))?/, async (msg, match) => {
+onCmd(/\/start(?:\s+(\S+))?/, async (msg, match) => {
   const payload = match[1];
   const subMatch = payload && /^sub_(\w+)$/.exec(payload);
   if (subMatch) {
@@ -929,7 +1040,7 @@ bot.onText(/\/start(?:\s+(\S+))?/, async (msg, match) => {
   bot.sendMessage(msg.chat.id, WELCOME_TEXT, { parse_mode: "Markdown" });
 });
 
-bot.onText(/\/status(?:\s+(\w+))?/, async (msg, match) => {
+onCmd(/\/status(?:\s+(\w+))?/, async (msg, match) => {
   const portalFilter = match[1]?.toLowerCase();
   if (portalFilter) {
     const resolved = resolvePortal(portalFilter);
@@ -959,7 +1070,7 @@ bot.onText(/\/status(?:\s+(\w+))?/, async (msg, match) => {
   }
 });
 
-bot.onText(/\/subscribe\s+(\w+)/, async (msg, match) => {
+onCmd(/\/subscribe\s+(\w+)/, async (msg, match) => {
   const resolved = resolvePortal(match[1]);
   if (!resolved.ok) {
     await sendPortalReply(msg.chat.id, { action: "sub", result: resolved });
@@ -968,11 +1079,11 @@ bot.onText(/\/subscribe\s+(\w+)/, async (msg, match) => {
   await doSubscribe(msg.chat.id, resolved.portal, subscriberMeta(msg));
 });
 
-bot.onText(/\/subscribe$/, async (msg) => {
+onCmd(/\/subscribe$/, async (msg) => {
   await sendPortalReply(msg.chat.id, { action: "sub", result: { ok: false, reason: "missing" } });
 });
 
-bot.onText(/\/unsubscribe\s+(\w+)/, async (msg, match) => {
+onCmd(/\/unsubscribe\s+(\w+)/, async (msg, match) => {
   const resolved = resolvePortal(match[1]);
   if (!resolved.ok) {
     await sendPortalReply(msg.chat.id, { action: "unsub", result: resolved });
@@ -981,11 +1092,11 @@ bot.onText(/\/unsubscribe\s+(\w+)/, async (msg, match) => {
   await doUnsubscribe(msg.chat.id, resolved.portal);
 });
 
-bot.onText(/\/unsubscribe$/, async (msg) => {
+onCmd(/\/unsubscribe$/, async (msg) => {
   await sendPortalReply(msg.chat.id, { action: "unsub", result: { ok: false, reason: "missing" } });
 });
 
-bot.onText(/\/mysubs/, async (msg) => {
+onCmd(/\/mysubs/, async (msg) => {
   try {
     const mine = await db.getUserPortals(msg.chat.id);
     if (mine.length === 0) {
@@ -994,7 +1105,7 @@ bot.onText(/\/mysubs/, async (msg) => {
     }
     bot.sendMessage(
       msg.chat.id,
-      `📋 *Your subscriptions:*\n${mine.map((p) => `• ${portalName(p)}`).join("\n")}\n\n/unsubscribe — remove one`,
+      `📋 *Your subscriptions:*\n${mine.map((p) => `• ${portalName(p)}`).join("\n")}\n\n/unsubscribe — stop alerts · /subscribe — add back`,
       { parse_mode: "Markdown" }
     );
   } catch (e) {
@@ -1002,15 +1113,15 @@ bot.onText(/\/mysubs/, async (msg) => {
   }
 });
 
-bot.onText(/\/help/, (msg) => {
+onCmd(/\/help/, (msg) => {
   bot.sendMessage(msg.chat.id, HELP_TEXT, { parse_mode: "Markdown" });
 });
 
-bot.onText(/\/portals/, (msg) => {
+onCmd(/\/portals/, (msg) => {
   sendPortalsList(msg.chat.id);
 });
 
-bot.onText(/\/notifications(?:\s+(\w+))?/, async (msg, match) => {
+onCmd(/\/notifications(?:\s+(\w+))?/, async (msg, match) => {
   const portalFilter = match[1]?.toLowerCase();
   if (portalFilter) {
     const resolved = resolvePortal(portalFilter);
@@ -1057,7 +1168,7 @@ bot.onText(/\/notifications(?:\s+(\w+))?/, async (msg, match) => {
   }
 });
 
-bot.onText(/\/history(?:\s+(\w+))?/, async (msg, match) => {
+onCmd(/\/history(?:\s+(\w+))?/, async (msg, match) => {
   const portalFilter = match[1]?.toLowerCase();
   try {
     const [history, latest] = await Promise.all([fetchHistoryRows(), fetchLatestStatus()]);
@@ -1090,7 +1201,7 @@ bot.onText(/\/history(?:\s+(\w+))?/, async (msg, match) => {
   }
 });
 
-bot.onText(/\/peak(?:\s+(\w+))?/, async (msg, match) => {
+onCmd(/\/peak(?:\s+(\w+))?/, async (msg, match) => {
   const portalArg = match[1]?.toLowerCase();
   if (!portalArg) {
     await sendPortalReply(msg.chat.id, { action: "peak", result: { ok: false, reason: "missing" } });

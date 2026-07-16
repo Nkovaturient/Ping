@@ -633,7 +633,20 @@
     transform:translateY(-2px) rotate(-12deg) scale(1.08);
   }
   .telegram-cta:active{ transform:translateY(-1px) scale(.98); }
+  .telegram-actions{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+  }
+  .telegram-verified{
+    margin:0;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:.02em;
+  }
   @media (max-width:640px){
+    .telegram-actions{ width:100%; align-items:center; }
     .telegram-cta{ width:100%; justify-content:center; }
   }
 
@@ -1714,17 +1727,20 @@
       <h3 data-i18n="telegramTitle">New vacancies, deadlines & uptime alerts</h3>
       <p data-i18n="telegramDesc">Subscribe on Telegram for the portals you care about — get instant alerts when new notifications drop, deadlines approach, or a portal goes down.</p>
     </div>
-    <a class="telegram-cta" href="http://t.me/portal_pulse_bot" target="_blank" rel="noopener noreferrer">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.14-.002.44.032.622.184a.65.65 0 0 1 .208.489c-.008.14-.117.436-.24.618-.29.42-.928 1.028-1.585 1.593-.428.362-1.28 1.033-1.28 1.033l-.176 3.323c-.058.79-.34 1.043-.66 1.043-.32 0-.494-.15-.72-.35-.245-.217-1.53-1.28-1.87-1.556l-.9.867s-.246.24-.5.24l.18-1.985 3.61-3.263c.155-.14-.033-.218-.19-.09l-4.44 2.796-1.9-.59s-.35-.128-.28-.42c.06-.24.28-.35.28-.35l7.62-2.945s.4-.14.451.05z"/></svg>
-      <span data-i18n="telegramCta">Get Telegram alerts</span>
-    </a>
+    <div class="telegram-actions">
+      <a class="telegram-cta" href="https://t.me/portal_pulse_bot" target="_blank" rel="noopener noreferrer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.14-.002.44.032.622.184a.65.65 0 0 1 .208.489c-.008.14-.117.436-.24.618-.29.42-.928 1.028-1.585 1.593-.428.362-1.28 1.033-1.28 1.033l-.176 3.323c-.058.79-.34 1.043-.66 1.043-.32 0-.494-.15-.72-.35-.245-.217-1.53-1.28-1.87-1.556l-.9.867s-.246.24-.5.24l.18-1.985 3.61-3.263c.155-.14-.033-.218-.19-.09l-4.44 2.796-1.9-.59s-.35-.128-.28-.42c.06-.24.28-.35.28-.35l7.62-2.945s.4-.14.451.05z"/></svg>
+        <span data-i18n="telegramCta">Get Telegram alerts</span>
+      </a>
+      <p class="telegram-verified" data-i18n="telegramVerified">Official: @portal_pulse_bot</p>
+    </div>
   </div>
 
-  <section id="notifSection">
+  <!-- <section id="notifSection">
     <h2 data-i18n="notifTitle">Latest notifications</h2>
     <p class="section-sub" data-i18n="notifSub">Recent career &amp; vacancy posts scraped from official portals. Updates twice daily.</p>
     <div id="notifContainer"><div class="empty-state" data-i18n="loading">Loading…</div></div>
-  </section>
+  </section> -->
 
   <section id="liveSection">
     <h2 data-i18n="liveTitle">Live status</h2>
@@ -1797,7 +1813,8 @@ const STRINGS = {
     telegramTitle: "New vacancies, deadlines & uptime alerts",
     telegramDesc: "Subscribe on Telegram for the portals you care about — get instant alerts when new notifications drop, deadlines approach, or a portal goes down.",
     telegramCta: "Get Telegram alerts",
-    notifTitle: "Latest notifications",
+    telegramVerified: "Official: @portal_pulse_bot",
+    // notifTitle: "Latest notifications",
     notifSub: "Recent career & vacancy posts scraped from official portals. Updates twice daily.",
     notifEmpty: "No scraped notifications yet. Please check back later.",
     liveTitle: "Live status", liveSub: "Most recent check per portal. Updates every ~15 minutes.",
@@ -1859,7 +1876,8 @@ const STRINGS = {
     telegramTitle: "Deadline nikalne se pehle alert paao",
     telegramDesc: "Telegram par subscribe karo — nayi notifications, deadline reminders, aur portal down hone par turant alert.",
     telegramCta: "Telegram alerts lo",
-    notifTitle: "Latest notifications",
+    telegramVerified: "Official: @portal_pulse_bot",
+    // notifTitle: "Latest notifications",
     notifSub: "Official portals se scrape ki gayi nayi vacancies. Din mein do baar update.",
     notifEmpty: "Abhi koi notification nahi — pehli scrape ke baad yahan dikhega.",
     liveTitle: "Live status", liveSub: "Har portal ka latest check. Har ~15 minute update.",
