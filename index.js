@@ -683,7 +683,7 @@ async function blockIfRateLimited(chatId) {
   if (last != null && now - last < RATE_LIMIT_MS) {
     if ((userSlowDownUntil.get(key) || 0) <= now) {
       userSlowDownUntil.set(key, now + RATE_LIMIT_MS);
-      await bot.sendMessage(chatId, "⏳ Cool — Take a breath.").catch(() => {});
+      await bot.sendMessage(chatId, "⏳ Cool — Take a breath. Click again.").catch(() => {});
     }
     return true;
   }
