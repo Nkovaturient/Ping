@@ -1,104 +1,104 @@
 {
   "upsc": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 0,
+    "latency_ms": 10263,
+    "up": false
+  },
+  "ssc": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 200,
+    "latency_ms": 1291,
+    "up": true
+  },
+  "nta": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 200,
+    "latency_ms": 1165,
+    "up": true
+  },
+  "ibps": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 0,
+    "latency_ms": 952,
+    "up": false
+  },
+  "rrb": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 0,
+    "latency_ms": 559,
+    "up": false
+  },
+  "rrb_apply": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 404,
+    "latency_ms": 1106,
+    "up": false
+  },
+  "indiapost_gds": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 0,
+    "latency_ms": 878,
+    "up": false
+  },
+  "rbi": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 200,
+    "latency_ms": 1089,
+    "up": true
+  },
+  "sbi": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 200,
+    "latency_ms": 4740,
+    "up": true
+  },
+  "uppsc": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 404,
+    "latency_ms": 1349,
+    "up": false
+  },
+  "upsssc": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 0,
+    "latency_ms": 10270,
+    "up": false
+  },
+  "bpsc": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 0,
+    "latency_ms": 875,
+    "up": false
+  },
+  "mppsc": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 403,
+    "latency_ms": 1029,
+    "up": false
+  },
+  "rpsc": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 0,
+    "latency_ms": 10278,
+    "up": false
+  },
+  "mpsc": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
+    "status_code": 200,
+    "latency_ms": 722,
+    "up": true
+  },
+  "tnpsc": {
+    "timestamp_utc": "2026-07-17T16:54:08Z",
     "status_code": 0,
     "latency_ms": 10262,
     "up": false
   },
-  "ssc": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 200,
-    "latency_ms": 1321,
-    "up": true
-  },
-  "nta": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 200,
-    "latency_ms": 1153,
-    "up": true
-  },
-  "ibps": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 0,
-    "latency_ms": 1013,
-    "up": false
-  },
-  "rrb": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 0,
-    "latency_ms": 544,
-    "up": false
-  },
-  "rrb_apply": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 404,
-    "latency_ms": 1185,
-    "up": false
-  },
-  "indiapost_gds": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 0,
-    "latency_ms": 924,
-    "up": false
-  },
-  "rbi": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 200,
-    "latency_ms": 1073,
-    "up": true
-  },
-  "sbi": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 0,
-    "latency_ms": 10630,
-    "up": false
-  },
-  "uppsc": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 404,
-    "latency_ms": 1258,
-    "up": false
-  },
-  "upsssc": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 0,
-    "latency_ms": 10287,
-    "up": false
-  },
-  "bpsc": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 0,
-    "latency_ms": 829,
-    "up": false
-  },
-  "mppsc": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 403,
-    "latency_ms": 1037,
-    "up": false
-  },
-  "rpsc": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 0,
-    "latency_ms": 10306,
-    "up": false
-  },
-  "mpsc": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 200,
-    "latency_ms": 721,
-    "up": true
-  },
-  "tnpsc": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
-    "status_code": 0,
-    "latency_ms": 10272,
-    "up": false
-  },
   "wbpsc": {
-    "timestamp_utc": "2026-07-17T15:48:19Z",
+    "timestamp_utc": "2026-07-17T16:54:08Z",
     "status_code": 0,
-    "latency_ms": 1361,
+    "latency_ms": 1081,
     "up": false
   }
 }
