@@ -7,7 +7,7 @@
     "postedAt": null,
     "deadline": "2026-06-24T23:59:00Z",
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "3d45510a7b764416",
@@ -17,7 +17,7 @@
     "postedAt": null,
     "deadline": "2026-07-21T23:59:00Z",
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "0609c629d44b7471",
@@ -27,7 +27,7 @@
     "postedAt": null,
     "deadline": null,
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "0d63a16a197ef153",
@@ -37,7 +37,7 @@
     "postedAt": null,
     "deadline": "2026-07-18T23:59:00Z",
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "342973b843ef9da0",
@@ -47,7 +47,7 @@
     "postedAt": null,
     "deadline": null,
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "249c4eae21ae7617",
@@ -57,7 +57,7 @@
     "postedAt": null,
     "deadline": "2026-05-14T23:59:00Z",
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "bd3f33bf534d7fde",
@@ -67,7 +67,7 @@
     "postedAt": null,
     "deadline": "2026-05-13T23:59:00Z",
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "292d8a01576519d5",
@@ -77,7 +77,7 @@
     "postedAt": null,
     "deadline": null,
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "fd2681a524631d8c",
@@ -87,7 +87,7 @@
     "postedAt": null,
     "deadline": null,
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "96806b07fb1e27c4",
@@ -97,7 +97,7 @@
     "postedAt": null,
     "deadline": null,
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "6230f220f59a456d",
@@ -107,7 +107,7 @@
     "postedAt": null,
     "deadline": null,
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "5e9517d6aebe6668",
@@ -117,7 +117,7 @@
     "postedAt": null,
     "deadline": null,
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "a3e7edcf1a0029c3",
@@ -127,7 +127,7 @@
     "postedAt": null,
     "deadline": null,
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "e8918bbd126a487f",
@@ -137,7 +137,7 @@
     "postedAt": null,
     "deadline": null,
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
   },
   {
     "id": "0c34f98e646cc555",
@@ -147,7 +147,587 @@
     "postedAt": null,
     "deadline": null,
     "source": "https://sbi.bank.in/web/careers/current-openings",
-    "scrapedAt": "2026-07-22T04:40:53Z"
+    "scrapedAt": "2026-07-22T15:20:01Z"
+  },
+  {
+    "id": "902feff0e93dde43",
+    "portal": "ibps",
+    "title": "CRP RRBs",
+    "url": "https://www.ibps.in/index.php/regional-rural-bank/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "1d8d4e171b4d4612",
+    "portal": "ibps",
+    "title": "CRP CSA(Customer Service Associates)",
+    "url": "https://www.ibps.in/index.php/clerical-cadre/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "700314c4e5806098",
+    "portal": "ibps",
+    "title": "CRP PO/MTs",
+    "url": "https://www.ibps.in/index.php/management-trainees/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "089d21aeccc82eda",
+    "portal": "ibps",
+    "title": "CRP Specialist Officers",
+    "url": "https://www.ibps.in/index.php/specialist-officers/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "ee5f6802ea2f27c2",
+    "portal": "ibps",
+    "title": "CRP-PO/MTs-XVI",
+    "url": "https://www.ibps.in/index.php/management-trainees-xvi/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "6aa54794fb9cb894",
+    "portal": "ibps",
+    "title": "RECRUITMENT EXAMS",
+    "url": "https://www.ibps.in/index.php/recruitment/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "48b34385c4362b00",
+    "portal": "ibps",
+    "title": "CRP - RRBs",
+    "url": "https://www.ibps.in/index.php/regional-rural-bank",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "fc89f2c31fad38dd",
+    "portal": "ibps",
+    "title": "CRP - CLERKS",
+    "url": "https://www.ibps.in/index.php/clerical-cadre",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "a0738c3cf55aeeeb",
+    "portal": "ibps",
+    "title": "IDBI Recruitment of Specialist Officers - 2026-27 Registration From 14-Jul-2026",
+    "url": "https://ibpsreg.ibps.in/idbiscojun26/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "1e9707c592903d67",
+    "portal": "ibps",
+    "title": "NABARD Recruitment of Specialists On Contract - 2026-27 Registration From 10-Jul-2026",
+    "url": "https://ibpsreg.ibps.in/nabardjun26/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "f10f68cc662daebb",
+    "portal": "ibps",
+    "title": "CRP-SPL-XVI",
+    "url": "https://www.ibps.in/index.php/specialist-officers-xvi/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "3eabd968cfc6db5a",
+    "portal": "ibps",
+    "title": "PNB Recruitment of Local Bank Officer in JMGS I Registration From 20-Jul-2026",
+    "url": "https://ibpsreg.ibps.in/pnbjul26/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "4d2c51596fd4f41f",
+    "portal": "ibps",
+    "title": "NIC Recruitment of 500 Assistants Registration From 18-Jul-2026",
+    "url": "https://ibpsreg.ibps.in/nicljul26/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "93d9af9916bfa431",
+    "portal": "ibps",
+    "title": "ONGC Recruitment of Geologists & Engineers at E1 levels Registration From 17-Jul-2026",
+    "url": "https://ibpsreg.ibps.in/ongcjul26/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "18ce07a7e3cbd89c",
+    "portal": "ibps",
+    "title": "CRP - PO/MTs",
+    "url": "https://www.ibps.in/index.php/management-trainees",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "320f876da48c2316",
+    "portal": "ibps",
+    "title": "CRP - SPECIALIST OFFICERS",
+    "url": "https://www.ibps.in/index.php/specialist-officers",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "97830ca07f922ee2",
+    "portal": "ibps",
+    "title": "Personnel Selection Services for Recruitment, Promotion and Placement",
+    "url": "https://www.ibps.in/index.php/services",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "7f153aed34058cb3",
+    "portal": "ibps",
+    "title": "CRP Clerical cadre",
+    "url": "https://www.ibps.in/index.php/clerical-cadre",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "ff9bff559df46512",
+    "portal": "ibps",
+    "title": "CRP-PO/MT & SPL-XVI",
+    "url": "https://www.ibps.in/wp-content/uploads/Corrigendum-for-extension_CRP-XVI.pdf",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "0184bbe7dfe21e0b",
+    "portal": "ibps",
+    "title": "Apply Online for Common Recruitment Process under CRP- PO/MTs \u2013XVI",
+    "url": "https://www.ibps.in/index.php/management-trainees-xvi/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "5999682837a3ed97",
+    "portal": "ibps",
+    "title": "Apply Online for Common Recruitment Process under CRP- SPL -XVI",
+    "url": "https://www.ibps.in/index.php/specialist-officers-xvi/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "f328ba050971f2a4",
+    "portal": "ibps",
+    "title": "CRP PO/MT",
+    "url": "https://www.ibps.in/index.php/management-trainees/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "0e84817bbad2f7cc",
+    "portal": "ibps",
+    "title": "CRP Specialist Officer",
+    "url": "https://www.ibps.in/index.php/specialist-officers",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "0368943c8ae5a3aa",
+    "portal": "ibps",
+    "title": "Corrigendum Regarding Extension For CRP PO/MT XVI & CRP SPL XVI",
+    "url": "https://www.ibps.in/wp-content/uploads/Corrigendum-for-extension_CRP-XVI.pdf",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://www.ibps.in/",
+    "scrapedAt": "2026-07-22T15:19:49Z"
+  },
+  {
+    "id": "67f95b0ca6539b53",
+    "portal": "nta",
+    "title": "Engineering Joint Entrance Examination - (Main)",
+    "url": "https://nta.ac.in/Engineeringexam",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://nta.ac.in/",
+    "scrapedAt": "2026-07-22T15:19:46Z"
+  },
+  {
+    "id": "4e023693eca45bc7",
+    "portal": "nta",
+    "title": "University UGC National Eligibility Test",
+    "url": "https://nta.ac.in/collegeexam",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://nta.ac.in/",
+    "scrapedAt": "2026-07-22T15:19:46Z"
+  },
+  {
+    "id": "fda599ab449fc29b",
+    "portal": "nta",
+    "title": "University CSIR-National Eligibility Test (CSIR-NET)",
+    "url": "https://nta.ac.in/Csirexam",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://nta.ac.in/",
+    "scrapedAt": "2026-07-22T15:19:46Z"
+  },
+  {
+    "id": "3ff0bca2784edd1d",
+    "portal": "nta",
+    "title": "MOOCs Swayam Examination",
+    "url": "https://nta.ac.in/Swayamexam",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://nta.ac.in/",
+    "scrapedAt": "2026-07-22T15:19:46Z"
+  },
+  {
+    "id": "06687dc424aa2a2a",
+    "portal": "nta",
+    "title": "NTA Registration and MoA",
+    "url": "https://nta.ac.in/Download/NTARegistrationandMOA.pdf",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://nta.ac.in/",
+    "scrapedAt": "2026-07-22T15:19:46Z"
+  },
+  {
+    "id": "19cfb584b472f45e",
+    "portal": "nta",
+    "title": "Joint Entrance Examination",
+    "url": "https://jeemain.nta.nic.in",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://nta.ac.in/",
+    "scrapedAt": "2026-07-22T15:19:46Z"
+  },
+  {
+    "id": "fce41dd47287f212",
+    "portal": "nta",
+    "title": "UGC National Eligibility Test",
+    "url": "https://ugcnet.nta.nic.in",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://nta.ac.in/",
+    "scrapedAt": "2026-07-22T15:19:46Z"
+  },
+  {
+    "id": "7033f7e80a565347",
+    "portal": "nta",
+    "title": "ICAR'S All India Entrance Examination",
+    "url": "https://exams.nta.nic.in/icar/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://nta.ac.in/",
+    "scrapedAt": "2026-07-22T15:19:46Z"
+  },
+  {
+    "id": "03dd917978a60f5f",
+    "portal": "nta",
+    "title": "Hotel Management Joint Entrance Examination",
+    "url": "https://exams.nta.nic.in/nchm-jee/",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://nta.ac.in/",
+    "scrapedAt": "2026-07-22T15:19:46Z"
+  },
+  {
+    "id": "a9e572b3b8456bd9",
+    "portal": "ssc",
+    "title": "Sub-Inspector in Delhi Police & Central Armed Police Forces Examination, 2026",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq133",
+    "postedAt": null,
+    "deadline": "2026-06-30T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "8d107271111d54fb",
+    "portal": "ssc",
+    "title": "Combined Higher Secondary (10+2) Level Examination, 2026",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq129",
+    "postedAt": null,
+    "deadline": "2026-05-31T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "fecf1571c3bb39b4",
+    "portal": "ssc",
+    "title": "Constables (GD) in Central Armed Police Forces (CAPFs), NIA, SSF and Rifleman (GD) in Assam Rifles Examination, 2027",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq134",
+    "postedAt": null,
+    "deadline": "2026-10-31T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "641009f6506fa850",
+    "portal": "ssc",
+    "title": "Selection Post Examination, Phase-XIV, 2026",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq128",
+    "postedAt": null,
+    "deadline": "2026-04-30T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "8f17bc8d2f069c2f",
+    "portal": "ssc",
+    "title": "Combined Graduate Level Examination, 2026",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq126",
+    "postedAt": null,
+    "deadline": "2026-04-30T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "c2bab0d05176cde2",
+    "portal": "ssc",
+    "title": "Stenographer Grade \u2018C\u2019 & \u2018D\u2019 Examination, 2026",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq130",
+    "postedAt": null,
+    "deadline": "2026-05-31T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "6faab3932acb0902",
+    "portal": "ssc",
+    "title": "JSA / LDC Grade Limited Departmental Competitive Examination, 2025 (for DoPT only)",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq123",
+    "postedAt": null,
+    "deadline": "2026-04-07T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "c01f5de45360532e",
+    "portal": "ssc",
+    "title": "Indian Navy Entrance Test (INET) - [Agniveer (MR as SSR ) and SSR (Medical)] (SSC ssc-calendar)",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1rnavy125",
+    "postedAt": null,
+    "deadline": "2026-04-06T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "89c9b3c4809abbce",
+    "portal": "ssc",
+    "title": "ASO Grade Limited Departmental Competitive Examination, 2025",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq125",
+    "postedAt": null,
+    "deadline": "2026-04-07T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "0696ab966e838ca9",
+    "portal": "ssc",
+    "title": "Combined Hindi Translators Examination, 2026",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq131",
+    "postedAt": null,
+    "deadline": "2026-05-31T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "79fc700a7620544d",
+    "portal": "ssc",
+    "title": "SSA / UDC Grade Limited Departmental Competitive Examination, 2025 (for DoPT only)",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq124",
+    "postedAt": null,
+    "deadline": "2026-04-07T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "74347ef52973c09d",
+    "portal": "ssc",
+    "title": "Multi-Tasking (Non-Technical) Staff & Havaldar (CBIC & CBN) Examination, 2026",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq132",
+    "postedAt": null,
+    "deadline": "2026-07-31T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "289c9cfae9e589b3",
+    "portal": "ssc",
+    "title": "Junior Engineer (Civil, Mechanical & Electrical) Examination, 2026",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq127",
+    "postedAt": null,
+    "deadline": "2026-04-30T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "5883ff74e0bed840",
+    "portal": "ssc",
+    "title": "Indian Navy Entrance Test ( INET ) - [Agniveer (Apprentice)] (SSC ssc-calendar)",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq4v2t1rnavy125",
+    "postedAt": null,
+    "deadline": "2026-06-29T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "ccd5388da5208063",
+    "portal": "ssc",
+    "title": "Head Constable {Assistant Wireless Operator (AWO)/Tele-Printer Operator (TPO)} in Delhi Police Examination, 2025",
+    "url": "https://ssc.gov.in/home/notice-board#q5x2t8r9v1m3n0k4y7p6j",
+    "postedAt": null,
+    "deadline": "2025-10-15T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "6808e59e84a98a4a",
+    "portal": "ssc",
+    "title": "Combined Graduate Level Examination, 2025",
+    "url": "https://ssc.gov.in/home/notice-board#w5z1t4r8x9c0n2m6p3vqd",
+    "postedAt": null,
+    "deadline": "2025-07-04T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "c2a7f83a2b13eb3c",
+    "portal": "ssc",
+    "title": "JSA/ LDC Grade Limited Departmental Competitive Examination, 2024 (only for DoPT))",
+    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8jw6bmn",
+    "postedAt": null,
+    "deadline": "2025-04-10T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "7d7cb2ca9e7c55ec",
+    "portal": "ssc",
+    "title": "JSA/ LDC Grade Limited Departmental Competitive Examination, 2025",
+    "url": "https://ssc.gov.in/home/notice-board#x8q4n1t7r0v3m9j6k2y5p",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "e3150f7f5196a3e0",
+    "portal": "ssc",
+    "title": "Constable (Driver) \u2013 Male in Delhi Police Examination, 2025",
+    "url": "https://ssc.gov.in/home/notice-board#y2n5t0x9r3q7m1v4j6k8b",
+    "postedAt": null,
+    "deadline": "2025-10-15T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "fea5319ac1e6b348",
+    "portal": "ssc",
+    "title": "Combined Higher Secondary (10+2) Level Examination, 2025",
+    "url": "https://ssc.gov.in/home/notice-board#g4t9m2x6n0r5q3v7j1p8c",
+    "postedAt": null,
+    "deadline": "2025-07-18T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "7cb93040e4e6bc7d",
+    "portal": "ssc",
+    "title": "Grade \u2018C\u2019 Stenographer Limited Departmental Competitive Examination, 2025",
+    "url": "https://ssc.gov.in/home/notice-board#n7q9r3x6t1m0v4k8y5p2j",
+    "postedAt": null,
+    "deadline": "2025-10-10T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "55e798cc4ab31545",
+    "portal": "ssc",
+    "title": "ASO Grade Limited Departmental Competitive Examination, 2025",
+    "url": "https://ssc.gov.in/home/notice-board#k6x1n9q3r8t5m0v2y7j4p",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "8848f67310f227cf",
+    "portal": "ssc",
+    "title": "Constables (GD) in CAPFs, NIA, SSF and Rifleman (GD) in Assam Rifles Examination, 2026",
+    "url": "https://ssc.gov.in/home/notice-board#t3r1q8n6x9v2m0j4k7y5p",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "c8f731250673ef2c",
+    "portal": "ssc",
+    "title": "SSA/ UDC Grade Limited Departmental Competitive Examination, 2025",
+    "url": "https://ssc.gov.in/home/notice-board#j9r3t6q1n7x4v2m0k8y5p",
+    "postedAt": null,
+    "deadline": null,
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
+  },
+  {
+    "id": "18e32b425ce542d6",
+    "portal": "ssc",
+    "title": "Sub-Inspector in Delhi Police and Central Armed Police Forces Examination, 2025",
+    "url": "https://ssc.gov.in/home/notice-board#m2q8v1x4r9t6n3j0y5b7k",
+    "postedAt": null,
+    "deadline": "2025-10-16T23:59:00Z",
+    "source": "https://ssc.gov.in/api/general-website/portal/records",
+    "scrapedAt": "2026-07-22T15:19:44Z"
   },
   {
     "id": "0d4651e2b2f26a34",
@@ -340,196 +920,6 @@
     "scrapedAt": "2026-07-22T04:40:51Z"
   },
   {
-    "id": "902feff0e93dde43",
-    "portal": "ibps",
-    "title": "CRP RRBs",
-    "url": "https://www.ibps.in/index.php/regional-rural-bank/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "1d8d4e171b4d4612",
-    "portal": "ibps",
-    "title": "CRP CSA(Customer Service Associates)",
-    "url": "https://www.ibps.in/index.php/clerical-cadre/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "700314c4e5806098",
-    "portal": "ibps",
-    "title": "CRP PO/MTs",
-    "url": "https://www.ibps.in/index.php/management-trainees/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "089d21aeccc82eda",
-    "portal": "ibps",
-    "title": "CRP Specialist Officers",
-    "url": "https://www.ibps.in/index.php/specialist-officers/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "ee5f6802ea2f27c2",
-    "portal": "ibps",
-    "title": "CRP-PO/MTs-XVI",
-    "url": "https://www.ibps.in/index.php/management-trainees-xvi/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "6aa54794fb9cb894",
-    "portal": "ibps",
-    "title": "RECRUITMENT EXAMS",
-    "url": "https://www.ibps.in/index.php/recruitment/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "48b34385c4362b00",
-    "portal": "ibps",
-    "title": "CRP - RRBs",
-    "url": "https://www.ibps.in/index.php/regional-rural-bank",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "fc89f2c31fad38dd",
-    "portal": "ibps",
-    "title": "CRP - CLERKS",
-    "url": "https://www.ibps.in/index.php/clerical-cadre",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "a0738c3cf55aeeeb",
-    "portal": "ibps",
-    "title": "IDBI Recruitment of Specialist Officers - 2026-27 Registration From 14-Jul-2026",
-    "url": "https://ibpsreg.ibps.in/idbiscojun26/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "1e9707c592903d67",
-    "portal": "ibps",
-    "title": "NABARD Recruitment of Specialists On Contract - 2026-27 Registration From 10-Jul-2026",
-    "url": "https://ibpsreg.ibps.in/nabardjun26/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "f10f68cc662daebb",
-    "portal": "ibps",
-    "title": "CRP-SPL-XVI",
-    "url": "https://www.ibps.in/index.php/specialist-officers-xvi/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "3eabd968cfc6db5a",
-    "portal": "ibps",
-    "title": "PNB Recruitment of Local Bank Officer in JMGS I Registration From 20-Jul-2026",
-    "url": "https://ibpsreg.ibps.in/pnbjul26/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "4d2c51596fd4f41f",
-    "portal": "ibps",
-    "title": "NIC Recruitment of 500 Assistants Registration From 18-Jul-2026",
-    "url": "https://ibpsreg.ibps.in/nicljul26/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "93d9af9916bfa431",
-    "portal": "ibps",
-    "title": "ONGC Recruitment of Geologists & Engineers at E1 levels Registration From 17-Jul-2026",
-    "url": "https://ibpsreg.ibps.in/ongcjul26/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "18ce07a7e3cbd89c",
-    "portal": "ibps",
-    "title": "CRP - PO/MTs",
-    "url": "https://www.ibps.in/index.php/management-trainees",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "320f876da48c2316",
-    "portal": "ibps",
-    "title": "CRP - SPECIALIST OFFICERS",
-    "url": "https://www.ibps.in/index.php/specialist-officers",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "97830ca07f922ee2",
-    "portal": "ibps",
-    "title": "Personnel Selection Services for Recruitment, Promotion and Placement",
-    "url": "https://www.ibps.in/index.php/services",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "7f153aed34058cb3",
-    "portal": "ibps",
-    "title": "CRP Clerical cadre",
-    "url": "https://www.ibps.in/index.php/clerical-cadre",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "ff9bff559df46512",
-    "portal": "ibps",
-    "title": "CRP-PO/MT & SPL-XVI",
-    "url": "https://www.ibps.in/wp-content/uploads/Corrigendum-for-extension_CRP-XVI.pdf",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
     "id": "8ed891cb8703a350",
     "portal": "ibps",
     "title": "Corrigendum Regarding CRP PO/MT XVI & CRP SPL XVI",
@@ -538,386 +928,6 @@
     "deadline": null,
     "source": "https://www.ibps.in/",
     "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "0184bbe7dfe21e0b",
-    "portal": "ibps",
-    "title": "Apply Online for Common Recruitment Process under CRP- PO/MTs \u2013XVI",
-    "url": "https://www.ibps.in/index.php/management-trainees-xvi/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "5999682837a3ed97",
-    "portal": "ibps",
-    "title": "Apply Online for Common Recruitment Process under CRP- SPL -XVI",
-    "url": "https://www.ibps.in/index.php/specialist-officers-xvi/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "f328ba050971f2a4",
-    "portal": "ibps",
-    "title": "CRP PO/MT",
-    "url": "https://www.ibps.in/index.php/management-trainees/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "0e84817bbad2f7cc",
-    "portal": "ibps",
-    "title": "CRP Specialist Officer",
-    "url": "https://www.ibps.in/index.php/specialist-officers",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-22T04:40:50Z"
-  },
-  {
-    "id": "67f95b0ca6539b53",
-    "portal": "nta",
-    "title": "Engineering Joint Entrance Examination - (Main)",
-    "url": "https://nta.ac.in/Engineeringexam",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://nta.ac.in/",
-    "scrapedAt": "2026-07-22T04:40:47Z"
-  },
-  {
-    "id": "4e023693eca45bc7",
-    "portal": "nta",
-    "title": "University UGC National Eligibility Test",
-    "url": "https://nta.ac.in/collegeexam",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://nta.ac.in/",
-    "scrapedAt": "2026-07-22T04:40:47Z"
-  },
-  {
-    "id": "fda599ab449fc29b",
-    "portal": "nta",
-    "title": "University CSIR-National Eligibility Test (CSIR-NET)",
-    "url": "https://nta.ac.in/Csirexam",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://nta.ac.in/",
-    "scrapedAt": "2026-07-22T04:40:47Z"
-  },
-  {
-    "id": "3ff0bca2784edd1d",
-    "portal": "nta",
-    "title": "MOOCs Swayam Examination",
-    "url": "https://nta.ac.in/Swayamexam",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://nta.ac.in/",
-    "scrapedAt": "2026-07-22T04:40:47Z"
-  },
-  {
-    "id": "06687dc424aa2a2a",
-    "portal": "nta",
-    "title": "NTA Registration and MoA",
-    "url": "https://nta.ac.in/Download/NTARegistrationandMOA.pdf",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://nta.ac.in/",
-    "scrapedAt": "2026-07-22T04:40:47Z"
-  },
-  {
-    "id": "19cfb584b472f45e",
-    "portal": "nta",
-    "title": "Joint Entrance Examination",
-    "url": "https://jeemain.nta.nic.in",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://nta.ac.in/",
-    "scrapedAt": "2026-07-22T04:40:47Z"
-  },
-  {
-    "id": "fce41dd47287f212",
-    "portal": "nta",
-    "title": "UGC National Eligibility Test",
-    "url": "https://ugcnet.nta.nic.in",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://nta.ac.in/",
-    "scrapedAt": "2026-07-22T04:40:47Z"
-  },
-  {
-    "id": "7033f7e80a565347",
-    "portal": "nta",
-    "title": "ICAR'S All India Entrance Examination",
-    "url": "https://exams.nta.nic.in/icar/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://nta.ac.in/",
-    "scrapedAt": "2026-07-22T04:40:47Z"
-  },
-  {
-    "id": "03dd917978a60f5f",
-    "portal": "nta",
-    "title": "Hotel Management Joint Entrance Examination",
-    "url": "https://exams.nta.nic.in/nchm-jee/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://nta.ac.in/",
-    "scrapedAt": "2026-07-22T04:40:47Z"
-  },
-  {
-    "id": "a9e572b3b8456bd9",
-    "portal": "ssc",
-    "title": "Sub-Inspector in Delhi Police & Central Armed Police Forces Examination, 2026",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq133",
-    "postedAt": null,
-    "deadline": "2026-06-30T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "8d107271111d54fb",
-    "portal": "ssc",
-    "title": "Combined Higher Secondary (10+2) Level Examination, 2026",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq129",
-    "postedAt": null,
-    "deadline": "2026-05-31T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "fecf1571c3bb39b4",
-    "portal": "ssc",
-    "title": "Constables (GD) in Central Armed Police Forces (CAPFs), NIA, SSF and Rifleman (GD) in Assam Rifles Examination, 2027",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq134",
-    "postedAt": null,
-    "deadline": "2026-10-31T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "641009f6506fa850",
-    "portal": "ssc",
-    "title": "Selection Post Examination, Phase-XIV, 2026",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq128",
-    "postedAt": null,
-    "deadline": "2026-04-30T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "8f17bc8d2f069c2f",
-    "portal": "ssc",
-    "title": "Combined Graduate Level Examination, 2026",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq126",
-    "postedAt": null,
-    "deadline": "2026-04-30T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "c2bab0d05176cde2",
-    "portal": "ssc",
-    "title": "Stenographer Grade \u2018C\u2019 & \u2018D\u2019 Examination, 2026",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq130",
-    "postedAt": null,
-    "deadline": "2026-05-31T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "6faab3932acb0902",
-    "portal": "ssc",
-    "title": "JSA / LDC Grade Limited Departmental Competitive Examination, 2025 (for DoPT only)",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq123",
-    "postedAt": null,
-    "deadline": "2026-04-07T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "c01f5de45360532e",
-    "portal": "ssc",
-    "title": "Indian Navy Entrance Test (INET) - [Agniveer (MR as SSR ) and SSR (Medical)] (SSC ssc-calendar)",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1rnavy125",
-    "postedAt": null,
-    "deadline": "2026-04-06T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "89c9b3c4809abbce",
-    "portal": "ssc",
-    "title": "ASO Grade Limited Departmental Competitive Examination, 2025",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq125",
-    "postedAt": null,
-    "deadline": "2026-04-07T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "0696ab966e838ca9",
-    "portal": "ssc",
-    "title": "Combined Hindi Translators Examination, 2026",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq131",
-    "postedAt": null,
-    "deadline": "2026-05-31T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "79fc700a7620544d",
-    "portal": "ssc",
-    "title": "SSA / UDC Grade Limited Departmental Competitive Examination, 2025 (for DoPT only)",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq124",
-    "postedAt": null,
-    "deadline": "2026-04-07T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "74347ef52973c09d",
-    "portal": "ssc",
-    "title": "Multi-Tasking (Non-Technical) Staff & Havaldar (CBIC & CBN) Examination, 2026",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq132",
-    "postedAt": null,
-    "deadline": "2026-07-31T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "289c9cfae9e589b3",
-    "portal": "ssc",
-    "title": "Junior Engineer (Civil, Mechanical & Electrical) Examination, 2026",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8fgq127",
-    "postedAt": null,
-    "deadline": "2026-04-30T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "5883ff74e0bed840",
-    "portal": "ssc",
-    "title": "Indian Navy Entrance Test ( INET ) - [Agniveer (Apprentice)] (SSC ssc-calendar)",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq4v2t1rnavy125",
-    "postedAt": null,
-    "deadline": "2026-06-29T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "ccd5388da5208063",
-    "portal": "ssc",
-    "title": "Head Constable {Assistant Wireless Operator (AWO)/Tele-Printer Operator (TPO)} in Delhi Police Examination, 2025",
-    "url": "https://ssc.gov.in/home/notice-board#q5x2t8r9v1m3n0k4y7p6j",
-    "postedAt": null,
-    "deadline": "2025-10-15T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "6808e59e84a98a4a",
-    "portal": "ssc",
-    "title": "Combined Graduate Level Examination, 2025",
-    "url": "https://ssc.gov.in/home/notice-board#w5z1t4r8x9c0n2m6p3vqd",
-    "postedAt": null,
-    "deadline": "2025-07-04T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "c2a7f83a2b13eb3c",
-    "portal": "ssc",
-    "title": "JSA/ LDC Grade Limited Departmental Competitive Examination, 2024 (only for DoPT))",
-    "url": "https://ssc.gov.in/home/notice-board#x3p9d7kq2v4t1r8jw6bmn",
-    "postedAt": null,
-    "deadline": "2025-04-10T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "7d7cb2ca9e7c55ec",
-    "portal": "ssc",
-    "title": "JSA/ LDC Grade Limited Departmental Competitive Examination, 2025",
-    "url": "https://ssc.gov.in/home/notice-board#x8q4n1t7r0v3m9j6k2y5p",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "e3150f7f5196a3e0",
-    "portal": "ssc",
-    "title": "Constable (Driver) \u2013 Male in Delhi Police Examination, 2025",
-    "url": "https://ssc.gov.in/home/notice-board#y2n5t0x9r3q7m1v4j6k8b",
-    "postedAt": null,
-    "deadline": "2025-10-15T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "fea5319ac1e6b348",
-    "portal": "ssc",
-    "title": "Combined Higher Secondary (10+2) Level Examination, 2025",
-    "url": "https://ssc.gov.in/home/notice-board#g4t9m2x6n0r5q3v7j1p8c",
-    "postedAt": null,
-    "deadline": "2025-07-18T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "7cb93040e4e6bc7d",
-    "portal": "ssc",
-    "title": "Grade \u2018C\u2019 Stenographer Limited Departmental Competitive Examination, 2025",
-    "url": "https://ssc.gov.in/home/notice-board#n7q9r3x6t1m0v4k8y5p2j",
-    "postedAt": null,
-    "deadline": "2025-10-10T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "55e798cc4ab31545",
-    "portal": "ssc",
-    "title": "ASO Grade Limited Departmental Competitive Examination, 2025",
-    "url": "https://ssc.gov.in/home/notice-board#k6x1n9q3r8t5m0v2y7j4p",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "8848f67310f227cf",
-    "portal": "ssc",
-    "title": "Constables (GD) in CAPFs, NIA, SSF and Rifleman (GD) in Assam Rifles Examination, 2026",
-    "url": "https://ssc.gov.in/home/notice-board#t3r1q8n6x9v2m0j4k7y5p",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "c8f731250673ef2c",
-    "portal": "ssc",
-    "title": "SSA/ UDC Grade Limited Departmental Competitive Examination, 2025",
-    "url": "https://ssc.gov.in/home/notice-board#j9r3t6q1n7x4v2m0k8y5p",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
-  },
-  {
-    "id": "18e32b425ce542d6",
-    "portal": "ssc",
-    "title": "Sub-Inspector in Delhi Police and Central Armed Police Forces Examination, 2025",
-    "url": "https://ssc.gov.in/home/notice-board#m2q8v1x4r9t6n3j0y5b7k",
-    "postedAt": null,
-    "deadline": "2025-10-16T23:59:00Z",
-    "source": "https://ssc.gov.in/api/general-website/portal/records",
-    "scrapedAt": "2026-07-22T04:40:43Z"
   },
   {
     "id": "0fcfe8831bbb589a",
@@ -938,16 +948,6 @@
     "deadline": null,
     "source": "https://www.upsc.gov.in/recruitment/recruitment-advertisement",
     "scrapedAt": "2026-07-22T04:40:42Z"
-  },
-  {
-    "id": "e32ae22843599333",
-    "portal": "ibps",
-    "title": "SBI Recruitment Of Specialist Cadre Officer (Bank Medical Officer) Registration From 24-Jun-2026",
-    "url": "https://ibpsreg.ibps.in/sbiscojun26/",
-    "postedAt": null,
-    "deadline": null,
-    "source": "https://www.ibps.in/",
-    "scrapedAt": "2026-07-21T15:21:42Z"
   },
   {
     "id": "868afeb3a9f19d44",
