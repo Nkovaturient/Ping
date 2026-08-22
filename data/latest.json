@@ -1,104 +1,104 @@
 {
   "upsc": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
+    "timestamp_utc": "2026-08-22T03:28:44Z",
+    "status_code": 0,
+    "latency_ms": 13018,
+    "up": false
+  },
+  "ssc": {
+    "timestamp_utc": "2026-08-22T03:28:44Z",
+    "status_code": 200,
+    "latency_ms": 1243,
+    "up": true
+  },
+  "nta": {
+    "timestamp_utc": "2026-08-22T03:28:44Z",
+    "status_code": 0,
+    "latency_ms": 11006,
+    "up": false
+  },
+  "ibps": {
+    "timestamp_utc": "2026-08-22T03:28:44Z",
+    "status_code": 0,
+    "latency_ms": 911,
+    "up": false
+  },
+  "rrb": {
+    "timestamp_utc": "2026-08-22T03:28:44Z",
+    "status_code": 0,
+    "latency_ms": 482,
+    "up": false
+  },
+  "rrb_apply": {
+    "timestamp_utc": "2026-08-22T03:28:44Z",
+    "status_code": 404,
+    "latency_ms": 1156,
+    "up": false
+  },
+  "indiapost_gds": {
+    "timestamp_utc": "2026-08-22T03:28:44Z",
+    "status_code": 0,
+    "latency_ms": 1041,
+    "up": false
+  },
+  "rbi": {
+    "timestamp_utc": "2026-08-22T03:28:44Z",
+    "status_code": 200,
+    "latency_ms": 946,
+    "up": true
+  },
+  "sbi": {
+    "timestamp_utc": "2026-08-22T03:28:44Z",
+    "status_code": 200,
+    "latency_ms": 1178,
+    "up": true
+  },
+  "uppsc": {
+    "timestamp_utc": "2026-08-22T03:28:44Z",
+    "status_code": 404,
+    "latency_ms": 1259,
+    "up": false
+  },
+  "upsssc": {
+    "timestamp_utc": "2026-08-22T03:28:44Z",
     "status_code": 0,
     "latency_ms": 10257,
     "up": false
   },
-  "ssc": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
-    "status_code": 200,
-    "latency_ms": 1059,
-    "up": true
-  },
-  "nta": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
-    "status_code": 0,
-    "latency_ms": 11041,
-    "up": false
-  },
-  "ibps": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
-    "status_code": 0,
-    "latency_ms": 919,
-    "up": false
-  },
-  "rrb": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
-    "status_code": 0,
-    "latency_ms": 532,
-    "up": false
-  },
-  "rrb_apply": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
-    "status_code": 404,
-    "latency_ms": 1101,
-    "up": false
-  },
-  "indiapost_gds": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
-    "status_code": 0,
-    "latency_ms": 948,
-    "up": false
-  },
-  "rbi": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
-    "status_code": 200,
-    "latency_ms": 984,
-    "up": true
-  },
-  "sbi": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
-    "status_code": 200,
-    "latency_ms": 2311,
-    "up": true
-  },
-  "uppsc": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
-    "status_code": 404,
-    "latency_ms": 1319,
-    "up": false
-  },
-  "upsssc": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
-    "status_code": 0,
-    "latency_ms": 10274,
-    "up": false
-  },
   "bpsc": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
+    "timestamp_utc": "2026-08-22T03:28:44Z",
     "status_code": 0,
-    "latency_ms": 2137,
+    "latency_ms": 741,
     "up": false
   },
   "mppsc": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
+    "timestamp_utc": "2026-08-22T03:28:44Z",
     "status_code": 403,
-    "latency_ms": 1088,
+    "latency_ms": 1255,
     "up": false
   },
   "rpsc": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
+    "timestamp_utc": "2026-08-22T03:28:44Z",
     "status_code": 0,
-    "latency_ms": 10286,
+    "latency_ms": 10255,
     "up": false
   },
   "mpsc": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
+    "timestamp_utc": "2026-08-22T03:28:44Z",
     "status_code": 200,
-    "latency_ms": 711,
+    "latency_ms": 739,
     "up": true
   },
   "tnpsc": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
+    "timestamp_utc": "2026-08-22T03:28:44Z",
     "status_code": 0,
-    "latency_ms": 10279,
+    "latency_ms": 10247,
     "up": false
   },
   "wbpsc": {
-    "timestamp_utc": "2026-08-22T02:41:58Z",
+    "timestamp_utc": "2026-08-22T03:28:44Z",
     "status_code": 200,
-    "latency_ms": 10993,
+    "latency_ms": 1291,
     "up": true
   }
 }
