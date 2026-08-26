@@ -141,104 +141,104 @@
     "5704bd709ab5beab": "2026-08-25T14:12:30.108002Z",
     "bc66b134ee205d70": "2026-08-26T02:43:46.957328Z",
     "9e3051f0fe5976eb": "2026-08-26T02:43:46.957332Z",
-    "538a5da842529b6a": "2026-08-26T02:43:46.957336Z"
+    "538a5da842529b6a": "2026-08-26T02:43:46.957336Z",
+    "18ce07a7e3cbd89c": "2026-08-26T14:11:17.546637Z",
+    "320f876da48c2316": "2026-08-26T14:11:17.546641Z"
   },
   "pendingIds": {
-    "94a642bdb18950c9": 1,
-    "18ce07a7e3cbd89c": 1,
-    "320f876da48c2316": 1
+    "94a642bdb18950c9": 1
   },
   "portalStatus": {
     "upsc": {
       "status": "unreachable: HTTPSConnectionPool(host='www.upsc.gov.in', port=443): Read timed out. (read timeout=20)",
-      "lastRun": "2026-08-26T02:42:47.941364Z",
+      "lastRun": "2026-08-26T14:10:41.377353Z",
       "count": 0
     },
     "ssc": {
       "status": "ok",
-      "lastRun": "2026-08-26T02:42:57.826467Z",
+      "lastRun": "2026-08-26T14:10:42.461083Z",
       "count": 25
     },
     "nta": {
-      "status": "unreachable: HTTPSConnectionPool(host='www.nta.ac.in', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='www.nta.ac.in', port=443): Failed to resolve 'www.nta.ac.in' ([Errno -3] Temporary failure in name resolution)\"))",
-      "lastRun": "2026-08-26T02:43:43.974485Z",
-      "count": 0
+      "status": "ok",
+      "lastRun": "2026-08-26T14:11:15.447118Z",
+      "count": 9
     },
     "ibps": {
       "status": "ok",
-      "lastRun": "2026-08-26T02:43:46.957317Z",
+      "lastRun": "2026-08-26T14:11:17.546627Z",
       "count": 25
     },
     "rrb": {
       "status": "skipped",
-      "lastRun": "2026-08-26T02:43:46.957357Z",
+      "lastRun": "2026-08-26T14:11:17.546658Z",
       "count": 0
     },
     "rrb_apply": {
       "status": "skipped",
-      "lastRun": "2026-08-26T02:43:46.957366Z",
+      "lastRun": "2026-08-26T14:11:17.546666Z",
       "count": 0
     },
     "indiapost_gds": {
       "status": "skipped",
-      "lastRun": "2026-08-26T02:43:46.957372Z",
+      "lastRun": "2026-08-26T14:11:17.546672Z",
       "count": 0
     },
     "rbi": {
       "status": "ok",
-      "lastRun": "2026-08-26T02:43:47.941730Z",
+      "lastRun": "2026-08-26T14:11:19.056484Z",
       "count": 19
     },
     "sbi": {
       "status": "ok",
-      "lastRun": "2026-08-26T02:43:49.501097Z",
+      "lastRun": "2026-08-26T14:11:20.580496Z",
       "count": 15
     },
     "uppsc": {
       "status": "skipped",
-      "lastRun": "2026-08-26T02:43:49.501122Z",
+      "lastRun": "2026-08-26T14:11:20.580519Z",
       "count": 0
     },
     "upsssc": {
       "status": "skipped",
-      "lastRun": "2026-08-26T02:43:49.501130Z",
+      "lastRun": "2026-08-26T14:11:20.580526Z",
       "count": 0
     },
     "bpsc": {
       "status": "skipped",
-      "lastRun": "2026-08-26T02:43:49.501136Z",
+      "lastRun": "2026-08-26T14:11:20.580531Z",
       "count": 0
     },
     "mppsc": {
       "status": "skipped",
-      "lastRun": "2026-08-26T02:43:49.501142Z",
+      "lastRun": "2026-08-26T14:11:20.580535Z",
       "count": 0
     },
     "rpsc": {
       "status": "skipped",
-      "lastRun": "2026-08-26T02:43:49.501148Z",
+      "lastRun": "2026-08-26T14:11:20.580541Z",
       "count": 0
     },
     "mpsc": {
       "status": "skipped_unreachable",
-      "lastRun": "2026-08-26T02:43:49.501155Z",
+      "lastRun": "2026-08-26T14:11:20.580548Z",
       "count": 0
     },
     "tnpsc": {
       "status": "skipped",
-      "lastRun": "2026-08-26T02:43:49.501160Z",
+      "lastRun": "2026-08-26T14:11:20.580553Z",
       "count": 0
     },
     "wbpsc": {
       "status": "skipped",
-      "lastRun": "2026-08-26T02:43:49.501165Z",
+      "lastRun": "2026-08-26T14:11:20.580558Z",
       "count": 0
     }
   },
   "consecutiveFailures": {
-    "upsc": 1,
+    "upsc": 2,
     "ssc": 0,
-    "nta": 1,
+    "nta": 0,
     "ibps": 0,
     "rbi": 0,
     "sbi": 0,
