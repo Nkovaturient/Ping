@@ -99,5 +99,23 @@
     "source": "https://sbi.bank.in/web/careers/current-openings",
     "verifiedOn": "2026-08-07",
     "autoScraped": true
+  },
+  {
+    "portal": "ibps",
+    "displayName": "Corrigendum dated 27.08.2026 in connection with CRP-PO/MTs-XVI",
+    "url": "https://www.ibps.in/index.php/management-trainees-xvi/",
+    "deadline": "2026-08-27T23:59:00",
+    "source": "https://www.ibps.in/",
+    "verifiedOn": "2026-08-27",
+    "autoScraped": true
+  },
+  {
+    "portal": "ibps",
+    "displayName": "Corrigendum dated 27.08.2026 in connection with CRP-SPL-XVI",
+    "url": "https://www.ibps.in/index.php/specialist-officers-xvi/",
+    "deadline": "2026-08-27T23:59:00",
+    "source": "https://www.ibps.in/",
+    "verifiedOn": "2026-08-27",
+    "autoScraped": true
   }
 ]
