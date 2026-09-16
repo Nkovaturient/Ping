@@ -126,5 +126,14 @@
     "source": "https://sbi.bank.in/web/careers/current-openings",
     "verifiedOn": "2026-09-04",
     "autoScraped": true
+  },
+  {
+    "portal": "sbi",
+    "displayName": "APPLY ONLINE (16.09.2026 to 06.10.2026)",
+    "url": "https://recruitment.sbi.bank.in/crpd-sco-2026-27-20/apply",
+    "deadline": "2026-09-16T23:59:00",
+    "source": "https://sbi.bank.in/web/careers/current-openings",
+    "verifiedOn": "2026-09-16",
+    "autoScraped": true
   }
 ]
