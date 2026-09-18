@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Fees | Ping — Portal Pulse</title>
+<meta name="description" content="Track Indian government exam application fees by category — General, SC, ST, OBC, EWS, PwBD. Compare fees across UPSC, SSC, IBPS, Railway, State PSC and more.">
+<link rel="icon" href="./asset/ping.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="./css/exam-fees.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="site-nav" aria-label="Site sections">
+    <a href="./index.html">Portal Pulse</a>
+    <a href="./fees.html" class="active">Exam Fees</a>
+  </nav>
+
+  <header class="top">
+    <div class="brand">
+      <h1>Exam Fees</h1>
+      <p>Application fee tracker for India's recruitment exams — filter by your category, compare across bodies, and view verified price history.</p>
+    </div>
+    <div id="lastUpdated" style="font-size:12px;color:var(--ink-soft);white-space:nowrap;"></div>
+  </header>
+
+  <main id="mainContent">
+
+    <div class="bento-card disclaimer-bar" id="disclaimerBar">Loading…</div>
+
+    <div class="fees-kpi-strip" id="overviewPanel">
+      <div class="bento-card fees-kpi"><div class="label">Exams tracked</div><div class="value" id="kpiTotal">—</div></div>
+      <div class="bento-card fees-kpi"><div class="label">Free for your category</div><div class="value" id="kpiFree" style="color:var(--ok)">—</div></div>
+      <div class="bento-card fees-kpi"><div class="label">Avg paid fee</div><div class="value" id="kpiAvg">—</div></div>
+      <div class="bento-card fees-kpi"><div class="label">Highest fee</div><div class="value" id="kpiMax">—</div><div class="label" id="kpiMaxSub"></div></div>
+    </div>
+
+    <div class="bento-card filter-panel">
+      <div class="filter-row">
+        <span class="filter-label">Your category</span>
+        <div class="reservation-picker">
+          <select id="reservationSelect" aria-label="Reservation category"></select>
+          <button type="button" class="btn btn-primary" id="compareAllBtn">Show all for my category</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Sector</span>
+        <div class="filter-chips">
+          <button type="button" class="filter-chip active" data-portal-cat="all">All</button>
+          <button type="button" class="filter-chip" data-portal-cat="central">Central</button>
+          <button type="button" class="filter-chip" data-portal-cat="banking">Banking</button>
+          <button type="button" class="filter-chip" data-portal-cat="railway">Railway</button>
+          <button type="button" class="filter-chip" data-portal-cat="state">State PSC</button>
+          <button type="button" class="filter-chip" data-portal-cat="education">Education</button>
+          <button type="button" class="filter-chip" id="womenFreeToggle">Fee Exempted for Women</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Search</span>
+        <input type="search" class="filter-search" id="examSearch" placeholder="UPSC, IBPS, NEET…" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="bento-card chart-card">
+        <h3>Top fees — your category</h3>
+        <div class="chart-wrap"><canvas id="categoryBarChart"></canvas></div>
+      </div>
+      <div class="bento-card chart-card">
+        <h3>Fee distribution</h3>
+        <div class="chart-wrap"><canvas id="categoryPieChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="bento-card exam-table-wrap">
+      <div class="table-toolbar">
+        <p id="tableCaption"></p>
+        <button type="button" class="btn" id="openCompareBtn" disabled>Compare selected</button>
+      </div>
+      <table class="exam-table">
+        <thead>
+          <tr>
+            <th scope="col" style="width:36px"></th>
+            <th scope="col">Exam</th>
+            <th scope="col">Body</th>
+            <th scope="col">Your fee</th>
+            <th scope="col">General</th>
+            <th scope="col">Cycle</th>
+            <th scope="col">Verified</th>
+          </tr>
+        </thead>
+        <tbody id="examTableBody">
+          <tr><td colspan="7" class="empty-state">Loading exam fees…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bento-card timeline-section">
+      <h3>Verified fee history</h3>
+      <p style="margin:0 0 12px;font-size:13px;color:var(--ink-soft);">Historical anchors only where official sources exist. Pre-2005 gaps are labeled.</p>
+      <select class="timeline-select" id="timelineExamSelect" aria-label="Select exam for timeline"></select>
+      <div class="timeline-chart-wrap"><canvas id="timelineChart"></canvas></div>
+      <div class="timeline-gap" id="timelineGapNote"></div>
+    </div>
+
+  </main>
+
+  <footer>
+    ©2026 Nk · Unofficial fee tracker · Verify on official sites before payment
+  </footer>
+</div>
+
+<div class="compare-drawer" id="compareDrawer" aria-hidden="true">
+  <div class="compare-backdrop"></div>
+  <div class="compare-sheet" role="dialog" aria-labelledby="compareTitle">
+    <div class="compare-head">
+      <h2 id="compareTitle">Compare fees</h2>
+      <button type="button" class="btn" id="closeCompareBtn">Close</button>
+    </div>
+    <div class="compare-body" id="compareBody"></div>
+  </div>
+</div>
+
+<script src="./js/exam-fees.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.initExamFeesPage) window.initExamFeesPage();
+  });
+</script>
+</body>
+</html>

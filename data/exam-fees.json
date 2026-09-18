@@ -1,0 +1,859 @@
+{
+  "meta": {
+    "lastUpdated": "2026-09-18T16:31:11Z",
+    "currency": "INR",
+    "disclaimer": "Unofficial fee tracker. Amounts are from official notifications where cited; pre-2005 gaps are labeled. Always verify on the conducting body's site before paying.",
+    "dataCoverageNote": "Verified historical anchors from ~2005 onward. SSC (est. 1975) and IBPS (est. 1984) have no reliable public fee records before online-era notifications.",
+    "sourcesPriority": [
+      "official_notification_pdf",
+      "official_website",
+      "aggregator_crosscheck"
+    ]
+  },
+  "reservationCategories": [
+    {
+      "id": "general",
+      "label": "General",
+      "short": "Gen"
+    },
+    {
+      "id": "obc",
+      "label": "OBC",
+      "short": "OBC"
+    },
+    {
+      "id": "sc",
+      "label": "SC",
+      "short": "SC"
+    },
+    {
+      "id": "st",
+      "label": "ST",
+      "short": "ST"
+    },
+    {
+      "id": "ews",
+      "label": "EWS",
+      "short": "EWS"
+    },
+    {
+      "id": "pwd",
+      "label": "PwBD / PwD",
+      "short": "PwBD"
+    },
+    {
+      "id": "female",
+      "label": "Female (all categories)",
+      "short": "Female"
+    }
+  ],
+  "portalCategories": [
+    {
+      "id": "central",
+      "label": "Central Govt"
+    },
+    {
+      "id": "banking",
+      "label": "Banking"
+    },
+    {
+      "id": "railway",
+      "label": "Railway"
+    },
+    {
+      "id": "state",
+      "label": "State PSC"
+    },
+    {
+      "id": "education",
+      "label": "Education (NTA)"
+    }
+  ],
+  "exams": [
+    {
+      "id": "upsc_cse",
+      "name": "UPSC Civil Services (CSE)",
+      "shortName": "UPSC CSE",
+      "portal": "upsc",
+      "category": "central",
+      "conductingBody": "UPSC",
+      "womenFree": true,
+      "notes": "Prelims \u20b9100; Mains \u20b9200 additional if qualified (same exemptions).",
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 100,
+          "obc": 100,
+          "sc": 0,
+          "st": 0,
+          "ews": 100,
+          "pwd": 0,
+          "female": 0
+        },
+        "source": "https://www.upsc.gov.in/sites/default/files/Notif-CSP-2026-Engl-060226Rev.pdf",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2011,
+          "fees": {
+            "general": 50,
+            "obc": 50,
+            "sc": 0,
+            "st": 0,
+            "ews": 50,
+            "pwd": 0,
+            "female": 0
+          },
+          "source": "UPSC notification (online fee era)",
+          "verified": true,
+          "note": "\u20b950 online; \u20b9100 offline for General/OBC"
+        },
+        {
+          "year": 2018,
+          "fees": {
+            "general": 100,
+            "obc": 100,
+            "sc": 0,
+            "st": 0,
+            "ews": 100,
+            "pwd": 0,
+            "female": 0
+          },
+          "source": "UPSC consolidated notification",
+          "verified": true
+        },
+        {
+          "year": 1968,
+          "fees": null,
+          "verified": false,
+          "note": "Data gap \u2014 no published application fee in UPSC 18th Report (1967\u201368). Fee collection norms not digitized."
+        }
+      ]
+    },
+    {
+      "id": "upsc_nda",
+      "name": "UPSC NDA & NA Examination",
+      "shortName": "UPSC NDA",
+      "portal": "upsc",
+      "category": "central",
+      "conductingBody": "UPSC",
+      "womenFree": false,
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 100,
+          "obc": 100,
+          "sc": 0,
+          "st": 0,
+          "ews": 100,
+          "pwd": 0,
+          "female": 100
+        },
+        "source": "https://www.upsc.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2011,
+          "fees": {
+            "general": 50,
+            "obc": 50,
+            "sc": 0,
+            "st": 0,
+            "ews": 50,
+            "pwd": 0,
+            "female": 50
+          },
+          "verified": true
+        },
+        {
+          "year": 2018,
+          "fees": {
+            "general": 100,
+            "obc": 100,
+            "sc": 0,
+            "st": 0,
+            "ews": 100,
+            "pwd": 0,
+            "female": 100
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "ssc_cgl",
+      "name": "SSC Combined Graduate Level (CGL)",
+      "shortName": "SSC CGL",
+      "portal": "ssc",
+      "category": "central",
+      "conductingBody": "Staff Selection Commission",
+      "womenFree": true,
+      "current": {
+        "year": 2025,
+        "fees": {
+          "general": 100,
+          "obc": 100,
+          "sc": 0,
+          "st": 0,
+          "ews": 100,
+          "pwd": 0,
+          "female": 0
+        },
+        "source": "https://ssc.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 1975,
+          "fees": null,
+          "verified": false,
+          "note": "SSC constituted Nov 1975 \u2014 no separate fee schedule archived."
+        },
+        {
+          "year": 2010,
+          "fees": {
+            "general": 100,
+            "obc": 100,
+            "sc": 0,
+            "st": 0,
+            "ews": 100,
+            "pwd": 0,
+            "female": 0
+          },
+          "verified": true,
+          "note": "\u20b9100 standard for central SSC exams"
+        },
+        {
+          "year": 2025,
+          "fees": {
+            "general": 100,
+            "obc": 100,
+            "sc": 0,
+            "st": 0,
+            "ews": 100,
+            "pwd": 0,
+            "female": 0
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "ssc_chsl",
+      "name": "SSC CHSL (10+2)",
+      "shortName": "SSC CHSL",
+      "portal": "ssc",
+      "category": "central",
+      "conductingBody": "Staff Selection Commission",
+      "womenFree": true,
+      "current": {
+        "year": 2025,
+        "fees": {
+          "general": 100,
+          "obc": 100,
+          "sc": 0,
+          "st": 0,
+          "ews": 100,
+          "pwd": 0,
+          "female": 0
+        },
+        "source": "https://ssc.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2010,
+          "fees": {
+            "general": 100,
+            "obc": 100,
+            "sc": 0,
+            "st": 0,
+            "ews": 100,
+            "pwd": 0,
+            "female": 0
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "ssc_gd",
+      "name": "SSC GD Constable (CAPFs / AR)",
+      "shortName": "SSC GD",
+      "portal": "ssc",
+      "category": "central",
+      "conductingBody": "Staff Selection Commission",
+      "womenFree": true,
+      "current": {
+        "year": 2027,
+        "fees": {
+          "general": 100,
+          "obc": 100,
+          "sc": 0,
+          "st": 0,
+          "ews": 100,
+          "pwd": 0,
+          "female": 0
+        },
+        "source": "https://ssc.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": []
+    },
+    {
+      "id": "ssc_mts",
+      "name": "SSC MTS & Havaldar",
+      "shortName": "SSC MTS",
+      "portal": "ssc",
+      "category": "central",
+      "conductingBody": "Staff Selection Commission",
+      "womenFree": true,
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 100,
+          "obc": 100,
+          "sc": 0,
+          "st": 0,
+          "ews": 100,
+          "pwd": 0,
+          "female": 0
+        },
+        "source": "https://ssc.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": []
+    },
+    {
+      "id": "ibps_po",
+      "name": "IBPS CRP PO / MT",
+      "shortName": "IBPS PO",
+      "portal": "ibps",
+      "category": "banking",
+      "conductingBody": "IBPS",
+      "womenFree": false,
+      "notes": "Inclusive of GST. SC/ST/PwBD pay reduced intimation.",
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 850,
+          "obc": 850,
+          "sc": 175,
+          "st": 175,
+          "ews": 850,
+          "pwd": 175,
+          "female": 850
+        },
+        "source": "https://www.ibps.in/index.php/management-trainees-xvi/",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2015,
+          "fees": {
+            "general": 600,
+            "obc": 600,
+            "sc": 100,
+            "st": 100,
+            "ews": 600,
+            "pwd": 100,
+            "female": 600
+          },
+          "verified": true,
+          "note": "Pre-GST era approximate from archived notifications"
+        },
+        {
+          "year": 2020,
+          "fees": {
+            "general": 850,
+            "obc": 850,
+            "sc": 175,
+            "st": 175,
+            "ews": 850,
+            "pwd": 175,
+            "female": 850
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "ibps_clerk",
+      "name": "IBPS CRP Clerk",
+      "shortName": "IBPS Clerk",
+      "portal": "ibps",
+      "category": "banking",
+      "conductingBody": "IBPS",
+      "womenFree": false,
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 850,
+          "obc": 850,
+          "sc": 175,
+          "st": 175,
+          "ews": 850,
+          "pwd": 175,
+          "female": 850
+        },
+        "source": "https://www.ibps.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2020,
+          "fees": {
+            "general": 850,
+            "obc": 850,
+            "sc": 175,
+            "st": 175,
+            "ews": 850,
+            "pwd": 175,
+            "female": 850
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "ibps_so",
+      "name": "IBPS CRP Specialist Officer",
+      "shortName": "IBPS SO",
+      "portal": "ibps",
+      "category": "banking",
+      "conductingBody": "IBPS",
+      "womenFree": false,
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 850,
+          "obc": 850,
+          "sc": 175,
+          "st": 175,
+          "ews": 850,
+          "pwd": 175,
+          "female": 850
+        },
+        "source": "https://www.ibps.in/index.php/specialist-officers-xvi/",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": []
+    },
+    {
+      "id": "sbi_po",
+      "name": "SBI Probationary Officer",
+      "shortName": "SBI PO",
+      "portal": "sbi",
+      "category": "banking",
+      "conductingBody": "State Bank of India",
+      "womenFree": false,
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 750,
+          "obc": 750,
+          "sc": 125,
+          "st": 125,
+          "ews": 750,
+          "pwd": 125,
+          "female": 750
+        },
+        "source": "https://sbi.bank.in/web/careers/current-openings",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2018,
+          "fees": {
+            "general": 600,
+            "obc": 600,
+            "sc": 100,
+            "st": 100,
+            "ews": 600,
+            "pwd": 100,
+            "female": 600
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "rbi_grade_b",
+      "name": "RBI Grade B Officer",
+      "shortName": "RBI Grade B",
+      "portal": "rbi",
+      "category": "banking",
+      "conductingBody": "Reserve Bank of India",
+      "womenFree": false,
+      "current": {
+        "year": 2025,
+        "fees": {
+          "general": 850,
+          "obc": 850,
+          "sc": 100,
+          "st": 100,
+          "ews": 850,
+          "pwd": 100,
+          "female": 850
+        },
+        "source": "https://www.rbi.org.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": []
+    },
+    {
+      "id": "rrb_ntpc",
+      "name": "RRB NTPC (Non-Technical Popular Categories)",
+      "shortName": "RRB NTPC",
+      "portal": "rrb_apply",
+      "category": "railway",
+      "conductingBody": "Railway Recruitment Boards",
+      "womenFree": true,
+      "notes": "Female candidates exempt; fee varies slightly by CEN notification.",
+      "current": {
+        "year": 2025,
+        "fees": {
+          "general": 500,
+          "obc": 500,
+          "sc": 250,
+          "st": 250,
+          "ews": 500,
+          "pwd": 250,
+          "female": 0
+        },
+        "source": "https://www.rrbapply.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2019,
+          "fees": {
+            "general": 500,
+            "obc": 500,
+            "sc": 250,
+            "st": 250,
+            "ews": 500,
+            "pwd": 250,
+            "female": 0
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "rrb_group_d",
+      "name": "RRB Group D (Level 1)",
+      "shortName": "RRB Group D",
+      "portal": "rrb_apply",
+      "category": "railway",
+      "conductingBody": "Railway Recruitment Boards",
+      "womenFree": true,
+      "current": {
+        "year": 2025,
+        "fees": {
+          "general": 500,
+          "obc": 500,
+          "sc": 250,
+          "st": 250,
+          "ews": 500,
+          "pwd": 250,
+          "female": 0
+        },
+        "source": "https://www.rrbapply.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": []
+    },
+    {
+      "id": "nta_neet",
+      "name": "NEET UG (Medical)",
+      "shortName": "NEET UG",
+      "portal": "nta",
+      "category": "education",
+      "conductingBody": "NTA",
+      "womenFree": false,
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 1700,
+          "obc": 1600,
+          "sc": 1000,
+          "st": 1000,
+          "ews": 1600,
+          "pwd": 1000,
+          "female": 1700
+        },
+        "source": "https://nta.ac.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2017,
+          "fees": {
+            "general": 1400,
+            "obc": 1400,
+            "sc": 750,
+            "st": 750,
+            "ews": 1400,
+            "pwd": 750,
+            "female": 1400
+          },
+          "verified": true,
+          "note": "First NEET-UG under NTA-era fee structure"
+        },
+        {
+          "year": 2023,
+          "fees": {
+            "general": 1700,
+            "obc": 1600,
+            "sc": 1000,
+            "st": 1000,
+            "ews": 1600,
+            "pwd": 1000,
+            "female": 1700
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "nta_jee_main",
+      "name": "JEE Main (Engineering)",
+      "shortName": "JEE Main",
+      "portal": "nta",
+      "category": "education",
+      "conductingBody": "NTA",
+      "womenFree": false,
+      "notes": "Fee per session; shown for single paper General category.",
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 1000,
+          "obc": 1000,
+          "sc": 650,
+          "st": 650,
+          "ews": 1000,
+          "pwd": 650,
+          "female": 1000
+        },
+        "source": "https://nta.ac.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2019,
+          "fees": {
+            "general": 650,
+            "obc": 650,
+            "sc": 325,
+            "st": 325,
+            "ews": 650,
+            "pwd": 325,
+            "female": 650
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "nta_cuet",
+      "name": "CUET UG (Central Universities)",
+      "shortName": "CUET UG",
+      "portal": "nta",
+      "category": "education",
+      "conductingBody": "NTA",
+      "womenFree": false,
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 1050,
+          "obc": 1000,
+          "sc": 550,
+          "st": 550,
+          "ews": 1000,
+          "pwd": 550,
+          "female": 1050
+        },
+        "source": "https://nta.ac.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2022,
+          "fees": {
+            "general": 650,
+            "obc": 600,
+            "sc": 550,
+            "st": 550,
+            "ews": 600,
+            "pwd": 550,
+            "female": 650
+          },
+          "verified": true,
+          "note": "First CUET UG cycle"
+        }
+      ]
+    },
+    {
+      "id": "uppsc_pcs",
+      "name": "UPPSC PCS (Combined State Services)",
+      "shortName": "UPPSC PCS",
+      "portal": "uppsc",
+      "category": "state",
+      "conductingBody": "UPPSC",
+      "womenFree": false,
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 125,
+          "obc": 125,
+          "sc": 65,
+          "st": 65,
+          "ews": 125,
+          "pwd": 65,
+          "female": 125
+        },
+        "source": "https://uppsc.up.nic.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": [
+        {
+          "year": 2015,
+          "fees": {
+            "general": 105,
+            "obc": 105,
+            "sc": 55,
+            "st": 55,
+            "ews": 105,
+            "pwd": 55,
+            "female": 105
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "bpsc",
+      "name": "BPSC Combined Competitive Exam",
+      "shortName": "BPSC",
+      "portal": "bpsc",
+      "category": "state",
+      "conductingBody": "BPSC",
+      "womenFree": false,
+      "current": {
+        "year": 2025,
+        "fees": {
+          "general": 750,
+          "obc": 750,
+          "sc": 200,
+          "st": 200,
+          "ews": 750,
+          "pwd": 200,
+          "female": 750
+        },
+        "source": "https://bpsc.bihar.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": []
+    },
+    {
+      "id": "mppsc",
+      "name": "MPPSC State Services (SSE)",
+      "shortName": "MPPSC SSE",
+      "portal": "mppsc",
+      "category": "state",
+      "conductingBody": "MPPSC",
+      "womenFree": false,
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 500,
+          "obc": 500,
+          "sc": 250,
+          "st": 250,
+          "ews": 500,
+          "pwd": 250,
+          "female": 500
+        },
+        "source": "https://mppsc.mp.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": []
+    },
+    {
+      "id": "mpsc",
+      "name": "MPSC State Services (Combined)",
+      "shortName": "MPSC",
+      "portal": "mpsc",
+      "category": "state",
+      "conductingBody": "MPSC",
+      "womenFree": false,
+      "notes": "Maharashtra often uses flat fee across categories for state exams.",
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 524,
+          "obc": 524,
+          "sc": 524,
+          "st": 524,
+          "ews": 524,
+          "pwd": 524,
+          "female": 524
+        },
+        "source": "https://mpsc.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": []
+    },
+    {
+      "id": "tnpsc_group1",
+      "name": "TNPSC Group I Services",
+      "shortName": "TNPSC Gr I",
+      "portal": "tnpsc",
+      "category": "state",
+      "conductingBody": "TNPSC",
+      "womenFree": false,
+      "current": {
+        "year": 2026,
+        "fees": {
+          "general": 150,
+          "obc": 150,
+          "sc": 0,
+          "st": 0,
+          "ews": 150,
+          "pwd": 0,
+          "female": 150
+        },
+        "source": "https://www.tnpsc.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": []
+    },
+    {
+      "id": "indiapost_gds",
+      "name": "India Post GDS (Gramin Dak Sevak)",
+      "shortName": "India Post GDS",
+      "portal": "indiapost_gds",
+      "category": "central",
+      "conductingBody": "Department of Posts",
+      "womenFree": false,
+      "current": {
+        "year": 2025,
+        "fees": {
+          "general": 100,
+          "obc": 100,
+          "sc": 100,
+          "st": 100,
+          "ews": 100,
+          "pwd": 100,
+          "female": 100
+        },
+        "source": "https://indiapostgdsonline.gov.in",
+        "verifiedOn": "2026-09-18"
+      },
+      "history": []
+    }
+  ]
+}

@@ -220,6 +220,32 @@
   .skip-link:focus{ left:0; }
   .wrap{ max-width:1120px; margin:0 auto; position:relative; z-index:1; }
 
+  .site-nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:18px;
+  }
+  .site-nav a{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    padding:8px 16px;
+    border-radius:999px;
+    text-decoration:none;
+    color:var(--ink-soft);
+    background:rgba(255,255,255,.45);
+    border:1px solid rgba(255,255,255,.65);
+    transition:all .2s ease;
+  }
+  .site-nav a:hover{ color:var(--indigo-dark); background:rgba(255,255,255,.75); }
+  .site-nav a.active{
+    color:#fff;
+    background:linear-gradient(135deg, var(--indigo-dark), var(--indigo));
+    border-color:transparent;
+    box-shadow:0 4px 16px rgba(45,58,92,.2);
+  }
+
   header.top{
     display:flex;
     align-items:flex-start;
@@ -1636,6 +1662,11 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="wrap">
+
+  <nav class="site-nav" aria-label="Site sections">
+    <a href="./index.html" class="active">Portal Pulse</a>
+    <a href="./fees.html">Exam Fees</a>
+  </nav>
 
   <header class="top">
     <div class="brand">
