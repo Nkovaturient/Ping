@@ -152,93 +152,93 @@
   "portalStatus": {
     "upsc": {
       "status": "skipped_unreachable",
-      "lastRun": "2026-10-18T06:06:11.833671Z",
+      "lastRun": "2026-10-18T16:40:08.872568Z",
       "count": 0
     },
     "ssc": {
-      "status": "ok",
-      "lastRun": "2026-10-18T06:06:13.301809Z",
-      "count": 25
+      "status": "unreachable: HTTPSConnectionPool(host='ssc.gov.in', port=443): Max retries exceeded with url: /api/general-website/portal/records (Caused by ConnectTimeoutError(<HTTPSConnection(host='ssc.gov.in', port=443) at 0x7f85039ca890>, 'Connection to ssc.gov.in timed out. (connect timeout=10)'))",
+      "lastRun": "2026-10-18T16:40:49.663802Z",
+      "count": 0
     },
     "nta": {
       "status": "ok",
-      "lastRun": "2026-10-18T06:06:22.140322Z",
+      "lastRun": "2026-10-18T16:40:54.017996Z",
       "count": 20
     },
     "ibps": {
       "status": "skipped_unreachable",
-      "lastRun": "2026-10-18T06:06:22.140351Z",
+      "lastRun": "2026-10-18T16:40:54.018028Z",
       "count": 0
     },
     "rrb": {
       "status": "skipped",
-      "lastRun": "2026-10-18T06:06:22.140358Z",
+      "lastRun": "2026-10-18T16:40:54.018038Z",
       "count": 0
     },
     "rrb_apply": {
       "status": "skipped",
-      "lastRun": "2026-10-18T06:06:22.140365Z",
+      "lastRun": "2026-10-18T16:40:54.018045Z",
       "count": 0
     },
     "indiapost_gds": {
       "status": "skipped",
-      "lastRun": "2026-10-18T06:06:22.140370Z",
+      "lastRun": "2026-10-18T16:40:54.018052Z",
       "count": 0
     },
     "rbi": {
       "status": "ok",
-      "lastRun": "2026-10-18T06:06:23.664629Z",
+      "lastRun": "2026-10-18T16:40:55.460766Z",
       "count": 19
     },
     "sbi": {
       "status": "ok",
-      "lastRun": "2026-10-18T06:06:25.131808Z",
+      "lastRun": "2026-10-18T16:40:56.837095Z",
       "count": 15
     },
     "uppsc": {
       "status": "skipped",
-      "lastRun": "2026-10-18T06:06:25.131840Z",
+      "lastRun": "2026-10-18T16:40:56.837121Z",
       "count": 0
     },
     "upsssc": {
       "status": "skipped",
-      "lastRun": "2026-10-18T06:06:25.131847Z",
+      "lastRun": "2026-10-18T16:40:56.837129Z",
       "count": 0
     },
     "bpsc": {
       "status": "skipped",
-      "lastRun": "2026-10-18T06:06:25.131852Z",
+      "lastRun": "2026-10-18T16:40:56.837136Z",
       "count": 0
     },
     "mppsc": {
       "status": "skipped",
-      "lastRun": "2026-10-18T06:06:25.131856Z",
+      "lastRun": "2026-10-18T16:40:56.837142Z",
       "count": 0
     },
     "rpsc": {
       "status": "skipped",
-      "lastRun": "2026-10-18T06:06:25.131860Z",
+      "lastRun": "2026-10-18T16:40:56.837147Z",
       "count": 0
     },
     "mpsc": {
       "status": "skipped_unreachable",
-      "lastRun": "2026-10-18T06:06:25.131866Z",
+      "lastRun": "2026-10-18T16:40:56.837154Z",
       "count": 0
     },
     "tnpsc": {
       "status": "skipped",
-      "lastRun": "2026-10-18T06:06:25.131871Z",
+      "lastRun": "2026-10-18T16:40:56.837162Z",
       "count": 0
     },
     "wbpsc": {
       "status": "skipped",
-      "lastRun": "2026-10-18T06:06:25.131876Z",
+      "lastRun": "2026-10-18T16:40:56.837168Z",
       "count": 0
     }
   },
   "consecutiveFailures": {
     "upsc": 2,
-    "ssc": 0,
+    "ssc": 1,
     "nta": 0,
     "ibps": 2,
     "rbi": 0,
