@@ -152,87 +152,87 @@
   "portalStatus": {
     "upsc": {
       "status": "skipped_unreachable",
-      "lastRun": "2026-11-10T20:31:08.550193Z",
+      "lastRun": "2026-11-11T07:51:36.958133Z",
       "count": 0
     },
     "ssc": {
       "status": "ok",
-      "lastRun": "2026-11-10T20:31:09.636455Z",
+      "lastRun": "2026-11-11T07:51:38.329394Z",
       "count": 25
     },
     "nta": {
       "status": "ok",
-      "lastRun": "2026-11-10T20:31:13.022439Z",
+      "lastRun": "2026-11-11T07:51:40.645334Z",
       "count": 22
     },
     "ibps": {
       "status": "skipped_unreachable",
-      "lastRun": "2026-11-10T20:31:13.022469Z",
+      "lastRun": "2026-11-11T07:51:40.645376Z",
       "count": 0
     },
     "rrb": {
       "status": "skipped",
-      "lastRun": "2026-11-10T20:31:13.022479Z",
+      "lastRun": "2026-11-11T07:51:40.645385Z",
       "count": 0
     },
     "rrb_apply": {
       "status": "skipped",
-      "lastRun": "2026-11-10T20:31:13.022486Z",
+      "lastRun": "2026-11-11T07:51:40.645390Z",
       "count": 0
     },
     "indiapost_gds": {
       "status": "skipped",
-      "lastRun": "2026-11-10T20:31:13.022492Z",
+      "lastRun": "2026-11-11T07:51:40.645395Z",
       "count": 0
     },
     "rbi": {
       "status": "ok",
-      "lastRun": "2026-11-10T20:31:14.534001Z",
+      "lastRun": "2026-11-11T07:51:44.465359Z",
       "count": 19
     },
     "sbi": {
       "status": "ok",
-      "lastRun": "2026-11-10T20:31:15.664788Z",
+      "lastRun": "2026-11-11T07:51:45.786359Z",
       "count": 15
     },
     "uppsc": {
       "status": "skipped",
-      "lastRun": "2026-11-10T20:31:15.664814Z",
+      "lastRun": "2026-11-11T07:51:45.786386Z",
       "count": 0
     },
     "upsssc": {
       "status": "skipped",
-      "lastRun": "2026-11-10T20:31:15.664823Z",
+      "lastRun": "2026-11-11T07:51:45.786393Z",
       "count": 0
     },
     "bpsc": {
       "status": "skipped",
-      "lastRun": "2026-11-10T20:31:15.664829Z",
+      "lastRun": "2026-11-11T07:51:45.786399Z",
       "count": 0
     },
     "mppsc": {
       "status": "skipped",
-      "lastRun": "2026-11-10T20:31:15.664835Z",
+      "lastRun": "2026-11-11T07:51:45.786403Z",
       "count": 0
     },
     "rpsc": {
       "status": "skipped",
-      "lastRun": "2026-11-10T20:31:15.664840Z",
+      "lastRun": "2026-11-11T07:51:45.786408Z",
       "count": 0
     },
     "mpsc": {
       "status": "skipped_unreachable",
-      "lastRun": "2026-11-10T20:31:15.664848Z",
+      "lastRun": "2026-11-11T07:51:45.786413Z",
       "count": 0
     },
     "tnpsc": {
       "status": "skipped",
-      "lastRun": "2026-11-10T20:31:15.664854Z",
+      "lastRun": "2026-11-11T07:51:45.786418Z",
       "count": 0
     },
     "wbpsc": {
       "status": "skipped",
-      "lastRun": "2026-11-10T20:31:15.664860Z",
+      "lastRun": "2026-11-11T07:51:45.786422Z",
       "count": 0
     }
   },
