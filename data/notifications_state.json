@@ -152,87 +152,87 @@
   "portalStatus": {
     "upsc": {
       "status": "skipped_unreachable",
-      "lastRun": "2026-11-19T08:55:51.672254Z",
+      "lastRun": "2026-11-19T21:42:12.700878Z",
       "count": 0
     },
     "ssc": {
       "status": "ok",
-      "lastRun": "2026-11-19T08:55:52.823240Z",
+      "lastRun": "2026-11-19T21:42:14.191977Z",
       "count": 25
     },
     "nta": {
       "status": "ok",
-      "lastRun": "2026-11-19T08:55:54.992411Z",
+      "lastRun": "2026-11-19T21:42:16.481520Z",
       "count": 23
     },
     "ibps": {
       "status": "skipped_unreachable",
-      "lastRun": "2026-11-19T08:55:54.992440Z",
+      "lastRun": "2026-11-19T21:42:16.481555Z",
       "count": 0
     },
     "rrb": {
       "status": "skipped",
-      "lastRun": "2026-11-19T08:55:54.992449Z",
+      "lastRun": "2026-11-19T21:42:16.481564Z",
       "count": 0
     },
     "rrb_apply": {
       "status": "skipped",
-      "lastRun": "2026-11-19T08:55:54.992456Z",
+      "lastRun": "2026-11-19T21:42:16.481571Z",
       "count": 0
     },
     "indiapost_gds": {
       "status": "skipped",
-      "lastRun": "2026-11-19T08:55:54.992462Z",
+      "lastRun": "2026-11-19T21:42:16.481577Z",
       "count": 0
     },
     "rbi": {
-      "status": "ok",
-      "lastRun": "2026-11-19T08:55:57.016075Z",
-      "count": 19
+      "status": "unreachable: 418 Client Error: Unknown Code for url: https://www.rbi.org.in/",
+      "lastRun": "2026-11-19T21:42:17.184790Z",
+      "count": 0
     },
     "sbi": {
       "status": "ok",
-      "lastRun": "2026-11-19T08:55:58.195242Z",
-      "count": 15
+      "lastRun": "2026-11-19T21:42:17.955864Z",
+      "count": 0
     },
     "uppsc": {
       "status": "skipped",
-      "lastRun": "2026-11-19T08:55:58.195268Z",
+      "lastRun": "2026-11-19T21:42:17.955896Z",
       "count": 0
     },
     "upsssc": {
       "status": "skipped",
-      "lastRun": "2026-11-19T08:55:58.195276Z",
+      "lastRun": "2026-11-19T21:42:17.955903Z",
       "count": 0
     },
     "bpsc": {
       "status": "skipped",
-      "lastRun": "2026-11-19T08:55:58.195283Z",
+      "lastRun": "2026-11-19T21:42:17.955909Z",
       "count": 0
     },
     "mppsc": {
       "status": "skipped",
-      "lastRun": "2026-11-19T08:55:58.195288Z",
+      "lastRun": "2026-11-19T21:42:17.955913Z",
       "count": 0
     },
     "rpsc": {
       "status": "skipped",
-      "lastRun": "2026-11-19T08:55:58.195294Z",
+      "lastRun": "2026-11-19T21:42:17.955918Z",
       "count": 0
     },
     "mpsc": {
       "status": "skipped_unreachable",
-      "lastRun": "2026-11-19T08:55:58.195301Z",
+      "lastRun": "2026-11-19T21:42:17.955924Z",
       "count": 0
     },
     "tnpsc": {
       "status": "skipped",
-      "lastRun": "2026-11-19T08:55:58.195307Z",
+      "lastRun": "2026-11-19T21:42:17.955929Z",
       "count": 0
     },
     "wbpsc": {
       "status": "skipped",
-      "lastRun": "2026-11-19T08:55:58.195313Z",
+      "lastRun": "2026-11-19T21:42:17.955934Z",
       "count": 0
     }
   },
@@ -241,7 +241,7 @@
     "ssc": 0,
     "nta": 0,
     "ibps": 2,
-    "rbi": 0,
+    "rbi": 1,
     "sbi": 0,
     "mpsc": 2
   }
