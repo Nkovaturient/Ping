@@ -225,5 +225,14 @@
     "source": "https://sbi.bank.in/web/careers/current-openings",
     "verifiedOn": "2026-11-05",
     "autoScraped": true
+  },
+  {
+    "portal": "sbi",
+    "displayName": "APPLY ONLINE (20.11.2026 TO 10.12.2026)",
+    "url": "https://ibpsreg.ibps.in/sbifteoct26/",
+    "deadline": "2026-11-20T23:59:00",
+    "source": "https://sbi.bank.in/web/careers/current-openings",
+    "verifiedOn": "2026-11-20",
+    "autoScraped": true
   }
 ]
